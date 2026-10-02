@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://cgadr55reetnl"]
+
+[ext_resource type="Script" uid="uid://0yxqa7pr5dye" path="res://src/entities/Projectile.gd" id="1"]
+
+[sub_resource type="Animation" id="1"]
+resource_name = "fire_loop"
+
+[sub_resource type="Animation" id="2"]
+resource_name = "fire_start"
+
+[sub_resource type="Animation" id="3"]
+resource_name = "hit"
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"_remove"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_n3s4t"]
+_data = {
+&"fire_loop": SubResource("1"),
+&"fire_start": SubResource("2"),
+&"hit": SubResource("3")
+}
+
+[node name="Projectile" type="Node2D" unique_id=1967562433]
+script = ExtResource("1")
+
+[node name="LifetimeTimer" type="Timer" parent="." unique_id=1300439819]
+
+[node name="ProjectileAnimations" type="AnimationPlayer" parent="." unique_id=1366791234]
+libraries/ = SubResource("AnimationLibrary_n3s4t")
+
+[node name="Hitbox" type="Area2D" parent="." unique_id=983099697]
+collision_layer = 0
+
+[connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

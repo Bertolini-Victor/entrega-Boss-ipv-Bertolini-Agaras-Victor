@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://22mlxu8p1pyp"]
+
+[ext_resource type="PackedScene" uid="uid://cgadr55reetnl" path="res://src/entities/Projectile.tscn" id="1"]
+[ext_resource type="Texture2D" uid="uid://bov7a3ffc82xs" path="res://assets/textures/fx/charged/charged1.png" id="2_uid2m"]
+
+[sub_resource type="CircleShape2D" id="1"]
+radius = 8.0
+
+[node name="TurretProjectile" unique_id=2047043401 instance=ExtResource("1")]
+VELOCITY = 400.0
+
+[node name="LifetimeTimer" parent="." index="0" unique_id=1300439819]
+wait_time = 3.0
+
+[node name="Hitbox" parent="." index="2" unique_id=983099697]
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" index="0" unique_id=1434374743]
+shape = SubResource("1")
+
+[node name="Sprite2D" type="Sprite2D" parent="." index="3" unique_id=1003978462]
+position = Vector2(1.1920929e-07, 0)
+scale = Vector2(1, 0.926)
+texture = ExtResource("2_uid2m")
