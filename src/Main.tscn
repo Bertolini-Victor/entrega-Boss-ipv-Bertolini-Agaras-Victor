@@ -3,14 +3,14 @@
 [ext_resource type="Script" uid="uid://coqxktsvv203r" path="res://src/Main.gd" id="1"]
 [ext_resource type="Script" uid="uid://25xetcj5a1il" path="res://src/entities/enemies/TurretsSpawner.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://ctr8khlrbhmg7" path="res://assets/textures/background/Space Background.png" id="2_0vhqb"]
-[ext_resource type="PackedScene" path="res://src/environment/Floor.tscn" id="4"]
+[ext_resource type="PackedScene" uid="uid://bl7rjy3ovwpvv" path="res://src/environment/Floor.tscn" id="4"]
 [ext_resource type="PackedScene" uid="uid://bd5hj26cc16d2" path="res://src/entities/enemies/Turret.tscn" id="5"]
 [ext_resource type="PackedScene" uid="uid://dvchiotj4dluu" path="res://src/environment/Obstacle.tscn" id="6"]
 [ext_resource type="PackedScene" uid="uid://bg6s38wn8ss5x" path="res://src/entities/player/Player.tscn" id="7"]
-[ext_resource type="PackedScene" path="res://src/environment/Wall.tscn" id="8"]
+[ext_resource type="PackedScene" uid="uid://dt5o1uaulndt8" path="res://src/environment/Wall.tscn" id="8"]
 [ext_resource type="PackedScene" uid="uid://2s81rbvgeowa" path="res://src/environment/Goal.tscn" id="9"]
 [ext_resource type="PackedScene" uid="uid://ca4mk7a5pbwy6" path="res://src/environment/Ramp.tscn" id="10"]
-[ext_resource type="PackedScene" path="res://src/environment/Platform.tscn" id="11"]
+[ext_resource type="PackedScene" uid="uid://e3w1dxk37h4j" path="res://src/environment/Platform.tscn" id="11"]
 
 [node name="Main" type="Node" unique_id=1295602444]
 script = ExtResource("1")
@@ -74,6 +74,8 @@ position = Vector2(545.103, 484.106)
 
 [node name="Player" parent="Environment/Entities" unique_id=1440153547 instance=ExtResource("7")]
 position = Vector2(152.506, 477.622)
+jump_speed = 400.0
+gravity = 700.0
 
 [node name="Camera3D" type="Camera2D" parent="Environment/Entities/Player" unique_id=1143206512]
 

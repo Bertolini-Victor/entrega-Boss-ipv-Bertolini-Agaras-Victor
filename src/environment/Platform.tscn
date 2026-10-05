@@ -1,17 +1,17 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene format=3 uid="uid://e3w1dxk37h4j"]
 
-[ext_resource path="res://assets/textures/jumpable_platform.png" type="Texture2D" id=1]
+[ext_resource type="Texture2D" uid="uid://b84uhk1esv2tl" path="res://assets/textures/jumpable_platform.png" id="1"]
 
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 48, 8 )
+[sub_resource type="RectangleShape2D" id="1"]
+size = Vector2(96, 16)
 
-[node name="Platform" type="StaticBody2D"]
+[node name="Platform" type="StaticBody2D" unique_id=2067731818]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource( 1 )
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1249824082]
+shape = SubResource("1")
 one_way_collision = true
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2( 4.76837e-07, 9.53674e-07 )
-scale = Vector2( 1.45455, 0.242424 )
-texture = ExtResource( 1 )
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=970888788]
+position = Vector2(4.76837e-07, 9.53674e-07)
+scale = Vector2(1.45455, 0.242424)
+texture = ExtResource("1")

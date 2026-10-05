@@ -1,3 +1,4 @@
+class_name Cannon
 extends Node2D
 
 @onready var weapon_tip: Node2D = $WeaponTip
@@ -5,9 +6,11 @@ extends Node2D
 
 var projectile_container: Node
 
+# Orienta el arma hacia el cursor.
 func process_input() -> void:
 	look_at(get_global_mouse_position())
 
+# Instancia un proyectil y lo dispara.
 func fire() -> void:
 	var projectile_instance: Node = projectile_scene.instantiate()
 	projectile_container.add_child(projectile_instance)
@@ -16,5 +19,6 @@ func fire() -> void:
 		global_position.direction_to(weapon_tip.global_position)
 	)
 
-func die():
+# Destruye el arma.
+func die() -> void:
 	queue_free() 

@@ -110,9 +110,9 @@ floor_max_angle = 0.802851
 floor_snap_length = 16.0
 platform_floor_layers = 4294901761
 script = ExtResource("1")
-ACCELERATION = 1000.0
-H_SPEED_LIMIT = 300.0
-jump_speed = 300
+acceleration = 1000.0
+h_speed_limit = 300.0
+jump_speed = 300.0
 push_force = 160.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=72660534]

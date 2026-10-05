@@ -1,16 +1,22 @@
-extends CharacterBody2D
 class_name Player
+extends CharacterBody2D
 
 signal player_died
 
 @onready var weapon: Node = $"%Weapon"
 @onready var body_animations: AnimationPlayer = $BodyAnimations
 @onready var body_pivot: Node2D = $BodyPivot
-@export var ACCELERATION: float = 3750.0
-@export var H_SPEED_LIMIT: float = 600.0
-@export var jump_speed: int = 500
-@export var FRICTION_WEIGHT: float = 6.25
-@export var gravity: int = 625
+
+@export_group("Movement")
+@export var acceleration: float = 3750.0
+@export var h_speed_limit: float = 600.0
+@export var friction_weight: float = 6.25
+
+@export_group("Jump & Gravity")
+@export var jump_speed: float = 500.0
+@export var gravity: float = 625.0 
+
+@export_group("Physics Interaction")
 @export var push_force: float = 80.0
 
 var projectile_container: Node
@@ -18,31 +24,40 @@ var h_movement_direction: int = 0
 var jump: bool = false
 var dead: bool = false
 
+# Configura el estado inicial del jugador.
 func _ready() -> void:
 	initialize()
 
-func initialize(projectile_container: Node = get_parent()) -> void:
-	self.projectile_container = projectile_container
-	weapon.projectile_container = projectile_container
+# Establece el contenedor para los proyectiles del arma.
+func initialize(p_projectile_container: Node = get_parent()) -> void:
+	assert(p_projectile_container != null, "projectile_container cannot be null")
+	self.projectile_container = p_projectile_container
+	weapon.projectile_container = p_projectile_container
 	body_animations.play("idle")
 
+# Procesa el movimiento y las colisiones del jugador.
 func _physics_process(delta: float) -> void:
 	_process_input()
 	
 	if !dead && h_movement_direction != 0:
 		velocity.x = clamp(
-			velocity.x + (h_movement_direction * ACCELERATION * delta),
-			-H_SPEED_LIMIT,
-			H_SPEED_LIMIT
+			velocity.x + (h_movement_direction * acceleration * delta),
+			-h_speed_limit,
+			h_speed_limit
 		)
-		body_pivot.scale.x = 1 - 2 * float(h_movement_direction < 0)
+		if h_movement_direction > 0:
+			body_pivot.scale.x = 1
+		elif h_movement_direction < 0:
+			body_pivot.scale.x = -1
 	else:
-		velocity.x = move_toward(velocity.x, 0, FRICTION_WEIGHT * 100 * delta)
+		velocity.x = move_toward(velocity.x, 0, friction_weight * 100 * delta)
 		
 	if jump and is_on_floor():
 		velocity.y -= jump_speed
 
 	velocity.y += gravity * delta
+	
+	move_and_slide()
 	
 	for i in get_slide_collision_count():
 		var collision: KinematicCollision2D = get_slide_collision(i)
@@ -54,10 +69,11 @@ func _physics_process(delta: float) -> void:
 			collision.get_collider().apply_central_impulse(
 				-collision_normal.slerp(-velocity.normalized(), 0.5) * push_force * velocity_alignment
 			)
-	move_and_slide()
+
 	if not dead:
 		_update_animation()
 
+# Procesa la entrada del usuario.
 func _process_input() -> void:
 	if dead:
 		jump = false
@@ -65,10 +81,6 @@ func _process_input() -> void:
 		return
 	
 	if Input.is_action_just_pressed("attack_1"):
-		if projectile_container == null:
-			projectile_container = get_parent()
-		if weapon.projectile_container == null:
-			weapon.projectile_container = projectile_container
 		weapon.fire()
 
 	jump = Input.is_action_just_pressed("jump")
@@ -79,18 +91,22 @@ func _process_input() -> void:
 	
 	weapon.process_input()
 
-func die():
+# Maneja la muerte del jugador.
+func die() -> void:
 	if dead:
 		return 
 	
 	dead = true
 	collision_layer = 0 
 	collision_mask = 1 
-	weapon.die()
+	if weapon:
+		weapon.die()
+		weapon = null
 	_play_animation("die")
 	await body_animations.animation_finished
 	player_died.emit()
 
+# Actualiza la animacion segun el estado de movimiento.
 func _update_animation() -> void:
 	if not is_on_floor():
 		_play_animation("jump")
@@ -99,6 +115,7 @@ func _update_animation() -> void:
 	else:
 		_play_animation("idle")
 
+# Reproduce una animacion del cuerpo.
 func _play_animation(animation: String) -> void:
 	if body_animations.has_animation(animation):
 		body_animations.play(animation)

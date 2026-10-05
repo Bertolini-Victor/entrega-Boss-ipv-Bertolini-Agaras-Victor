@@ -79,3 +79,8 @@ defense_1={
 2d_physics/layer_1="world"
 2d_physics/layer_2="player"
 2d_physics/layer_3="turrets"
+2d_physics/layer_4="obstacles"
+
+[physics]
+
+2d/default_gravity=2500.0
