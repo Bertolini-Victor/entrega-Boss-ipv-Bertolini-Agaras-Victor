@@ -69,7 +69,3 @@ reset={
 2d_physics/layer_1="world"
 2d_physics/layer_2="player"
 2d_physics/layer_3="turrets"
-
-[rendering]
-
-environment/defaults/default_environment="res://default_env.tres"
