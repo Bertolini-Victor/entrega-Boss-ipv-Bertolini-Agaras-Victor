@@ -26,6 +26,7 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_0vhqb")
 expand_mode = 1
+stretch_mode = 6
 
 [node name="Environment" type="Node2D" parent="." unique_id=668645349]
 
@@ -77,10 +78,11 @@ position = Vector2(152.506, 477.622)
 [node name="Camera3D" type="Camera2D" parent="Environment/Entities/Player" unique_id=1143206512]
 
 [node name="TurretsSpawner" type="Marker2D" parent="Environment/Entities" unique_id=1543959206]
-position = Vector2(1269.72, 24.3184)
+position = Vector2(1121, 533)
 script = ExtResource("2")
 turret_scene = ExtResource("5")
-extents = Vector2(300, -350)
+amount = 2
+extents = Vector2(200, -250)
 
 [node name="Turret" parent="Environment/Entities" unique_id=1654059648 instance=ExtResource("5")]
 position = Vector2(1608.14, 497.862)
@@ -107,3 +109,6 @@ position = Vector2(516.379, 398.224)
 
 [node name="Goal" parent="Environment/Objects" unique_id=786003239 instance=ExtResource("9")]
 position = Vector2(1534.51, 203.62158)
+
+[connection signal="player_died" from="Environment/Entities/Player" to="." method="_on_player_player_died"]
+[connection signal="level_completed" from="Environment/Objects/Goal" to="." method="_on_goal_level_completed"]

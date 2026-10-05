@@ -1,6 +1,7 @@
 extends CharacterBody2D
-
 class_name Player
+
+signal player_died
 
 @onready var weapon: Node = $"%Weapon"
 @onready var body_animations: AnimationPlayer = $BodyAnimations
@@ -9,7 +10,7 @@ class_name Player
 @export var H_SPEED_LIMIT: float = 600.0
 @export var jump_speed: int = 500
 @export var FRICTION_WEIGHT: float = 6.25
-@export var gravity: int = 625.0
+@export var gravity: int = 625
 @export var push_force: float = 80.0
 
 var projectile_container: Node
@@ -19,7 +20,6 @@ var dead: bool = false
 
 func _ready() -> void:
 	initialize()
-
 
 func initialize(projectile_container: Node = get_parent()) -> void:
 	self.projectile_container = projectile_container
@@ -35,12 +35,10 @@ func _physics_process(delta: float) -> void:
 			-H_SPEED_LIMIT,
 			H_SPEED_LIMIT
 		)
-		body_animations.play("walk")
 		body_pivot.scale.x = 1 - 2 * float(h_movement_direction < 0)
 	else:
-		velocity.x = lerp(velocity.x, 0.0, FRICTION_WEIGHT * delta) if abs(velocity.x) > 1 else 0
-		body_animations.play("idle")
-	
+		velocity.x = move_toward(velocity.x, 0, FRICTION_WEIGHT * 100 * delta)
+		
 	if jump and is_on_floor():
 		velocity.y -= jump_speed
 
@@ -56,25 +54,17 @@ func _physics_process(delta: float) -> void:
 			collision.get_collider().apply_central_impulse(
 				-collision_normal.slerp(-velocity.normalized(), 0.5) * push_force * velocity_alignment
 			)
-			
-	
-	
-	if !is_on_floor():
-		_play_animation("jump")
-	elif h_movement_direction != 0:
-		_play_animation("walk")
-	else:
-		_play_animation("idle")
-	
 	move_and_slide()
-
+	if not dead:
+		_update_animation()
 
 func _process_input() -> void:
 	if dead:
 		jump = false
+		h_movement_direction = 0 
 		return
 	
-	if Input.is_action_just_pressed("fire_cannon"):
+	if Input.is_action_just_pressed("attack_1"):
 		if projectile_container == null:
 			projectile_container = get_parent()
 		if weapon.projectile_container == null:
@@ -94,17 +84,20 @@ func die():
 		return 
 	
 	dead = true
-	$CollisionShape2D.set_deferred("disabled", true)
-	set_physics_process(false) 
+	collision_layer = 0 
+	collision_mask = 1 
 	weapon.die()
 	_play_animation("die")
 	await body_animations.animation_finished
-	get_tree().reload_current_scene()
+	player_died.emit()
 
-func _remove() -> void:
-	set_physics_process(false)
-	hide()
-	collision_layer = 0
+func _update_animation() -> void:
+	if not is_on_floor():
+		_play_animation("jump")
+	elif h_movement_direction != 0:
+		_play_animation("walk")
+	else:
+		_play_animation("idle")
 
 func _play_animation(animation: String) -> void:
 	if body_animations.has_animation(animation):

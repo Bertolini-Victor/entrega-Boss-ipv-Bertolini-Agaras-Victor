@@ -35,7 +35,7 @@ func fire() -> void:
 	fire_timer.start()
 
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if target == null:
 		return
 	
@@ -60,11 +60,16 @@ func die():
 	queue_free()
 
 func _on_detection_area_body_entered(body: Node2D) -> void:
-	if target == null:
+	if dead:
+		return
+
+	if body is Player and target == null:
 		target = body
-		fire_timer.start()
 
 func _on_detection_area_body_exited(body: Node2D) -> void:
+	if dead:
+		return
+
 	if body == target:
 		target = null
 		fire_timer.stop()
