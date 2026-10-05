@@ -38,6 +38,9 @@ func remove() -> void:
 	await projectile_animations.animation_finished
 	queue_free()
 
+func _remove() -> void:
+	pass
+
 func _on_hitbox_body_entered(body: Node2D) -> void:
 	if body.has_method("die"):
 		body.die()

@@ -4,6 +4,7 @@
 
 [sub_resource type="Animation" id="1"]
 resource_name = "fire_loop"
+length = 0.1
 
 [sub_resource type="Animation" id="2"]
 resource_name = "fire_start"

@@ -81,7 +81,7 @@ position = Vector2(152.506, 477.622)
 position = Vector2(1121, 533)
 script = ExtResource("2")
 turret_scene = ExtResource("5")
-amount = 2
+amount = 3
 extents = Vector2(200, -250)
 
 [node name="Turret" parent="Environment/Entities" unique_id=1654059648 instance=ExtResource("5")]

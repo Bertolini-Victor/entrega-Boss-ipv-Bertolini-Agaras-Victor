@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bd5hj26cc16d2"]
 
 [ext_resource type="Script" uid="uid://mvifnud8nrv3" path="res://src/entities/enemies/Turret.gd" id="2"]
-[ext_resource type="PackedScene" uid="uid://22mlxu8p1pyp" path="res://src/entities/player/TurretProjectile.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://22mlxu8p1pyp" path="res://src/entities/enemies/TurretProjectile.tscn" id="3"]
 [ext_resource type="Texture2D" uid="uid://3a1qy8iqfgr5" path="res://assets/textures/enemies/golem/Golem_DeathB.png" id="3_aag6v"]
 [ext_resource type="Texture2D" uid="uid://dwv400d0h5eec" path="res://assets/textures/enemies/golem/Golem_IdleB.png" id="3_chgy7"]
 
@@ -132,8 +132,6 @@ texture_filter = 1
 position = Vector2(0, -15)
 sprite_frames = SubResource("SpriteFrames_njpiu")
 animation = &"die"
-frame = 6
-frame_progress = 0.14582992
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1867534974]
 position = Vector2(-0.5, -14)
