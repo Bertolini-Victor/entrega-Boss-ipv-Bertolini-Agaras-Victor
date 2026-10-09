@@ -3,17 +3,62 @@ class_name MeleeAttack
 
 @export var attack_duration: float = 0.15
 @export var attack_range: float = 40.0
+@export var wall_check_distance: float = 18.0
+
 var _is_attacking: bool = false
 var _draw_slash: bool = false
 var _slash_facing: float = 1.0
+var _player: CharacterBody2D = null
+
+func _ready() -> void:
+	_player = _get_player()
+
+func _get_player() -> CharacterBody2D:
+	if owner is CharacterBody2D:
+		return owner as CharacterBody2D
+	var current: Node = get_parent()
+	while current != null:
+		if current is CharacterBody2D:
+			return current as CharacterBody2D
+		current = current.get_parent()
+	return null
 
 # Ejecuta el ataque cuerpo a cuerpo orientado según facing_direction (+1.0 o -1.0).
 func attack(facing_direction: float = 1.0) -> void:
 	if _is_attacking:
 		return
-	_is_attacking = true
 
 	var facing: float = 1.0 if facing_direction >= 0.0 else -1.0
+
+	if _player == null:
+		_player = _get_player()
+
+	# Bloquear el ataque si el jugador está pegado físicamente a una pared en la dirección frontal
+	if _player != null and _player.is_on_wall():
+		var wall_normal: Vector2 = _player.get_wall_normal()
+		if sign(wall_normal.x) == -facing:
+			return
+
+	# Chequeo frontal mediante raycast contra Capa 1 ("world") y Capa 4 ("obstacles")
+	var space_state: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
+	var exclude_rids: Array[RID] = []
+	if _player != null:
+		exclude_rids.append(_player.get_rid())
+
+	var ray_params := PhysicsRayQueryParameters2D.create(
+		global_position,
+		global_position + Vector2(facing * wall_check_distance, 0.0),
+		1 | 8,
+		exclude_rids
+	)
+	ray_params.collide_with_bodies = true
+	ray_params.collide_with_areas = false
+
+	var wall_hit: Dictionary = space_state.intersect_ray(ray_params)
+	if not wall_hit.is_empty():
+		return
+
+	_is_attacking = true
 
 	# Activar el efecto visual del corte
 	_slash_facing = facing
@@ -21,8 +66,6 @@ func attack(facing_direction: float = 1.0) -> void:
 	queue_redraw()
 
 	# Usar PhysicsShapeQueryParameters2D para detección instantánea y confiable
-	var space_state: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
-
 	var shape := RectangleShape2D.new()
 	var attack_height: float = 30.0
 	shape.size = Vector2(attack_range, attack_height)
