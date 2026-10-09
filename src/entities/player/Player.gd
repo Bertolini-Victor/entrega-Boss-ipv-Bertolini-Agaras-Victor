@@ -118,9 +118,12 @@ func _process_input() -> void:
 	if can_heavy_blast and heavy_cannon:
 		heavy_cannon.process_input()
 		
-	if can_parry:
-		if Input.is_action_just_pressed("parry") or Input.is_action_just_pressed("parry_redirect"):
-			parry_controller.try_parry(can_redirect)
+	if can_parry and parry_controller != null:
+		if Input.is_action_just_pressed("parry"):
+			parry_controller.try_parry(false)
+		elif Input.is_action_just_pressed("parry_redirect"):
+			if can_redirect:
+				parry_controller.try_parry(true)
 
 # Maneja la muerte del jugador.
 func die() -> void:

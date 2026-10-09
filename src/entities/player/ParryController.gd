@@ -45,7 +45,7 @@ func try_parry(allow_redirect: bool = false) -> void:
 	_attempting_redirect = allow_redirect
 	queue_redraw()
 
-	if not _can_parry or _incoming_projectile == null:
+	if not _can_parry or _incoming_projectile == null or not is_instance_valid(_incoming_projectile):
 		parry_failed.emit()
 		return
 		
