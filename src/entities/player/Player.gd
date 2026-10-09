@@ -4,7 +4,7 @@ extends CharacterBody2D
 signal player_died
 signal died
 
-@onready var weapon: Node = $"%Weapon"
+@onready var weapon: Cannon = $"%Weapon"
 @onready var body_animations: AnimationPlayer = $BodyAnimations
 @onready var body_pivot: Node2D = $BodyPivot
 @onready var melee_attack: MeleeAttack = $WeaponContainer/MeleeAttack
@@ -74,14 +74,16 @@ func _physics_process(delta: float) -> void:
 	
 	move_and_slide()
 	
-	for i in get_slide_collision_count():
+	for i: int in get_slide_collision_count():
 		var collision: KinematicCollision2D = get_slide_collision(i)
-		if collision.get_collider() is RigidBody2D:
+		var collider: Object = collision.get_collider()
+		if collider is RigidBody2D:
+			var rigid_body: RigidBody2D = collider as RigidBody2D
 			var collision_normal: Vector2 = collision.get_normal()
 			var velocity_alignment: float = float(
 				collision_normal.dot(-velocity.normalized()) > 0.0
 			)
-			collision.get_collider().apply_central_impulse(
+			rigid_body.apply_central_impulse(
 				-collision_normal.slerp(-velocity.normalized(), 0.5) * push_force * velocity_alignment
 			)
 
