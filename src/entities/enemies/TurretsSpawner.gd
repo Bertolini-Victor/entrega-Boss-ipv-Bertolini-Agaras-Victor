@@ -15,11 +15,19 @@ func _ready() -> void:
 
 # Instancia y posiciona las torretas en la escena.
 func _initialize() -> void:
-	for i in amount:
+	if turret_scene == null:
+		return
+
+	var min_x: float = min(global_position.x, global_position.x + extents.x)
+	var max_x: float = max(global_position.x, global_position.x + extents.x)
+	var min_y: float = min(global_position.y, global_position.y + extents.y)
+	var max_y: float = max(global_position.y, global_position.y + extents.y)
+
+	for i: int in amount:
 		var turret_instance: Node = turret_scene.instantiate()
 		var turret_pos: Vector2 = Vector2(
-			randf_range(global_position.x, global_position.x + extents.x),
-			randf_range(global_position.y, global_position.y + extents.y)
+			randf_range(min_x, max_x),
+			randf_range(min_y, max_y)
 		)
 		add_child(turret_instance)
 		turret_instance.initialize(turret_pos, get_parent())
@@ -34,4 +42,4 @@ func _set_extents(value: Vector2) -> void:
 # Dibuja un rectangulo de referencia en el editor.
 func _draw() -> void:
 	if Engine.is_editor_hint():
-		draw_rect(Rect2(Vector2.ZERO, extents), Color.BLUE, false)
+		draw_rect(Rect2(Vector2.ZERO, extents).abs(), Color.BLUE, false)
