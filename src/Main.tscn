@@ -78,7 +78,7 @@ jump_speed = 400.0
 gravity = 700.0
 can_redirect = true
 
-[node name="Camera3D" type="Camera2D" parent="Environment/Entities/Player" unique_id=1143206512]
+[node name="Camera2D" type="Camera2D" parent="Environment/Entities/Player" unique_id=1143206512]
 
 [node name="TurretsSpawner" type="Marker2D" parent="Environment/Entities" unique_id=1543959206]
 position = Vector2(926, 507)
