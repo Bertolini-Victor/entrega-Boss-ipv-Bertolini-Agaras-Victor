@@ -110,7 +110,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="1"]
-size = Vector2(29, 28)
+size = Vector2(34, 31)
 
 [sub_resource type="CircleShape2D" id="2"]
 radius = 184.0978
@@ -134,7 +134,7 @@ sprite_frames = SubResource("SpriteFrames_njpiu")
 animation = &"idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1867534974]
-position = Vector2(-0.5, -14)
+position = Vector2(0, -15.5)
 shape = SubResource("1")
 
 [node name="RayCast2D" type="RayCast2D" parent="." unique_id=949887667]

@@ -122,21 +122,14 @@ _data = {
 &"hit": SubResource("Animation_8utj8")
 }
 
-[sub_resource type="CircleShape2D" id="1"]
-radius = 8.0
-
 [node name="PlayerProjectile" unique_id=1437221611 instance=ExtResource("1")]
 texture_filter = 1
-VELOCITY = 200.0
 
 [node name="ProjectileAnimations" parent="." index="1" unique_id=1366791234]
 libraries/ = SubResource("AnimationLibrary_ahk78")
 
 [node name="Hitbox" parent="." index="2" unique_id=983099697]
-collision_mask = 5
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" index="0" unique_id=942346100]
-shape = SubResource("1")
+collision_mask = 13
 
 [node name="Sprite2D" type="Sprite2D" parent="." index="3" unique_id=1995404900]
 texture = ExtResource("11_5db4q")

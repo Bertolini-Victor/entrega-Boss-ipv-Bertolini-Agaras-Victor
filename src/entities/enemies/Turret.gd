@@ -1,6 +1,8 @@
 class_name Turret
 extends StaticBody2D
 
+signal died
+
 @onready var fire_position: Node2D = $FirePosition
 @onready var fire_timer: Timer = $FireTimer
 @onready var raycast: RayCast2D = $RayCast2D
@@ -14,6 +16,7 @@ var dead: bool = false
 
 # Inicializa el temporizador y la animacion.
 func _ready() -> void:
+	add_to_group("enemies")
 	fire_timer.timeout.connect(fire)	
 	_play_animation("idle")
 
@@ -55,10 +58,12 @@ func die() -> void:
 		return 
 	
 	dead = true
+	remove_from_group("enemies")
 	fire_timer.stop()
 	collision_shape.set_deferred("disabled", true)
 	set_physics_process(false) 
 	_play_animation("die")
+	died.emit()
 	await body_anim.animation_finished
 	queue_free()
 
