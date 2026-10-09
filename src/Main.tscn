@@ -76,15 +76,16 @@ position = Vector2(545.103, 484.106)
 position = Vector2(152.506, 477.622)
 jump_speed = 400.0
 gravity = 700.0
+can_redirect = true
 
 [node name="Camera3D" type="Camera2D" parent="Environment/Entities/Player" unique_id=1143206512]
 
 [node name="TurretsSpawner" type="Marker2D" parent="Environment/Entities" unique_id=1543959206]
-position = Vector2(1121, 533)
+position = Vector2(926, 507)
 script = ExtResource("2")
 turret_scene = ExtResource("5")
 amount = 3
-extents = Vector2(200, -250)
+extents = Vector2(300, -100)
 
 [node name="Turret" parent="Environment/Entities" unique_id=1654059648 instance=ExtResource("5")]
 position = Vector2(1608.14, 497.862)

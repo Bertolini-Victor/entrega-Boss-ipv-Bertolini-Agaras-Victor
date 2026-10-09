@@ -5,7 +5,7 @@
 [sub_resource type="RectangleShape2D" id="1"]
 size = Vector2(64, 592)
 
-[node name="Wall" type="StaticBody2D" unique_id=962527511]
+[node name="Wall" type="StaticBody2D" groups=["terrain"] unique_id=962527511]
 
 [node name="gray_square" type="Sprite2D" parent="." unique_id=478684930]
 scale = Vector2(0.3, 3)

@@ -5,7 +5,7 @@
 [sub_resource type="RectangleShape2D" id="1"]
 size = Vector2(96, 16)
 
-[node name="Platform" type="StaticBody2D" unique_id=2067731818]
+[node name="Platform" type="StaticBody2D" groups=["terrain"] unique_id=2067731818]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1249824082]
 shape = SubResource("1")
