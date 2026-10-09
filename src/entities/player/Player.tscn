@@ -4,7 +4,12 @@
 [ext_resource type="Texture2D" uid="uid://de1m14eyfnc8c" path="res://assets/textures/player/player_sheet.png" id="2_lvau8"]
 [ext_resource type="Texture2D" uid="uid://7v68qc6wpxn0" path="res://assets/textures/player/staff.png" id="3_lvau8"]
 [ext_resource type="Script" uid="uid://bxm1bqpwq3bk5" path="res://src/entities/player/Cannon.gd" id="4"]
-[ext_resource type="PackedScene" uid="uid://dnl107pupmqic" path="res://src/entities/player/PlayerProjectile.tscn" id="5"]
+[ext_resource type="PackedScene" uid="uid://c7ejb3ehyxs1r" path="res://src/entities/player/PlayerFireball.tscn" id="5"]
+[ext_resource type="Script" uid="uid://cwhpmfa22aekc" path="res://src/entities/player/MeleeAttack.gd" id="6"]
+[ext_resource type="Script" path="res://src/entities/player/HeavyCannonController.gd" id="8_heavy"]
+[ext_resource type="PackedScene" path="res://src/entities/player/HeavyBlastProjectile.tscn" id="9_blast_proj"]
+[ext_resource type="Script" path="res://src/entities/player/ParryController.gd" id="10_parry"]
+[ext_resource type="PackedScene" path="res://src/entities/player/ParryZone.tscn" id="11_parry"]
 
 [sub_resource type="RectangleShape2D" id="1"]
 size = Vector2(18, 20)
@@ -132,6 +137,12 @@ hframes = 9
 vframes = 5
 frame = 1
 
+[node name="ParryController" type="Node2D" parent="."]
+position = Vector2(-5, -10)
+script = ExtResource("10_parry")
+
+[node name="ParryZone" parent="ParryController" instance=ExtResource("11_parry")]
+
 [node name="WeaponContainer" type="Node2D" parent="." unique_id=1392024065]
 position = Vector2(-5, -7)
 
@@ -147,3 +158,30 @@ texture = ExtResource("3_lvau8")
 
 [node name="WeaponTip" type="Marker2D" parent="WeaponContainer/Weapon" unique_id=1289130225]
 position = Vector2(9, 0)
+
+[node name="FireTimer" type="Timer" parent="WeaponContainer/Weapon" unique_id=1389130225]
+wait_time = 0.5
+one_shot = true
+
+[node name="MeleeAttack" type="Node2D" parent="WeaponContainer" unique_id=1461851317]
+script = ExtResource("6")
+
+[node name="HeavyCannon" type="Node2D" parent="WeaponContainer"]
+position = Vector2(0, -6)
+script = ExtResource("8_heavy")
+projectile_scene = ExtResource("9_blast_proj")
+
+[node name="WeaponTip" type="Marker2D" parent="WeaponContainer/HeavyCannon"]
+position = Vector2(16, 0)
+
+[node name="ChargeTimer" type="Timer" parent="WeaponContainer/HeavyCannon"]
+wait_time = 0.6
+one_shot = true
+
+[node name="CooldownTimer" type="Timer" parent="WeaponContainer/HeavyCannon"]
+wait_time = 1.2
+one_shot = true
+
+[connection signal="timeout" from="WeaponContainer/HeavyCannon/ChargeTimer" to="WeaponContainer/HeavyCannon" method="_on_charge_timer_timeout"]
+[connection signal="timeout" from="WeaponContainer/HeavyCannon/CooldownTimer" to="WeaponContainer/HeavyCannon" method="_on_cooldown_timer_timeout"]
+[connection signal="area_entered" from="ParryController/ParryZone" to="ParryController" method="_on_parry_zone_area_entered"]

@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://c7ejb3ehyxs1r"]
+
+[ext_resource type="Script" uid="uid://cvdwn73c31ghn" path="res://src/entities/player/FireballProjectile.gd" id="1_fireball"]
+[ext_resource type="PackedScene" uid="uid://dnl107pupmqic" path="res://src/entities/player/PlayerProjectile.tscn" id="2_base"]
+
+[node name="PlayerFireball" unique_id=-2057745685 instance=ExtResource("2_base")]
+script = ExtResource("1_fireball")
+max_range = 250.0

@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://ckj4yq1m2a3b4"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_parry"]
+radius = 55.0
+
+[node name="ParryZone" type="Area2D"]
+collision_layer = 0
+collision_mask = 16
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_parry")

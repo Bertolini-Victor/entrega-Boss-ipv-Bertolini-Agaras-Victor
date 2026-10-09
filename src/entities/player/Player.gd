@@ -2,10 +2,14 @@ class_name Player
 extends CharacterBody2D
 
 signal player_died
+signal died
 
 @onready var weapon: Node = $"%Weapon"
 @onready var body_animations: AnimationPlayer = $BodyAnimations
 @onready var body_pivot: Node2D = $BodyPivot
+@onready var melee_attack: MeleeAttack = $WeaponContainer/MeleeAttack
+@onready var heavy_cannon: HeavyCannonController = $WeaponContainer/HeavyCannon
+@onready var parry_controller: ParryController = $ParryController
 
 @export_group("Movement")
 @export var acceleration: float = 3750.0
@@ -18,6 +22,13 @@ signal player_died
 
 @export_group("Physics Interaction")
 @export var push_force: float = 80.0
+
+@export_group("Abilities")
+@export var can_melee: bool = true
+@export var can_fireball: bool = true
+@export var can_heavy_blast: bool = true
+@export var can_parry: bool = true
+@export var can_redirect: bool = false
 
 var projectile_container: Node
 var h_movement_direction: int = 0
@@ -33,6 +44,10 @@ func initialize(p_projectile_container: Node = get_parent()) -> void:
 	assert(p_projectile_container != null, "projectile_container cannot be null")
 	self.projectile_container = p_projectile_container
 	weapon.projectile_container = p_projectile_container
+	if heavy_cannon:
+		heavy_cannon.projectile_container = p_projectile_container
+	elif has_node("WeaponContainer/HeavyCannon"):
+		$WeaponContainer/HeavyCannon.projectile_container = p_projectile_container
 	body_animations.play("idle")
 
 # Procesa el movimiento y las colisiones del jugador.
@@ -53,7 +68,7 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0, friction_weight * 100 * delta)
 		
 	if jump and is_on_floor():
-		velocity.y -= jump_speed
+		velocity.y = -jump_speed
 
 	velocity.y += gravity * delta
 	
@@ -80,7 +95,15 @@ func _process_input() -> void:
 		h_movement_direction = 0 
 		return
 	
-	if Input.is_action_just_pressed("attack_1"):
+	if Input.is_action_just_pressed("attack_melee") and can_melee:
+		var mouse_offset_x: float = get_global_mouse_position().x - global_position.x
+		var facing_dir: float = sign(mouse_offset_x) if mouse_offset_x != 0.0 else body_pivot.scale.x
+		if facing_dir == 0.0:
+			facing_dir = 1.0
+		body_pivot.scale.x = facing_dir
+		melee_attack.attack(facing_dir)
+	
+	if Input.is_action_just_pressed("attack_1") and can_fireball:
 		weapon.fire()
 
 	jump = Input.is_action_just_pressed("jump")
@@ -90,6 +113,12 @@ func _process_input() -> void:
 	)
 	
 	weapon.process_input()
+	if can_heavy_blast and heavy_cannon:
+		heavy_cannon.process_input()
+		
+	if can_parry:
+		if Input.is_action_just_pressed("parry") or Input.is_action_just_pressed("parry_redirect"):
+			parry_controller.try_parry(can_redirect)
 
 # Maneja la muerte del jugador.
 func die() -> void:
@@ -102,8 +131,18 @@ func die() -> void:
 	if weapon:
 		weapon.die()
 		weapon = null
+	if melee_attack:
+		melee_attack.die()
+		melee_attack = null
+	if heavy_cannon:
+		heavy_cannon.die()
+		heavy_cannon = null
+	if parry_controller:
+		parry_controller.die()
+		parry_controller = null
 	_play_animation("die")
 	await body_animations.animation_finished
+	died.emit()
 	player_died.emit()
 
 # Actualiza la animacion segun el estado de movimiento.
