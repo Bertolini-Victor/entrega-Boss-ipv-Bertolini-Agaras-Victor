@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://coqxktsvv203r" path="res://src/Main.gd" id="1"]
 [ext_resource type="Script" uid="uid://25xetcj5a1il" path="res://src/entities/enemies/TurretsSpawner.gd" id="2"]
-[ext_resource type="Texture2D" uid="uid://ctr8khlrbhmg7" path="res://assets/textures/background/Space Background.png" id="2_0vhqb"]
 [ext_resource type="PackedScene" uid="uid://bl7rjy3ovwpvv" path="res://src/environment/Floor.tscn" id="4"]
 [ext_resource type="PackedScene" uid="uid://bd5hj26cc16d2" path="res://src/entities/enemies/Turret.tscn" id="5"]
 [ext_resource type="PackedScene" uid="uid://dvchiotj4dluu" path="res://src/environment/Obstacle.tscn" id="6"]
@@ -17,16 +16,7 @@ script = ExtResource("1")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=713205033]
 layer = -1
-
-[node name="Background" type="TextureRect" parent="CanvasLayer" unique_id=1089276]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2_0vhqb")
-expand_mode = 1
-stretch_mode = 6
+visible = false
 
 [node name="Environment" type="Node2D" parent="." unique_id=668645349]
 
