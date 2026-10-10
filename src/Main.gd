@@ -1,11 +1,6 @@
 class_name Main
 extends Node
 
-# Maneja eventos de entrada no procesados.
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("reset"):
-		_restart_level() 
-
 # Reinicia la escena actual.
 func _restart_level() -> void:
 	get_tree().call_deferred("reload_current_scene")
