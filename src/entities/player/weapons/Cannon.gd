@@ -23,6 +23,9 @@ func fire() -> void:
 	)
 	fire_timer.start()
 
+func is_ready() -> bool:
+	return fire_timer.is_stopped()
+
 # Destruye el arma.
 func die() -> void:
 	queue_free() 

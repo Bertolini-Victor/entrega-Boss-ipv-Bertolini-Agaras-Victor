@@ -101,6 +101,9 @@ func _fire() -> void:
 		global_position.direction_to(weapon_tip.global_position)
 	)
 
+func is_charging() -> bool:
+	return _is_charging
+
 func die() -> void:
 	_is_charging = false
 	_apply_charge_feedback(false)
