@@ -87,6 +87,8 @@ func attack(facing_direction: float = 1.0) -> void:
 			collider.die()
 
 	await get_tree().create_timer(attack_duration).timeout
+	if not is_inside_tree():
+		return
 	_draw_slash = false
 	queue_redraw()
 	_is_attacking = false

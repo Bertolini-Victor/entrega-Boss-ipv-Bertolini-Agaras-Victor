@@ -7,6 +7,7 @@ extends Node2D
 @export var velocity_speed: float = 300.0
 
 var direction: Vector2
+var _is_removing: bool = false
 
 # Configura la posicion inicial y direccion del proyectil.
 func initialize(spawn_position: Vector2, p_direction: Vector2) -> void:
@@ -30,6 +31,9 @@ func _on_lifetime_timer_timeout() -> void:
 
 # Detiene el proyectil y reproduce la animacion de impacto.
 func remove() -> void:
+	if _is_removing:
+		return
+	_is_removing = true
 	lifetime_timer.stop() 
 	
 	hitbox.set_deferred("collision_mask", 0) 

@@ -1,8 +1,6 @@
 class_name HeavyBlast
 extends Projectile
 
-var _is_removing: bool = false
-
 # Sobrescribe el manejo de colisiones con cuerpos físicos.
 func _on_hitbox_body_entered(body: Node2D) -> void:
 	if _is_removing:
@@ -25,7 +23,4 @@ func _on_hitbox_area_entered(area: Area2D) -> void:
 
 # Detiene el proyectil y reproduce la animación de impacto.
 func remove() -> void:
-	if _is_removing:
-		return
-	_is_removing = true
 	super.remove()
