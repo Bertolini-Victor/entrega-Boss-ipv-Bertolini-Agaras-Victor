@@ -18,13 +18,14 @@ signal died
 @export var skid_acceleration: float = 2400.0
 
 @export_group("Jump & Gravity")
-@export var jump_height: float = 70.0
-@export var jump_rise_time: float = 0.35
-@export var jump_fall_time: float = 0.28 
+@export var jump_height: float = 90.0
+@export var jump_rise_time: float = 0.38
+@export var jump_fall_time: float = 0.30
 @export var jump_cut_multiplier: float = 0.45
 @export var coyote_time: float = 0.10
 @export var jump_buffer_time: float = 0.12
 @export var air_acceleration_ratio: float = 0.75
+@export var max_fall_speed: float = 680.0
 
 @export_group("Physics Interaction")
 @export var push_force: float = 120.0
@@ -35,6 +36,9 @@ signal died
 @export var can_heavy_blast: bool = true
 @export var can_parry: bool = true
 @export var can_redirect: bool = false
+
+@export_group("Combat")
+@export var attack_lock_time: float = 0.18   # seconds the "hands are busy" after casting a fireball
 
 var projectile_container: Node
 var h_movement_direction: int = 0
@@ -47,6 +51,7 @@ var _jump_velocity: float = 0.0
 
 var _coyote_timer: float = 0.0
 var _jump_buffer_timer: float = 0.0
+var _cast_lock_timer: float = 0.0
 var _was_on_floor: bool = false
 var _is_rising: bool = false
 
@@ -73,6 +78,9 @@ func initialize(p_projectile_container: Node = get_parent()) -> void:
 
 # Procesa el movimiento y las colisiones del jugador.
 func _physics_process(delta: float) -> void:
+	if _cast_lock_timer > 0.0:
+		_cast_lock_timer -= delta
+
 	_process_input()
 
 	# ── Timers ──────────────────────────────────────────────────────────────
@@ -120,7 +128,7 @@ func _physics_process(delta: float) -> void:
 
 	# ── Asymmetric gravity ──────────────────────────────────────────────────
 	var g := _gravity_rise if velocity.y < 0.0 else _gravity_fall
-	velocity.y += g * delta
+	velocity.y = minf(velocity.y + g * delta, max_fall_speed)
 
 	if on_floor and velocity.y > 0.0:
 		velocity.y = 0.0
@@ -155,30 +163,34 @@ func _process_input() -> void:
 		h_movement_direction = 0
 		return
 
-	# ── Helpers para exclusión mutua ────────────────────────────────────────
-	var _melee_busy   : bool = can_melee   and melee_attack  != null and melee_attack.is_attacking()
-	var _fireball_busy: bool = can_fireball and weapon        != null and not weapon.is_ready()
-	var _heavy_busy   : bool = can_heavy_blast and heavy_cannon != null and heavy_cannon.is_charging()
-	var _any_attack_busy: bool = _melee_busy or _fireball_busy or _heavy_busy
+	# ── Exclusión mutua entre ataques ───────────────────────────────────────
+	var melee_busy: bool = can_melee and melee_attack != null and melee_attack.is_attacking()
+	var heavy_busy: bool = can_heavy_blast and heavy_cannon != null and heavy_cannon.is_charging()
+	var cast_locked: bool = _cast_lock_timer > 0.0
 
-	# Melee — bloqueado si hay cualquier otro ataque activo
-	if Input.is_action_just_pressed("attack_melee") and can_melee and not _fireball_busy and not _heavy_busy:
+	# Melee — blocked while charging the heavy cannon or during the cast lock
+	if Input.is_action_just_pressed("attack_melee") and can_melee and not heavy_busy and not cast_locked:
 		var mouse_offset_x: float = get_global_mouse_position().x - global_position.x
 		var facing_dir: float = sign(mouse_offset_x) if mouse_offset_x != 0.0 else body_pivot.scale.x
 		if facing_dir == 0.0:
 			facing_dir = 1.0
 		body_pivot.scale.x = facing_dir
 		melee_attack.attack(facing_dir)
+		melee_busy = melee_attack.is_attacking()
 
-	# Fireball — bloqueada si el cañón pesado está cargando o el melee está activo
-	if Input.is_action_just_pressed("attack_1") and can_fireball and not _heavy_busy and not _melee_busy:
-		weapon.fire()
+	# Fireball — blocked while melee is active, while charging the heavy cannon,
+	# or during the cast lock. Only locks the other attacks if it actually fired.
+	if Input.is_action_just_pressed("attack_1") and can_fireball and not heavy_busy and not melee_busy and not cast_locked:
+		if weapon.is_ready():
+			weapon.fire()
+			_cast_lock_timer = attack_lock_time
+			cast_locked = true
 
 	weapon.process_input()
 
-	# Cañón pesado — bloqueado si el fireball está en cooldown o el melee está activo
+	# Heavy cannon — blocked while melee is active or during the cast lock.
 	if can_heavy_blast and heavy_cannon:
-		if not _fireball_busy and not _melee_busy:
+		if not melee_busy and not cast_locked:
 			heavy_cannon.process_input()
 
 	# Jump buffer: queue on press
