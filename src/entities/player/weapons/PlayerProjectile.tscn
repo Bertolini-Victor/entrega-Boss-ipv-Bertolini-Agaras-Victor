@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dnl107pupmqic"]
 
-[ext_resource type="PackedScene" uid="uid://cgadr55reetnl" path="res://src/entities/Projectile.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://cgadr55reetnl" path="res://src/entities/projectiles/Projectile.tscn" id="1"]
 [ext_resource type="Texture2D" uid="uid://c0dtic4faccuo" path="res://assets/textures/fx/bolt/bolt1.png" id="2_4f5x2"]
 [ext_resource type="Texture2D" uid="uid://byb8a46xw8hvo" path="res://assets/textures/fx/bolt/bolt2.png" id="3_mmob7"]
 [ext_resource type="Texture2D" uid="uid://cumdu64mhxypv" path="res://assets/textures/fx/bolt/bolt3.png" id="4_sqwf7"]

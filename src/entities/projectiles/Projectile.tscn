@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cgadr55reetnl"]
 
-[ext_resource type="Script" uid="uid://0yxqa7pr5dye" path="res://src/entities/Projectile.gd" id="1"]
+[ext_resource type="Script" uid="uid://0yxqa7pr5dye" path="res://src/entities/projectiles/Projectile.gd" id="1"]
 
 [sub_resource type="Animation" id="1"]
 resource_name = "fire_loop"

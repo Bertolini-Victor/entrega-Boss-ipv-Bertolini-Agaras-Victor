@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://22mlxu8p1pyp"]
 
-[ext_resource type="PackedScene" uid="uid://cgadr55reetnl" path="res://src/entities/Projectile.tscn" id="1_uid2m"]
+[ext_resource type="PackedScene" uid="uid://cgadr55reetnl" path="res://src/entities/projectiles/Projectile.tscn" id="1_uid2m"]
 [ext_resource type="Texture2D" uid="uid://bov7a3ffc82xs" path="res://assets/textures/fx/charged/charged1.png" id="2_t2gel"]
 
 [node name="TurretProjectile" unique_id=2047043401 instance=ExtResource("1_uid2m")]
