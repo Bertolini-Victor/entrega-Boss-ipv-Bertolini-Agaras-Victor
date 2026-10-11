@@ -64,8 +64,6 @@ position = Vector2(545.103, 484.106)
 
 [node name="Player" parent="Environment/Entities" unique_id=1440153547 instance=ExtResource("7")]
 position = Vector2(152.506, 477.622)
-jump_speed = 400.0
-gravity = 700.0
 can_redirect = true
 
 [node name="Camera2D" type="Camera2D" parent="Environment/Entities/Player" unique_id=1143206512]

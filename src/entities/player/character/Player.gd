@@ -12,21 +12,22 @@ signal died
 @onready var parry_controller: ParryController = $ParryController
 
 @export_group("Movement")
-@export var acceleration: float = 2800.0
-@export var h_speed_limit: float = 480.0
+@export var acceleration: float = 950.0
+@export var h_speed_limit: float = 150.0
 @export var friction_weight: float = 10.0
+@export var skid_acceleration: float = 2400.0
 
 @export_group("Jump & Gravity")
-@export var jump_height: float = 160.0          # peak height in pixels
-@export var jump_rise_time: float = 0.38        # seconds to reach apex (gentle gravity)
-@export var jump_fall_time: float = 0.32        # seconds to fall back down (stronger gravity)
-@export var jump_cut_multiplier: float = 0.42   # velocity multiplier when jump is released early
-@export var coyote_time: float = 0.10           # seconds after leaving ledge when jump is still allowed
-@export var jump_buffer_time: float = 0.12      # seconds before landing when a jump press is buffered
-@export var air_acceleration_ratio: float = 0.70 # air accel = ground accel * this ratio
+@export var jump_height: float = 70.0
+@export var jump_rise_time: float = 0.35
+@export var jump_fall_time: float = 0.28 
+@export var jump_cut_multiplier: float = 0.45
+@export var coyote_time: float = 0.10
+@export var jump_buffer_time: float = 0.12
+@export var air_acceleration_ratio: float = 0.75
 
 @export_group("Physics Interaction")
-@export var push_force: float = 80.0
+@export var push_force: float = 120.0
 
 @export_group("Abilities")
 @export var can_melee: bool = true
@@ -87,9 +88,17 @@ func _physics_process(delta: float) -> void:
 
 	# ── Horizontal movement ─────────────────────────────────────────────────
 	if not dead and h_movement_direction != 0:
-		var accel := acceleration if on_floor else acceleration * air_acceleration_ratio
+		var is_skidding: bool = on_floor and velocity.x != 0.0 and sign(velocity.x) != h_movement_direction
+		var current_accel: float
+		if is_skidding:
+			current_accel = skid_acceleration
+		elif on_floor:
+			current_accel = acceleration
+		else:
+			current_accel = acceleration * air_acceleration_ratio
+
 		velocity.x = clamp(
-			velocity.x + (h_movement_direction * accel * delta),
+			velocity.x + (h_movement_direction * current_accel * delta),
 			-h_speed_limit,
 			h_speed_limit
 		)
@@ -101,7 +110,7 @@ func _physics_process(delta: float) -> void:
 		var friction := friction_weight if on_floor else friction_weight * 0.35
 		velocity.x = move_toward(velocity.x, 0.0, friction * 100.0 * delta)
 
-	# ── Jump (coyote time + buffer) ─────────────────────────────────────────
+	# ── Jump ─────────────────────────────────────────
 	var can_jump := _coyote_timer > 0.0
 	if _jump_buffer_timer > 0.0 and can_jump:
 		velocity.y    = -_jump_velocity

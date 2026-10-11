@@ -6,10 +6,10 @@
 [ext_resource type="Script" uid="uid://bxm1bqpwq3bk5" path="res://src/entities/player/weapons/Cannon.gd" id="4"]
 [ext_resource type="PackedScene" uid="uid://c7ejb3ehyxs1r" path="res://src/entities/player/weapons/PlayerFireball.tscn" id="5"]
 [ext_resource type="Script" uid="uid://cwhpmfa22aekc" path="res://src/entities/player/abilities/MeleeAttack.gd" id="6"]
-[ext_resource type="Script" path="res://src/entities/player/weapons/HeavyCannonController.gd" id="8_heavy"]
-[ext_resource type="PackedScene" path="res://src/entities/player/weapons/HeavyBlastProjectile.tscn" id="9_blast_proj"]
-[ext_resource type="Script" path="res://src/entities/player/abilities/ParryController.gd" id="10_parry"]
-[ext_resource type="PackedScene" path="res://src/entities/player/abilities/ParryZone.tscn" id="11_parry"]
+[ext_resource type="Script" uid="uid://ce3i0obqlwy3k" path="res://src/entities/player/weapons/HeavyCannonController.gd" id="8_heavy"]
+[ext_resource type="PackedScene" uid="uid://bkl1natxpy03i" path="res://src/entities/player/weapons/HeavyBlastProjectile.tscn" id="9_blast_proj"]
+[ext_resource type="Script" uid="uid://261vhccsbf7r" path="res://src/entities/player/abilities/ParryController.gd" id="10_parry"]
+[ext_resource type="PackedScene" uid="uid://ckj4yq1m2a3b4" path="res://src/entities/player/abilities/ParryZone.tscn" id="11_parry"]
 
 [sub_resource type="RectangleShape2D" id="1"]
 size = Vector2(18, 20)
@@ -115,10 +115,6 @@ floor_max_angle = 0.802851
 floor_snap_length = 16.0
 platform_floor_layers = 4294901761
 script = ExtResource("1")
-acceleration = 1000.0
-h_speed_limit = 300.0
-jump_speed = 300.0
-push_force = 160.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=72660534]
 position = Vector2(-5, -10)
@@ -137,11 +133,11 @@ hframes = 9
 vframes = 5
 frame = 1
 
-[node name="ParryController" type="Node2D" parent="."]
+[node name="ParryController" type="Node2D" parent="." unique_id=2142619956]
 position = Vector2(-5, -10)
 script = ExtResource("10_parry")
 
-[node name="ParryZone" parent="ParryController" instance=ExtResource("11_parry")]
+[node name="ParryZone" parent="ParryController" unique_id=737919550 instance=ExtResource("11_parry")]
 
 [node name="WeaponContainer" type="Node2D" parent="." unique_id=1392024065]
 position = Vector2(-5, -7)
@@ -166,22 +162,22 @@ one_shot = true
 [node name="MeleeAttack" type="Node2D" parent="WeaponContainer" unique_id=1461851317]
 script = ExtResource("6")
 
-[node name="HeavyCannon" type="Node2D" parent="WeaponContainer"]
+[node name="HeavyCannon" type="Node2D" parent="WeaponContainer" unique_id=817653554]
 position = Vector2(0, -6)
 script = ExtResource("8_heavy")
 projectile_scene = ExtResource("9_blast_proj")
 
-[node name="WeaponTip" type="Marker2D" parent="WeaponContainer/HeavyCannon"]
+[node name="WeaponTip" type="Marker2D" parent="WeaponContainer/HeavyCannon" unique_id=691525727]
 position = Vector2(16, 0)
 
-[node name="ChargeTimer" type="Timer" parent="WeaponContainer/HeavyCannon"]
+[node name="ChargeTimer" type="Timer" parent="WeaponContainer/HeavyCannon" unique_id=1110792107]
 wait_time = 0.6
 one_shot = true
 
-[node name="CooldownTimer" type="Timer" parent="WeaponContainer/HeavyCannon"]
+[node name="CooldownTimer" type="Timer" parent="WeaponContainer/HeavyCannon" unique_id=1976297967]
 wait_time = 1.2
 one_shot = true
 
+[connection signal="area_entered" from="ParryController/ParryZone" to="ParryController" method="_on_parry_zone_area_entered"]
 [connection signal="timeout" from="WeaponContainer/HeavyCannon/ChargeTimer" to="WeaponContainer/HeavyCannon" method="_on_charge_timer_timeout"]
 [connection signal="timeout" from="WeaponContainer/HeavyCannon/CooldownTimer" to="WeaponContainer/HeavyCannon" method="_on_cooldown_timer_timeout"]
-[connection signal="area_entered" from="ParryController/ParryZone" to="ParryController" method="_on_parry_zone_area_entered"]
