@@ -40,15 +40,14 @@ var h_movement_direction: int = 0
 var jump: bool = false
 var dead: bool = false
 
-var _gravity_rise: float = 0.0   # computed in _ready()
-var _gravity_fall: float = 0.0   # computed in _ready()
-var _jump_velocity: float = 0.0  # computed in _ready()
+var _gravity_rise: float = 0.0
+var _gravity_fall: float = 0.0
+var _jump_velocity: float = 0.0
 
 var _coyote_timer: float = 0.0
 var _jump_buffer_timer: float = 0.0
 var _was_on_floor: bool = false
 var _is_rising: bool = false
-var _weapon_busy: bool = false
 
 # Configura el estado inicial del jugador.
 func _ready() -> void:
@@ -121,7 +120,7 @@ func _physics_process(delta: float) -> void:
 	_was_on_floor = on_floor
 	move_and_slide()
 
-	# ── RigidBody2D push (keep exactly as before) ──────────────────────────
+	# ── RigidBody2D push  ──────────────────────────
 	for i: int in get_slide_collision_count():
 		var collision: KinematicCollision2D = get_slide_collision(i)
 		var collider: Object = collision.get_collider()
@@ -147,7 +146,14 @@ func _process_input() -> void:
 		h_movement_direction = 0
 		return
 
-	if Input.is_action_just_pressed("attack_melee") and can_melee:
+	# ── Helpers para exclusión mutua ────────────────────────────────────────
+	var _melee_busy   : bool = can_melee   and melee_attack  != null and melee_attack.is_attacking()
+	var _fireball_busy: bool = can_fireball and weapon        != null and not weapon.is_ready()
+	var _heavy_busy   : bool = can_heavy_blast and heavy_cannon != null and heavy_cannon.is_charging()
+	var _any_attack_busy: bool = _melee_busy or _fireball_busy or _heavy_busy
+
+	# Melee — bloqueado si hay cualquier otro ataque activo
+	if Input.is_action_just_pressed("attack_melee") and can_melee and not _fireball_busy and not _heavy_busy:
 		var mouse_offset_x: float = get_global_mouse_position().x - global_position.x
 		var facing_dir: float = sign(mouse_offset_x) if mouse_offset_x != 0.0 else body_pivot.scale.x
 		if facing_dir == 0.0:
@@ -155,10 +161,16 @@ func _process_input() -> void:
 		body_pivot.scale.x = facing_dir
 		melee_attack.attack(facing_dir)
 
-	# Fireball — only if heavy cannon is not charging
-	if Input.is_action_just_pressed("attack_1") and can_fireball:
-		if not (can_heavy_blast and heavy_cannon and heavy_cannon.is_charging()):
-			weapon.fire()
+	# Fireball — bloqueada si el cañón pesado está cargando o el melee está activo
+	if Input.is_action_just_pressed("attack_1") and can_fireball and not _heavy_busy and not _melee_busy:
+		weapon.fire()
+
+	weapon.process_input()
+
+	# Cañón pesado — bloqueado si el fireball está en cooldown o el melee está activo
+	if can_heavy_blast and heavy_cannon:
+		if not _fireball_busy and not _melee_busy:
+			heavy_cannon.process_input()
 
 	# Jump buffer: queue on press
 	if Input.is_action_just_pressed("jump"):
@@ -173,12 +185,6 @@ func _process_input() -> void:
 	h_movement_direction = int(
 		Input.is_action_pressed("move_right")) - int(Input.is_action_pressed("move_left")
 	)
-
-	weapon.process_input()
-	# Heavy cannon — only if fireball is not on cooldown
-	if can_heavy_blast and heavy_cannon:
-		if not (can_fireball and weapon and not weapon.is_ready()):
-			heavy_cannon.process_input()
 
 	if can_parry and parry_controller != null:
 		if Input.is_action_just_pressed("parry"):

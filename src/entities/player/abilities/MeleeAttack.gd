@@ -132,5 +132,8 @@ func _draw() -> void:
 		var pb: Vector2 = center + Vector2(cos(angle_b), sin(angle_b)) * radius
 		draw_line(pa, pb, edge_color, 2.0)
 
+func is_attacking() -> bool:
+	return _is_attacking
+
 func die() -> void:
 	queue_free()
