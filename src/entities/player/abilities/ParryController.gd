@@ -65,6 +65,7 @@ func _do_redirect() -> void:
 			var hitbox = _incoming_projectile.get_node_or_null("Hitbox")
 			if hitbox:
 				hitbox.collision_mask = 1 | 4 | 8
+				hitbox.collision_layer = 0
 			else:
 				_incoming_projectile.remove()
 			_incoming_projectile = null
