@@ -52,6 +52,8 @@ func _physics_process(_delta: float) -> void:
 	elif !fire_timer.is_stopped():
 		fire_timer.stop()
 
+const CHI_ORB_SCENE: PackedScene = preload("res://src/environment/chi_orb/ChiOrb.tscn")
+
 # Desactiva la torreta y reproduce la animacion de muerte.
 func die() -> void:
 	if dead:
@@ -62,10 +64,17 @@ func die() -> void:
 	fire_timer.stop()
 	collision_shape.set_deferred("disabled", true)
 	set_physics_process(false) 
+	_spawn_chi_orb()
 	_play_animation("die")
 	died.emit()
 	await body_anim.animation_finished
 	queue_free()
+
+func _spawn_chi_orb() -> void:
+	if CHI_ORB_SCENE:
+		var orb: Node = CHI_ORB_SCENE.instantiate()
+		orb.global_position = global_position
+		get_parent().call_deferred("add_child", orb)
 
 # Detecta cuando un jugador entra en rango.
 func _on_detection_area_body_entered(body: Node2D) -> void:
