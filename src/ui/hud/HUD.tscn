@@ -1,0 +1,143 @@
+[gd_scene load_steps=2 format=3 uid="uid://chudscene00001"]
+
+[ext_resource type="Script" path="res://src/ui/hud/HUD.gd" id="1_hud"]
+
+[node name="HUD" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_hud")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+offset_left = 6.0
+offset_top = 6.0
+offset_right = 86.0
+offset_bottom = 40.0
+
+[node name="StatsBox" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="HeartContainer" type="HBoxContainer" parent="MarginContainer/StatsBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Heart1" type="Label" parent="MarginContainer/StatsBox/HeartContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.2, 0.2, 1)
+theme_override_font_sizes/font_size = 11
+text = "♥"
+
+[node name="Heart2" type="Label" parent="MarginContainer/StatsBox/HeartContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.2, 0.2, 1)
+theme_override_font_sizes/font_size = 11
+text = "♥"
+
+[node name="ChiBox" type="VBoxContainer" parent="MarginContainer/StatsBox"]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="ChiBar" type="ProgressBar" parent="MarginContainer/StatsBox/ChiBox"]
+custom_minimum_size = Vector2(64, 5)
+layout_mode = 2
+max_value = 100.0
+show_percentage = false
+
+[node name="ChiLabel" type="Label" parent="MarginContainer/StatsBox/ChiBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
+theme_override_font_sizes/font_size = 7
+text = "Chi: 0 / 100"
+
+[node name="TutorialOverlay" type="PanelContainer" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -75.0
+offset_top = 8.0
+offset_right = 75.0
+offset_bottom = 74.0
+grow_horizontal = 2
+
+[node name="Background" type="ColorRect" parent="TutorialOverlay"]
+layout_mode = 2
+color = Color(0.08, 0.08, 0.12, 0.85)
+
+[node name="Margin" type="MarginContainer" parent="TutorialOverlay"]
+layout_mode = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 4
+
+[node name="Content" type="VBoxContainer" parent="TutorialOverlay/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Title" type="Label" parent="TutorialOverlay/Margin/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 8
+text = "CONTROLES BÁSICOS"
+horizontal_alignment = 1
+
+[node name="Controls" type="Label" parent="TutorialOverlay/Margin/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 7
+text = "Moverse: A / D
+Saltar: Espacio
+Cuerpo a Cuerpo: Q
+Parry: Clic Derecho"
+horizontal_alignment = 1
+
+[node name="TutorialTimer" type="Timer" parent="TutorialOverlay"]
+wait_time = 7.0
+one_shot = true
+autostart = true
+
+[node name="FireballOverlay" type="PanelContainer" parent="."]
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -90.0
+offset_top = 24.0
+offset_right = 90.0
+offset_bottom = 60.0
+grow_horizontal = 2
+
+[node name="Background" type="ColorRect" parent="FireballOverlay"]
+layout_mode = 2
+color = Color(0.2, 0.14, 0.03, 0.88)
+
+[node name="Margin" type="MarginContainer" parent="FireballOverlay"]
+layout_mode = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 4
+
+[node name="Content" type="VBoxContainer" parent="FireballOverlay/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Title" type="Label" parent="FireballOverlay/Margin/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_font_sizes/font_size = 8
+text = "¡BOLA DE FUEGO DESBLOQUEADA!"
+horizontal_alignment = 1
+
+[node name="Hint" type="Label" parent="FireballOverlay/Margin/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_font_sizes/font_size = 7
+text = "Disparo disponible: Clic Izquierdo"
+horizontal_alignment = 1
+
+[node name="FireballTimer" type="Timer" parent="FireballOverlay"]
+wait_time = 5.0
+one_shot = true
+
+[connection signal="timeout" from="TutorialOverlay/TutorialTimer" to="." method="_on_tutorial_timer_timeout"]
+[connection signal="timeout" from="FireballOverlay/FireballTimer" to="." method="_on_fireball_timer_timeout"]
