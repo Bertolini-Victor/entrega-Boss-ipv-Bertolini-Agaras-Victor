@@ -45,7 +45,10 @@ func remove() -> void:
 
 # Maneja las colisiones con otros cuerpos.
 func _on_hitbox_body_entered(body: Node2D) -> void:
-	if body.has_method("die"):
+	if body.has_method("take_damage"):
+		body.take_damage(1)
+		remove()
+	elif body.has_method("die"):
 		body.die()
 		remove()
 	elif body is StaticBody2D or body is TileMapLayer or body is RigidBody2D: 

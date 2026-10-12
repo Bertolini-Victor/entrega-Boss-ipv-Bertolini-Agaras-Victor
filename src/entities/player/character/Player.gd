@@ -3,6 +3,9 @@ extends CharacterBody2D
 
 signal player_died
 signal died
+signal health_changed(current_hp: int, max_hp: int)
+signal chi_changed(current_chi: int, max_chi: int)
+signal fireball_unlocked
 
 @onready var weapon: Cannon = $"%Weapon"
 @onready var body_animations: AnimationPlayer = $BodyAnimations
@@ -10,6 +13,10 @@ signal died
 @onready var melee_attack: MeleeAttack = $WeaponContainer/MeleeAttack
 @onready var heavy_cannon: HeavyCannonController = $WeaponContainer/HeavyCannon
 @onready var parry_controller: ParryController = $ParryController
+
+@export_group("Stats")
+@export var max_health: int = 2
+@export var max_chi: int = 100
 
 @export_group("Movement")
 @export var acceleration: float = 950.0
@@ -32,13 +39,18 @@ signal died
 
 @export_group("Abilities")
 @export var can_melee: bool = true
-@export var can_fireball: bool = true
+@export var can_fireball: bool = false
 @export var can_heavy_blast: bool = true
 @export var can_parry: bool = true
 @export var can_redirect: bool = false
 
 @export_group("Combat")
-@export var attack_lock_time: float = 0.18   # seconds the "hands are busy" after casting a fireball
+@export var attack_lock_time: float = 0.18
+
+var health: int = 2
+var chi: int = 0
+var _is_invulnerable: bool = false
+var _invulnerability_timer: float = 0.0
 
 var projectile_container: Node
 var h_movement_direction: int = 0
@@ -59,6 +71,10 @@ var _is_rising: bool = false
 func _ready() -> void:
 	_compute_jump_physics()
 	initialize()
+	health = max_health
+	chi = 0
+	health_changed.emit(health, max_health)
+	chi_changed.emit(chi, max_chi)
 
 func _compute_jump_physics() -> void:
 	_gravity_rise  = (2.0 * jump_height) / (jump_rise_time  * jump_rise_time)
@@ -80,6 +96,15 @@ func initialize(p_projectile_container: Node = get_parent()) -> void:
 func _physics_process(delta: float) -> void:
 	if _cast_lock_timer > 0.0:
 		_cast_lock_timer -= delta
+
+	if _is_invulnerable:
+		_invulnerability_timer -= delta
+		if body_pivot:
+			body_pivot.modulate.a = 0.35 if int(_invulnerability_timer * 12.0) % 2 == 0 else 1.0
+		if _invulnerability_timer <= 0.0:
+			_is_invulnerable = false
+			if body_pivot:
+				body_pivot.modulate.a = 1.0
 
 	_process_input()
 
@@ -214,12 +239,41 @@ func _process_input() -> void:
 			if can_redirect:
 				parry_controller.try_parry(true)
 
+# Recibe danio progresivo con 1.0s de invulnerabilidad temporal (i-frames).
+func take_damage(amount: int = 1) -> void:
+	if dead or _is_invulnerable:
+		return
+	
+	health = max(0, health - amount)
+	health_changed.emit(health, max_health)
+	
+	if health <= 0:
+		die()
+	else:
+		_is_invulnerable = true
+		_invulnerability_timer = 1.0
+
+# Recolecta energia Chi y desbloquea la Bola de Fuego al alcanzar 100 puntos.
+func collect_chi(amount: int) -> void:
+	if dead:
+		return
+	
+	chi = min(max_chi, chi + amount)
+	chi_changed.emit(chi, max_chi)
+	
+	if chi >= max_chi and not can_fireball:
+		can_fireball = true
+		fireball_unlocked.emit()
+
 # Maneja la muerte del jugador.
 func die() -> void:
 	if dead:
 		return 
 	
 	dead = true
+	_is_invulnerable = false
+	if body_pivot:
+		body_pivot.modulate.a = 1.0
 	collision_layer = 0 
 	collision_mask = 1 
 	if weapon:
