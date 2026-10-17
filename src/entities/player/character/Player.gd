@@ -490,4 +490,3 @@ func _draw() -> void:
 		var col: Color = p["color"]
 		col.a = alpha
 		draw_circle(p["pos"], p["radius"], col)
-
