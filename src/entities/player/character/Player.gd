@@ -40,7 +40,7 @@ signal fireball_unlocked
 @export_group("Abilities")
 @export var can_melee: bool = true
 @export var can_fireball: bool = false
-@export var can_heavy_blast: bool = true
+@export var can_heavy_blast: bool = false
 @export var can_parry: bool = true
 @export var can_redirect: bool = false
 
