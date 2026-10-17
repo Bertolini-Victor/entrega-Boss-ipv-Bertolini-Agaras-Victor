@@ -7,11 +7,11 @@ signal health_changed(current_hp: int, max_hp: int)
 signal chi_changed(current_chi: int, max_chi: int)
 signal fireball_unlocked
 
-@onready var weapon: Cannon = $"%Weapon"
+@onready var weapon: FireballController = $"%Weapon"
 @onready var body_animations: AnimationPlayer = $BodyAnimations
 @onready var body_pivot: Node2D = $BodyPivot
 @onready var melee_attack: MeleeAttack = $WeaponContainer/MeleeAttack
-@onready var heavy_cannon: HeavyCannonController = $WeaponContainer/HeavyCannon
+@onready var lightning_controller: LightningController = $WeaponContainer/HeavyCannon
 @onready var parry_controller: ParryController = $ParryController
 
 @export_group("Stats")
@@ -86,8 +86,8 @@ func initialize(p_projectile_container: Node = get_parent()) -> void:
 	assert(p_projectile_container != null, "projectile_container cannot be null")
 	self.projectile_container = p_projectile_container
 	weapon.projectile_container = p_projectile_container
-	if heavy_cannon:
-		heavy_cannon.projectile_container = p_projectile_container
+	if lightning_controller:
+		lightning_controller.projectile_container = p_projectile_container
 	elif has_node("WeaponContainer/HeavyCannon"):
 		$WeaponContainer/HeavyCannon.projectile_container = p_projectile_container
 	body_animations.play("idle")
@@ -190,7 +190,7 @@ func _process_input() -> void:
 
 	# ── Exclusión mutua entre ataques ───────────────────────────────────────
 	var melee_busy: bool = can_melee and melee_attack != null and melee_attack.is_attacking()
-	var heavy_busy: bool = can_heavy_blast and heavy_cannon != null and heavy_cannon.is_charging()
+	var heavy_busy: bool = can_heavy_blast and lightning_controller != null and lightning_controller.is_charging()
 	var cast_locked: bool = _cast_lock_timer > 0.0
 
 	# Melee — blocked while charging the heavy cannon or during the cast lock
@@ -214,9 +214,9 @@ func _process_input() -> void:
 	weapon.process_input()
 
 	# Heavy cannon — blocked while melee is active or during the cast lock.
-	if can_heavy_blast and heavy_cannon:
+	if can_heavy_blast and lightning_controller:
 		if not melee_busy and not cast_locked:
-			heavy_cannon.process_input()
+			lightning_controller.process_input()
 
 	# Jump buffer: queue on press
 	if Input.is_action_just_pressed("jump"):
@@ -282,9 +282,9 @@ func die() -> void:
 	if melee_attack:
 		melee_attack.die()
 		melee_attack = null
-	if heavy_cannon:
-		heavy_cannon.die()
-		heavy_cannon = null
+	if lightning_controller:
+		lightning_controller.die()
+		lightning_controller = null
 	if parry_controller:
 		parry_controller.die()
 		parry_controller = null

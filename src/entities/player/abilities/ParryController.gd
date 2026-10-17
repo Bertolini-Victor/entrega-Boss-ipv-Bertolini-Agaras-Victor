@@ -95,7 +95,7 @@ func _find_nearest_enemy() -> Node2D:
 
 func _on_parry_zone_area_entered(area: Area2D) -> void:
 	var proj = area.get_parent()
-	if proj is Projectile and not proj is FireballProjectile and not proj is HeavyBlast:
+	if proj is Projectile and not proj is FireballProjectile and not proj is LightningProjectile:
 		_incoming_projectile = proj
 		_can_parry = true
 		_parry_timer = parry_window

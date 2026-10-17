@@ -1,4 +1,4 @@
-class_name HeavyBlast
+class_name LightningProjectile
 extends Projectile
 
 # Sobrescribe el manejo de colisiones con cuerpos físicos.
@@ -16,7 +16,7 @@ func _on_hitbox_area_entered(area: Area2D) -> void:
 	if _is_removing:
 		return
 	var parent = area.get_parent()
-	if parent is Projectile and parent != self and not parent is HeavyBlast and not parent is FireballProjectile:
+	if parent is Projectile and parent != self and not parent is LightningProjectile and not parent is FireballProjectile:
 		if area.collision_layer & 16 != 0 or parent.is_in_group("enemy_projectiles"):
 			parent.remove()
 			remove()

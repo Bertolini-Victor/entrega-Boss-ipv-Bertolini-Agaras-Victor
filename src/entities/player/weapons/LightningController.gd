@@ -1,4 +1,4 @@
-class_name HeavyCannonController
+class_name LightningController
 extends Node2D
 
 @export var projectile_scene: PackedScene

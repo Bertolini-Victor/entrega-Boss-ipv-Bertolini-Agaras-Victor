@@ -1,4 +1,4 @@
-class_name Cannon
+class_name FireballController
 extends Node2D
 
 @onready var weapon_tip: Node2D = $WeaponTip
