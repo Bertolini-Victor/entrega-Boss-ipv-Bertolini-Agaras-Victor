@@ -10,9 +10,13 @@ signal fireball_unlocked
 @onready var weapon: FireballController = $"%Weapon"
 @onready var body_animations: AnimationPlayer = $BodyAnimations
 @onready var body_pivot: Node2D = $BodyPivot
+@onready var body_sprite: Sprite2D = $BodyPivot/Body
 @onready var melee_attack: MeleeAttack = $WeaponContainer/MeleeAttack
 @onready var lightning_controller: LightningController = $WeaponContainer/HeavyCannon
 @onready var parry_controller: ParryController = $ParryController
+
+const BODY_SPRITE_BASE_POS: Vector2 = Vector2(-3, -11)
+const BODY_SPRITE_HALF_HEIGHT: float = 11.0
 
 @export_group("Stats")
 @export var max_health: int = 2
@@ -23,6 +27,8 @@ signal fireball_unlocked
 @export var h_speed_limit: float = 150.0
 @export var friction_weight: float = 10.0
 @export var skid_acceleration: float = 2400.0
+@export var skid_speed_threshold: float = 95.0
+@export var skid_stop_threshold: float = 25.0
 
 @export_group("Jump & Gravity")
 @export var jump_height: float = 90.0
@@ -33,6 +39,18 @@ signal fireball_unlocked
 @export var jump_buffer_time: float = 0.12
 @export var air_acceleration_ratio: float = 0.75
 @export var max_fall_speed: float = 680.0
+@export var speed_jump_bonus: float = 45.0
+@export var apex_velocity_threshold: float = 45.0
+@export var apex_gravity_multiplier: float = 0.50
+@export var apex_acceleration_multiplier: float = 1.20
+@export var corner_correction_px: int = 4
+
+@export_group("Game Feel & Juice")
+@export var jump_stretch_scale: Vector2 = Vector2(0.78, 1.24)
+@export var land_squash_max_scale: Vector2 = Vector2(1.28, 0.74)
+@export var squash_recovery_speed: float = 11.0
+@export var max_run_tilt_degrees: float = 6.0
+@export var skid_tilt_degrees: float = 9.0
 
 @export_group("Physics Interaction")
 @export var push_force: float = 120.0
@@ -66,6 +84,10 @@ var _jump_buffer_timer: float = 0.0
 var _cast_lock_timer: float = 0.0
 var _was_on_floor: bool = false
 var _is_rising: bool = false
+var _pre_land_velocity_y: float = 0.0
+var _is_skidding_active: bool = false
+var _dust_particles: Array[Dictionary] = []
+var _skid_dust_timer: float = 0.0
 
 # Configura el estado inicial del jugador.
 func _ready() -> void:
@@ -122,13 +144,20 @@ func _physics_process(delta: float) -> void:
 	# ── Horizontal movement ─────────────────────────────────────────────────
 	if not dead and h_movement_direction != 0:
 		var is_skidding: bool = on_floor and velocity.x != 0.0 and sign(velocity.x) != h_movement_direction
+		if is_skidding and absf(velocity.x) < skid_stop_threshold:
+			velocity.x = 0.0
+			is_skidding = false
+		_is_skidding_active = is_skidding and absf(velocity.x) >= skid_speed_threshold
+
+		var is_in_apex: bool = not on_floor and Input.is_action_pressed("jump") and absf(velocity.y) <= apex_velocity_threshold
 		var current_accel: float
 		if is_skidding:
 			current_accel = skid_acceleration
 		elif on_floor:
 			current_accel = acceleration
 		else:
-			current_accel = acceleration * air_acceleration_ratio
+			var air_accel_mult: float = apex_acceleration_multiplier if is_in_apex else 1.0
+			current_accel = acceleration * air_acceleration_ratio * air_accel_mult
 
 		velocity.x = clamp(
 			velocity.x + (h_movement_direction * current_accel * delta),
@@ -140,27 +169,58 @@ func _physics_process(delta: float) -> void:
 		elif h_movement_direction < 0:
 			body_pivot.scale.x = -1
 	else:
+		_is_skidding_active = false
 		var friction := friction_weight if on_floor else friction_weight * 0.35
 		velocity.x = move_toward(velocity.x, 0.0, friction * 100.0 * delta)
+
+	if _is_skidding_active and on_floor and not dead:
+		_skid_dust_timer -= delta
+		if _skid_dust_timer <= 0.0:
+			_skid_dust_timer = 0.08
+			_spawn_skid_dust()
+	else:
+		_skid_dust_timer = 0.0
 
 	# ── Jump ─────────────────────────────────────────
 	var can_jump := _coyote_timer > 0.0
 	if _jump_buffer_timer > 0.0 and can_jump:
-		velocity.y    = -_jump_velocity
+		var speed_ratio: float = absf(velocity.x) / maxf(h_speed_limit, 1.0)
+		var extra_jump: float = speed_ratio * speed_jump_bonus
+		velocity.y    = -(_jump_velocity + extra_jump)
 		_coyote_timer = 0.0
 		_jump_buffer_timer = 0.0
 		_is_rising = true
+		if not Input.is_action_pressed("jump"):
+			velocity.y *= jump_cut_multiplier
+		_apply_jump_juice(on_floor)
 
-	# ── Asymmetric gravity ──────────────────────────────────────────────────
+	# ── Asymmetric gravity & Apex Hang ──────────────────────────────────────
+	var is_in_apex_grav: bool = not on_floor and Input.is_action_pressed("jump") and absf(velocity.y) <= apex_velocity_threshold
 	var g := _gravity_rise if velocity.y < 0.0 else _gravity_fall
+	if is_in_apex_grav:
+		g *= apex_gravity_multiplier
 	velocity.y = minf(velocity.y + g * delta, max_fall_speed)
+
+	if not on_floor:
+		_pre_land_velocity_y = velocity.y
+	else:
+		_pre_land_velocity_y = 0.0
 
 	if on_floor and velocity.y > 0.0:
 		velocity.y = 0.0
 		_is_rising = false
 
+	# ── Corner Correction ────────────────────────────
+	if velocity.y < 0.0:
+		_check_corner_correction(delta)
+
 	_was_on_floor = on_floor
 	move_and_slide()
+
+	# ── Landing Juice ────────────────────────────────
+	var just_landed: bool = not _was_on_floor and is_on_floor()
+	if just_landed:
+		_apply_landing_juice()
 
 	# ── RigidBody2D push  ──────────────────────────
 	for i: int in get_slide_collision_count():
@@ -177,6 +237,9 @@ func _physics_process(delta: float) -> void:
 					-collision_normal.slerp(-velocity.normalized(), 0.5)
 					* push_force * velocity_alignment
 				)
+
+	_update_visual_juice(delta, on_floor)
+	_update_dust_particles(delta)
 
 	if not dead:
 		_update_animation()
@@ -272,6 +335,14 @@ func die() -> void:
 	
 	dead = true
 	_is_invulnerable = false
+	_dust_particles.clear()
+	queue_redraw()
+	if body_sprite:
+		body_sprite.scale = Vector2.ONE
+		body_sprite.rotation = 0.0
+		body_sprite.position = BODY_SPRITE_BASE_POS
+	if body_animations:
+		body_animations.speed_scale = 1.0
 	if body_pivot:
 		body_pivot.modulate.a = 1.0
 	collision_layer = 0 
@@ -293,16 +364,130 @@ func die() -> void:
 	died.emit()
 	player_died.emit()
 
-# Actualiza la animacion segun el estado de movimiento.
+# Actualiza la animacion segun el estado de movimiento y modula la cadencia de caminata.
 func _update_animation() -> void:
 	if not is_on_floor():
+		body_animations.speed_scale = 1.0
 		_play_animation("jump")
 	elif h_movement_direction != 0:
+		var speed_ratio: float = clampf(absf(velocity.x) / maxf(h_speed_limit, 1.0), 0.0, 1.0)
+		body_animations.speed_scale = lerpf(0.75, 1.35, speed_ratio)
 		_play_animation("walk")
 	else:
+		body_animations.speed_scale = 1.0
 		_play_animation("idle")
 
 # Reproduce una animacion del cuerpo.
 func _play_animation(animation: String) -> void:
 	if body_animations.has_animation(animation):
 		body_animations.play(animation)
+
+# Evalua colisiones superiores y redondea esquinas si el hueco esta a pocos pixeles.
+func _check_corner_correction(delta: float) -> void:
+	if corner_correction_px <= 0:
+		return
+	var motion := Vector2(0.0, velocity.y * delta)
+	if not test_move(global_transform, motion):
+		return
+	
+	for step: int in range(1, corner_correction_px + 1):
+		var left_xform := Transform2D(0.0, global_position + Vector2(-float(step), 0.0))
+		if not test_move(left_xform, motion):
+			global_position.x -= float(step)
+			return
+		
+		var right_xform := Transform2D(0.0, global_position + Vector2(float(step), 0.0))
+		if not test_move(right_xform, motion):
+			global_position.x += float(step)
+			return
+
+# Aplica estiramiento visual y polvo al despegar.
+func _apply_jump_juice(was_on_ground: bool) -> void:
+	if body_sprite:
+		body_sprite.scale = jump_stretch_scale
+		body_sprite.position.y = -BODY_SPRITE_HALF_HEIGHT * body_sprite.scale.y
+	if was_on_ground:
+		_spawn_jump_dust()
+
+# Aplica compresion de impacto al aterrizar y polvo si la caida fue fuerte.
+func _apply_landing_juice() -> void:
+	var impact_ratio: float = clampf(_pre_land_velocity_y / max_fall_speed, 0.15, 1.0)
+	if body_sprite:
+		body_sprite.scale = Vector2.ONE.lerp(land_squash_max_scale, impact_ratio)
+		body_sprite.position.y = -BODY_SPRITE_HALF_HEIGHT * body_sprite.scale.y
+	if _pre_land_velocity_y >= max_fall_speed * 0.40:
+		_spawn_hard_landing_dust()
+
+# Recupera la escala del sprite hacia Vector2.ONE, ajusta posicion y calcula inclinacion.
+func _update_visual_juice(delta: float, on_floor_now: bool) -> void:
+	if not body_sprite or dead:
+		return
+	
+	body_sprite.scale = body_sprite.scale.lerp(Vector2.ONE, clampf(squash_recovery_speed * delta, 0.0, 1.0))
+	body_sprite.position.y = -BODY_SPRITE_HALF_HEIGHT * body_sprite.scale.y
+	body_sprite.position.x = BODY_SPRITE_BASE_POS.x
+	
+	var target_tilt: float = 0.0
+	if on_floor_now:
+		if _is_skidding_active:
+			target_tilt = -sign(velocity.x) * deg_to_rad(skid_tilt_degrees)
+		elif h_movement_direction != 0 and absf(velocity.x) > 10.0:
+			var speed_ratio: float = clampf(absf(velocity.x) / h_speed_limit, 0.0, 1.0)
+			target_tilt = sign(velocity.x) * speed_ratio * deg_to_rad(max_run_tilt_degrees)
+	
+	body_sprite.rotation = lerp_angle(body_sprite.rotation, target_tilt, clampf(14.0 * delta, 0.0, 1.0))
+
+func _spawn_jump_dust() -> void:
+	var origin := Vector2(-5.0, 0.0)
+	for i: int in range(5):
+		var vel := Vector2(randf_range(-35.0, 35.0), randf_range(-8.0, -18.0))
+		_add_dust_particle(origin + Vector2(randf_range(-4.0, 4.0), 0.0), vel, randf_range(0.20, 0.32), randf_range(1.5, 2.5))
+
+func _spawn_skid_dust() -> void:
+	var dir: float = sign(velocity.x)
+	if dir == 0.0:
+		dir = 1.0
+	var origin := Vector2(-5.0 + dir * 6.0, 0.0)
+	var vel := Vector2(dir * randf_range(15.0, 45.0), randf_range(-6.0, -14.0))
+	_add_dust_particle(origin, vel, randf_range(0.18, 0.28), randf_range(1.2, 2.2))
+
+func _spawn_hard_landing_dust() -> void:
+	var origin := Vector2(-5.0, 0.0)
+	for i: int in range(7):
+		var dir: float = -1.0 if i % 2 == 0 else 1.0
+		var vel := Vector2(dir * randf_range(25.0, 65.0), randf_range(-5.0, -16.0))
+		_add_dust_particle(origin + Vector2(dir * randf_range(1.0, 6.0), 0.0), vel, randf_range(0.22, 0.35), randf_range(1.6, 2.8))
+
+func _add_dust_particle(pos: Vector2, vel: Vector2, lifetime: float, radius: float) -> void:
+	if _dust_particles.size() >= 30:
+		_dust_particles.pop_front()
+	_dust_particles.append({
+		"pos": pos,
+		"vel": vel,
+		"lifetime": lifetime,
+		"initial_lifetime": lifetime,
+		"radius": radius,
+		"color": Color(0.88, 0.88, 0.94, 0.65)
+	})
+
+func _update_dust_particles(delta: float) -> void:
+	var had_particles: bool = not _dust_particles.is_empty()
+	var write_idx: int = 0
+	for i: int in range(_dust_particles.size()):
+		var p: Dictionary = _dust_particles[i]
+		p["lifetime"] -= delta
+		if p["lifetime"] > 0.0:
+			p["pos"] += p["vel"] * delta
+			_dust_particles[write_idx] = p
+			write_idx += 1
+	_dust_particles.resize(write_idx)
+	if had_particles or not _dust_particles.is_empty():
+		queue_redraw()
+
+func _draw() -> void:
+	for p: Dictionary in _dust_particles:
+		var alpha: float = clampf(p["lifetime"] / p["initial_lifetime"], 0.0, 1.0) * 0.65
+		var col: Color = p["color"]
+		col.a = alpha
+		draw_circle(p["pos"], p["radius"], col)
+
