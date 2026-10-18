@@ -24,6 +24,8 @@ var _attempting_redirect: bool = false
 
 func _ready() -> void:
 	_player = get_parent()
+	if not parry_zone.area_exited.is_connected(_on_parry_zone_area_exited):
+		parry_zone.area_exited.connect(_on_parry_zone_area_exited)
 
 func _process(delta: float) -> void:
 	if _draw_shield:
@@ -99,6 +101,10 @@ func _on_parry_zone_area_entered(area: Area2D) -> void:
 		_incoming_projectile = proj
 		_can_parry = true
 		_parry_timer = parry_window
+
+func _on_parry_zone_area_exited(area: Area2D) -> void:
+	if area.get_parent() == _incoming_projectile:
+		_parry_expired()
 
 func _do_parry() -> void:
 	_can_parry = false
