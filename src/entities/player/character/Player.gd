@@ -2,7 +2,6 @@ class_name Player
 extends CharacterBody2D
 
 signal player_died
-signal died
 signal health_changed(current_hp: int, max_hp: int)
 signal chi_changed(current_chi: int, max_chi: int)
 signal fireball_unlocked
@@ -12,7 +11,7 @@ signal fireball_unlocked
 @onready var body_pivot: Node2D = $BodyPivot
 @onready var body_sprite: Sprite2D = $BodyPivot/Body
 @onready var melee_attack: MeleeAttack = $WeaponContainer/MeleeAttack
-@onready var lightning_controller: LightningController = $WeaponContainer/HeavyCannon
+@onready var lightning_controller: LightningController = $WeaponContainer/LightningAttack
 @onready var parry_controller: ParryController = $ParryController
 
 const BODY_SPRITE_BASE_POS: Vector2 = Vector2(-3, -11)
@@ -58,7 +57,7 @@ const BODY_SPRITE_HALF_HEIGHT: float = 11.0
 @export_group("Abilities")
 @export var can_melee: bool = true
 @export var can_fireball: bool = false
-@export var can_heavy_blast: bool = false
+@export var can_lightning: bool = false
 @export var can_parry: bool = true
 @export var can_redirect: bool = false
 
@@ -83,7 +82,6 @@ var _coyote_timer: float = 0.0
 var _jump_buffer_timer: float = 0.0
 var _cast_lock_timer: float = 0.0
 var _was_on_floor: bool = false
-var _is_rising: bool = false
 var _pre_land_velocity_y: float = 0.0
 var _is_skidding_active: bool = false
 var _dust_particles: Array[Dictionary] = []
@@ -110,8 +108,6 @@ func initialize(p_projectile_container: Node = get_parent()) -> void:
 	weapon.projectile_container = p_projectile_container
 	if lightning_controller:
 		lightning_controller.projectile_container = p_projectile_container
-	elif has_node("WeaponContainer/HeavyCannon"):
-		$WeaponContainer/HeavyCannon.projectile_container = p_projectile_container
 	body_animations.play("idle")
 
 # Procesa el movimiento y las colisiones del jugador.
@@ -189,7 +185,6 @@ func _physics_process(delta: float) -> void:
 		velocity.y    = -(_jump_velocity + extra_jump)
 		_coyote_timer = 0.0
 		_jump_buffer_timer = 0.0
-		_is_rising = true
 		if not Input.is_action_pressed("jump"):
 			velocity.y *= jump_cut_multiplier
 		_apply_jump_juice(on_floor)
@@ -208,7 +203,6 @@ func _physics_process(delta: float) -> void:
 
 	if on_floor and velocity.y > 0.0:
 		velocity.y = 0.0
-		_is_rising = false
 
 	# ── Corner Correction ────────────────────────────
 	if velocity.y < 0.0:
@@ -253,11 +247,11 @@ func _process_input() -> void:
 
 	# ── Exclusión mutua entre ataques ───────────────────────────────────────
 	var melee_busy: bool = can_melee and melee_attack != null and melee_attack.is_attacking()
-	var heavy_busy: bool = can_heavy_blast and lightning_controller != null and lightning_controller.is_charging()
+	var lightning_busy: bool = can_lightning and lightning_controller != null and lightning_controller.is_charging()
 	var cast_locked: bool = _cast_lock_timer > 0.0
 
-	# Melee — blocked while charging the heavy cannon or during the cast lock
-	if Input.is_action_just_pressed("attack_melee") and can_melee and not heavy_busy and not cast_locked:
+	# Melee — blocked while charging lightning or during the cast lock
+	if Input.is_action_just_pressed("attack_melee") and can_melee and not lightning_busy and not cast_locked:
 		var mouse_offset_x: float = get_global_mouse_position().x - global_position.x
 		var facing_dir: float = sign(mouse_offset_x) if mouse_offset_x != 0.0 else body_pivot.scale.x
 		if facing_dir == 0.0:
@@ -266,9 +260,9 @@ func _process_input() -> void:
 		melee_attack.attack(facing_dir)
 		melee_busy = melee_attack.is_attacking()
 
-	# Fireball — blocked while melee is active, while charging the heavy cannon,
+	# Fireball — blocked while melee is active, while charging lightning,
 	# or during the cast lock. Only locks the other attacks if it actually fired.
-	if Input.is_action_just_pressed("attack_1") and can_fireball and not heavy_busy and not melee_busy and not cast_locked:
+	if Input.is_action_just_pressed("attack_1") and can_fireball and not lightning_busy and not melee_busy and not cast_locked:
 		if weapon.is_ready():
 			weapon.fire()
 			_cast_lock_timer = attack_lock_time
@@ -276,8 +270,8 @@ func _process_input() -> void:
 
 	weapon.process_input()
 
-	# Heavy cannon — blocked while melee is active or during the cast lock.
-	if can_heavy_blast and lightning_controller:
+	# Lightning attack — blocked while melee is active or during the cast lock.
+	if can_lightning and lightning_controller:
 		if not melee_busy and not cast_locked:
 			lightning_controller.process_input()
 
@@ -361,7 +355,6 @@ func die() -> void:
 		parry_controller = null
 	_play_animation("die")
 	await body_animations.animation_finished
-	died.emit()
 	player_died.emit()
 
 # Actualiza la animacion segun el estado de movimiento y modula la cadencia de caminata.

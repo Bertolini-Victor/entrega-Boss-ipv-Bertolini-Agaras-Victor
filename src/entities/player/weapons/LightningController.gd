@@ -61,10 +61,10 @@ func _apply_charge_feedback(charging: bool) -> void:
 		modulate = _original_modulate
 		scale = _original_scale
 
-# Procesa la entrada y maneja la carga y orientación del arma pesada.
+# Procesa la entrada y maneja la carga y orientación del ataque de rayo.
 func process_input() -> void:
 	look_at(get_global_mouse_position())
-	if Input.is_action_pressed("attack_heavy") and not _on_cooldown:
+	if Input.is_action_pressed("attack_lightning") and not _on_cooldown:
 		if not _is_charging:
 			_start_charge()
 	elif _is_charging:
