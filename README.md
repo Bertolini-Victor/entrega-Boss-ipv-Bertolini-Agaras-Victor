@@ -50,11 +50,11 @@ En **Dragon in Space**, encarnás al **Tío Iroh** (*Avatar: La Leyenda de Aang*
 | :--- | :---: | :--- |
 | **Moverse a la izquierda / derecha** | `A` / `D` | Movimiento horizontal con aceleración, fricción y *skid* de cambio de dirección |
 | **Saltar** | `Espacio` | Salto de altura variable (*jump cut*), *coyote time* y *jump buffer* |
-| **Golpe Cuerpo a Cuerpo** | `Q` | Ataque básico de corto alcance orientado hacia el cursor |
-| **Fuego Control (Bola de Fuego)** | `Clic Izquierdo` | Disparo de fuego a media distancia *(se desbloquea al reunir 100 de Chi)* |
-| **Rayo Control (Ataque Cargado)** | `E` *(mantener)* | Técnica cargada a distancia capaz de destruir amenazas y neutralizar proyectiles en vuelo |
+| **Golpe Cuerpo a Cuerpo** | `Clic Izquierdo` | Ataque básico de corto alcance orientado hacia el cursor |
+| **Fuego Control (Bola de Fuego)** | `Q` | Disparo de fuego a media distancia *(se desbloquea al reunir 100 de Chi)* |
 | **Bloqueo / Parry** | `Clic Derecho` | Detiene proyectiles enemigos dentro de la ventana de timing sin recibir daño |
-| **Redirección de Energía** | `R` | Absorbe el disparo enemigo en el instante preciso y lo reenvía hacia el hostil más cercano |
+
+Rayo Control (`E`, mantener) y Redirección de Energía (`R`) están desactivados en esta versión.
 
 ---
 
