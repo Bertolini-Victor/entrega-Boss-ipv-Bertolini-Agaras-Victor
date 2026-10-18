@@ -25,6 +25,12 @@ func initialize(turret_pos: Vector2, p_projectile_container: Node) -> void:
 	global_position = turret_pos
 	self.projectile_container = p_projectile_container
 
+# Punto de mira: centro del hitbox del objetivo si lo expone; si no, su posicion.
+func _get_target_aim_point() -> Vector2:
+	if target != null and target.has_method("get_aim_point"):
+		return target.get_aim_point()
+	return target.global_position
+
 # Instancia y dispara un proyectil hacia el objetivo.
 func fire() -> void:
 	if target == null:
@@ -36,7 +42,7 @@ func fire() -> void:
 	projectile_container.add_child(proj_instance)
 	proj_instance.initialize(
 		fire_position.global_position,
-		fire_position.global_position.direction_to(target.global_position)
+		fire_position.global_position.direction_to(_get_target_aim_point())
 	)
 	fire_timer.start()
 
@@ -45,7 +51,8 @@ func _physics_process(_delta: float) -> void:
 	if target == null:
 		return
 	
-	raycast.set_target_position(raycast.to_local(target.global_position))
+	raycast.set_target_position(raycast.to_local(_get_target_aim_point()))
+	raycast.force_raycast_update()
 	if raycast.is_colliding() && raycast.get_collider() == target:
 		if fire_timer.is_stopped():
 			fire_timer.start()

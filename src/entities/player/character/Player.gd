@@ -13,6 +13,7 @@ signal fireball_unlocked
 @onready var melee_attack: MeleeAttack = $WeaponContainer/MeleeAttack
 @onready var lightning_controller: LightningController = $WeaponContainer/LightningAttack
 @onready var parry_controller: ParryController = $ParryController
+@onready var _hitbox_shape: CollisionShape2D = $CollisionShape2D
 
 var _sprite_base_pos: Vector2 = Vector2.ZERO
 var _sprite_half_height: float = 0.0
@@ -305,6 +306,12 @@ func _process_input() -> void:
 		elif Input.is_action_just_pressed("parry_redirect"):
 			if can_redirect:
 				parry_controller.try_parry(true)
+
+# Devuelve el centro del hitbox del jugador (punto de mira para enemigos).
+func get_aim_point() -> Vector2:
+	if _hitbox_shape == null:
+		return global_position
+	return _hitbox_shape.global_position
 
 # Recibe danio progresivo con 1.0s de invulnerabilidad temporal (i-frames).
 func take_damage(amount: int = 1) -> void:
