@@ -363,8 +363,16 @@ func die() -> void:
 	if parry_controller:
 		parry_controller.die()
 		parry_controller = null
-	_play_animation("die")
-	await body_animations.animation_finished
+	var wait_for_animation: bool = body_animations != null \
+		and body_animations.has_animation("die") \
+		and body_animations.get_animation("die").loop_mode == Animation.LOOP_NONE
+	if wait_for_animation:
+		_play_animation("die")
+		await body_animations.animation_finished
+	else:
+		await get_tree().create_timer(0.6).timeout
+	if not is_inside_tree():
+		return
 	player_died.emit()
 
 # Actualiza la animacion segun el estado de movimiento y modula la cadencia de caminata.
