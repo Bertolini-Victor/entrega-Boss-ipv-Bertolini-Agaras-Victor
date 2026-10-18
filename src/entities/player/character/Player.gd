@@ -14,8 +14,8 @@ signal fireball_unlocked
 @onready var lightning_controller: LightningController = $WeaponContainer/LightningAttack
 @onready var parry_controller: ParryController = $ParryController
 
-const BODY_SPRITE_BASE_POS: Vector2 = Vector2(-3, -11)
-const BODY_SPRITE_HALF_HEIGHT: float = 11.0
+var _sprite_base_pos: Vector2 = Vector2.ZERO
+var _sprite_half_height: float = 0.0
 
 @export_group("Stats")
 @export var max_health: int = 2
@@ -89,12 +89,22 @@ var _skid_dust_timer: float = 0.0
 
 # Configura el estado inicial del jugador.
 func _ready() -> void:
+	_cache_sprite_metrics()
 	_compute_jump_physics()
 	initialize()
 	health = max_health
 	chi = 0
 	health_changed.emit(health, max_health)
 	chi_changed.emit(chi, max_chi)
+
+# Lee la posicion del sprite desde la escena. Convencion: el borde inferior
+# del sprite queda sobre el origen del Player (los pies), por lo que la mitad
+# del alto equivale a la distancia vertical del centro del sprite a los pies.
+func _cache_sprite_metrics() -> void:
+	if body_sprite == null:
+		return
+	_sprite_base_pos = body_sprite.position
+	_sprite_half_height = absf(_sprite_base_pos.y)
 
 func _compute_jump_physics() -> void:
 	_gravity_rise  = (2.0 * jump_height) / (jump_rise_time  * jump_rise_time)
@@ -334,7 +344,7 @@ func die() -> void:
 	if body_sprite:
 		body_sprite.scale = Vector2.ONE
 		body_sprite.rotation = 0.0
-		body_sprite.position = BODY_SPRITE_BASE_POS
+		body_sprite.position = _sprite_base_pos
 	if body_animations:
 		body_animations.speed_scale = 1.0
 	if body_pivot:
@@ -398,7 +408,7 @@ func _check_corner_correction(delta: float) -> void:
 func _apply_jump_juice(was_on_ground: bool) -> void:
 	if body_sprite:
 		body_sprite.scale = jump_stretch_scale
-		body_sprite.position.y = -BODY_SPRITE_HALF_HEIGHT * body_sprite.scale.y
+		body_sprite.position.y = -_sprite_half_height * body_sprite.scale.y
 	if was_on_ground:
 		_spawn_jump_dust()
 
@@ -407,7 +417,7 @@ func _apply_landing_juice() -> void:
 	var impact_ratio: float = clampf(_pre_land_velocity_y / max_fall_speed, 0.15, 1.0)
 	if body_sprite:
 		body_sprite.scale = Vector2.ONE.lerp(land_squash_max_scale, impact_ratio)
-		body_sprite.position.y = -BODY_SPRITE_HALF_HEIGHT * body_sprite.scale.y
+		body_sprite.position.y = -_sprite_half_height * body_sprite.scale.y
 	if _pre_land_velocity_y >= max_fall_speed * 0.40:
 		_spawn_hard_landing_dust()
 
@@ -417,8 +427,8 @@ func _update_visual_juice(delta: float, on_floor_now: bool) -> void:
 		return
 	
 	body_sprite.scale = body_sprite.scale.lerp(Vector2.ONE, clampf(squash_recovery_speed * delta, 0.0, 1.0))
-	body_sprite.position.y = -BODY_SPRITE_HALF_HEIGHT * body_sprite.scale.y
-	body_sprite.position.x = BODY_SPRITE_BASE_POS.x
+	body_sprite.position.y = -_sprite_half_height * body_sprite.scale.y
+	body_sprite.position.x = _sprite_base_pos.x
 	
 	var target_tilt: float = 0.0
 	if on_floor_now:
