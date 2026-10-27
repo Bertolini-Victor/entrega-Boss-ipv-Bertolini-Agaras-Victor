@@ -6,6 +6,8 @@ signal parry_failed
 
 @export var parry_window: float = 0.25
 @export var redirect_window: float = 0.10
+@export var chi_reward: int = 15
+@export var melee_parry_range: float = 65.0
 
 @onready var parry_zone: Area2D = $ParryZone
 
@@ -13,6 +15,7 @@ var _player: Node2D = null
 var _incoming_projectile: Node = null
 var _can_parry: bool = false
 var _parry_timer: float = 0.0
+var _active_parry_timer: float = 0.0
 
 var _draw_shield: bool = false
 var _visual_timer: float = 0.0
@@ -39,22 +42,71 @@ func _process(delta: float) -> void:
 		if _parry_timer <= 0.0:
 			_parry_expired()
 
+	if _active_parry_timer > 0.0:
+		_active_parry_timer -= delta
+		var melee_enemy: Node2D = _find_parryable_melee_enemy()
+		if melee_enemy != null:
+			_do_melee_parry(melee_enemy)
+
 func try_parry(allow_redirect: bool = false) -> void:
 	_draw_shield = true
 	_visual_timer = _visual_duration
 	_is_success = false
 	_is_redirect = false
 	_attempting_redirect = allow_redirect
+	_active_parry_timer = parry_window
 	queue_redraw()
 
-	if not _can_parry or _incoming_projectile == null or not is_instance_valid(_incoming_projectile):
-		parry_failed.emit()
+	if _can_parry and _incoming_projectile != null and is_instance_valid(_incoming_projectile):
+		_active_parry_timer = 0.0
+		if allow_redirect:
+			_do_redirect()
+		else:
+			_do_parry()
 		return
-		
-	if allow_redirect:
-		_do_redirect()
-	else:
-		_do_parry()
+
+	var melee_enemy: Node2D = _find_parryable_melee_enemy()
+	if melee_enemy != null:
+		_do_melee_parry(melee_enemy)
+		return
+
+	parry_failed.emit()
+
+func try_parry_melee_attack(attacker: Node2D) -> bool:
+	if _active_parry_timer <= 0.0 or attacker == null or not is_instance_valid(attacker):
+		return false
+	_do_melee_parry(attacker)
+	return true
+
+func _do_melee_parry(enemy: Node2D) -> void:
+	_active_parry_timer = 0.0
+	_can_parry = false
+	if enemy != null and is_instance_valid(enemy) and enemy.has_method("on_parried"):
+		enemy.on_parried()
+	_is_success = true
+	_is_redirect = false
+	_draw_shield = true
+	_visual_timer = _visual_duration
+	queue_redraw()
+	_grant_chi_reward()
+	parry_success.emit()
+
+func _find_parryable_melee_enemy() -> Node2D:
+	var enemies = get_tree().get_nodes_in_group("enemies")
+	var nearest: Node2D = null
+	var min_dist: float = melee_parry_range
+	for enemy in enemies:
+		if not is_instance_valid(enemy):
+			continue
+		if not enemy.is_inside_tree() or ("dead" in enemy and enemy.dead):
+			continue
+		if not enemy.has_method("is_parryable_attack_active") or not enemy.is_parryable_attack_active():
+			continue
+		var d: float = global_position.distance_to(enemy.global_position)
+		if d <= min_dist:
+			min_dist = d
+			nearest = enemy
+	return nearest
 
 func _do_redirect() -> void:
 	_can_parry = false
@@ -73,6 +125,7 @@ func _do_redirect() -> void:
 			_incoming_projectile = null
 			_is_success = true
 			_is_redirect = true
+			_grant_chi_reward()
 			parry_success.emit()
 		else:
 			# CRITERIO DE ACEPTACIÓN: Si no hay Turret viva, hace bloqueo normal
@@ -113,7 +166,12 @@ func _do_parry() -> void:
 	_incoming_projectile = null
 	
 	_is_success = true
+	_grant_chi_reward()
 	parry_success.emit()
+
+func _grant_chi_reward() -> void:
+	if _player != null and is_instance_valid(_player) and _player.has_method("collect_chi"):
+		_player.collect_chi(chi_reward)
 
 func _parry_expired() -> void:
 	_can_parry = false

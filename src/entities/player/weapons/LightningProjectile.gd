@@ -5,7 +5,10 @@ extends Projectile
 func _on_hitbox_body_entered(body: Node2D) -> void:
 	if _is_removing:
 		return
-	if body.has_method("die"):
+	if body.has_method("take_damage"):
+		body.take_damage(1)
+		remove()
+	elif body.has_method("die"):
 		body.die()
 		remove()
 	elif body.is_in_group("terrain") or body is StaticBody2D or body is TileMapLayer or body is RigidBody2D:

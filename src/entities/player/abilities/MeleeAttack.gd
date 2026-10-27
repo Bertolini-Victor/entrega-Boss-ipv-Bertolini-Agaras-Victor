@@ -83,7 +83,9 @@ func attack(facing_direction: float = 1.0) -> void:
 	var results: Array = space_state.intersect_shape(params)
 	for result in results:
 		var collider = result["collider"]
-		if collider.has_method("die"):
+		if collider.has_method("take_damage"):
+			collider.take_damage(1)
+		elif collider.has_method("die"):
 			collider.die()
 
 	await get_tree().create_timer(attack_duration).timeout

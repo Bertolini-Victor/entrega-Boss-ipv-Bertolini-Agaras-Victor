@@ -8,16 +8,20 @@ signal died
 @onready var raycast: RayCast2D = $RayCast2D
 @onready var body_anim: AnimatedSprite2D = $Body
 @export var projectile_scene: PackedScene
+@export var telegraph_duration: float = 0.4
+@export var telegraph_color: Color = Color(2.0, 0.4, 0.4, 1.0)
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 
 var target: Node2D
 var projectile_container: Node
 var dead: bool = false
+var _is_telegraphing: bool = false
+var _telegraph_tween: Tween = null
 
 # Inicializa el temporizador y la animacion.
 func _ready() -> void:
 	add_to_group("enemies")
-	fire_timer.timeout.connect(fire)	
+	fire_timer.timeout.connect(fire)
 	_play_animation("idle")
 
 # Configura la posicion y el contenedor de proyectiles.
@@ -31,11 +35,39 @@ func _get_target_aim_point() -> Vector2:
 		return target.get_aim_point()
 	return target.global_position
 
-# Instancia y dispara un proyectil hacia el objetivo.
+# Cancela el telegrafiado activo y restaura el color original del sprite.
+func _cancel_telegraph() -> void:
+	_is_telegraphing = false
+	if _telegraph_tween != null and _telegraph_tween.is_valid():
+		_telegraph_tween.kill()
+	_telegraph_tween = null
+	if body_anim != null:
+		body_anim.self_modulate = Color.WHITE
+
+# Ejecuta el telegrafiado visual y luego instancia y dispara un proyectil hacia el objetivo.
 func fire() -> void:
-	if target == null:
+	if dead or target == null or _is_telegraphing:
 		return
-	
+
+	_is_telegraphing = true
+	if _telegraph_tween != null and _telegraph_tween.is_valid():
+		_telegraph_tween.kill()
+	_telegraph_tween = create_tween()
+	if body_anim != null:
+		body_anim.self_modulate = Color.WHITE
+		_telegraph_tween.tween_property(body_anim, "self_modulate", telegraph_color, telegraph_duration)
+	else:
+		_telegraph_tween.tween_interval(telegraph_duration)
+
+	await _telegraph_tween.finished
+	if not is_inside_tree():
+		return
+	if dead or target == null or not _is_telegraphing:
+		_cancel_telegraph()
+		return
+
+	_cancel_telegraph()
+
 	var proj_instance: Node = projectile_scene.instantiate()
 	if projectile_container == null:
 		projectile_container = get_parent()
@@ -48,33 +80,39 @@ func fire() -> void:
 
 # Apunta al objetivo y controla el temporizador de disparo.
 func _physics_process(_delta: float) -> void:
-	if target == null:
+	if dead or target == null:
 		return
-	
+
 	raycast.set_target_position(raycast.to_local(_get_target_aim_point()))
 	raycast.force_raycast_update()
 	if raycast.is_colliding() && raycast.get_collider() == target:
-		if fire_timer.is_stopped():
+		if fire_timer.is_stopped() and not _is_telegraphing:
 			fire_timer.start()
-	elif !fire_timer.is_stopped():
-		fire_timer.stop()
+	else:
+		if !fire_timer.is_stopped():
+			fire_timer.stop()
+		if _is_telegraphing:
+			_cancel_telegraph()
 
 const CHI_ORB_SCENE: PackedScene = preload("res://src/environment/chi_orb/ChiOrb.tscn")
 
 # Desactiva la torreta y reproduce la animacion de muerte.
 func die() -> void:
 	if dead:
-		return 
-	
+		return
+
 	dead = true
+	_cancel_telegraph()
 	remove_from_group("enemies")
 	fire_timer.stop()
 	collision_shape.set_deferred("disabled", true)
-	set_physics_process(false) 
+	set_physics_process(false)
 	_spawn_chi_orb()
 	_play_animation("die")
 	died.emit()
 	await body_anim.animation_finished
+	if not is_inside_tree():
+		return
 	queue_free()
 
 func _spawn_chi_orb() -> void:
@@ -99,6 +137,7 @@ func _on_detection_area_body_exited(body: Node2D) -> void:
 	if body == target:
 		target = null
 		fire_timer.stop()
+		_cancel_telegraph()
 
 # Reproduce una animacion especifica.
 func _play_animation(animation: String) -> void:

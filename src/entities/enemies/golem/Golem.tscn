@@ -1,0 +1,282 @@
+[gd_scene format=3 uid="uid://c6golem7scn01"]
+
+[ext_resource type="Script" uid="uid://du8ky51q3n8es" path="res://src/entities/enemies/golem/Golem.gd" id="1_golem_script"]
+[ext_resource type="Texture2D" uid="uid://cvy38xjo8lmsg" path="res://assets/textures/enemies/golem/Golem_IdleA.png" id="2_idle"]
+[ext_resource type="Texture2D" uid="uid://bijags5ebokm1" path="res://assets/textures/enemies/golem/Golem_Run.png" id="3_run"]
+[ext_resource type="Texture2D" uid="uid://beirj2jcdxr6n" path="res://assets/textures/enemies/golem/Golem_AttackA.png" id="4_attack"]
+[ext_resource type="Texture2D" uid="uid://bt5bkfbeudku7" path="res://assets/textures/enemies/golem/Golem_HitA.png" id="5_hit"]
+[ext_resource type="Texture2D" uid="uid://7jtcm8txj7ss" path="res://assets/textures/enemies/golem/Golem_DeathA.png" id="6_death"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atk_0"]
+atlas = ExtResource("4_attack")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atk_1"]
+atlas = ExtResource("4_attack")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atk_2"]
+atlas = ExtResource("4_attack")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atk_3"]
+atlas = ExtResource("4_attack")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atk_4"]
+atlas = ExtResource("4_attack")
+region = Rect2(0, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atk_5"]
+atlas = ExtResource("4_attack")
+region = Rect2(64, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atk_6"]
+atlas = ExtResource("4_attack")
+region = Rect2(128, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atk_7"]
+atlas = ExtResource("4_attack")
+region = Rect2(192, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atk_8"]
+atlas = ExtResource("4_attack")
+region = Rect2(0, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atk_9"]
+atlas = ExtResource("4_attack")
+region = Rect2(64, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atk_10"]
+atlas = ExtResource("4_attack")
+region = Rect2(128, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atk_11"]
+atlas = ExtResource("4_attack")
+region = Rect2(192, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_die_0"]
+atlas = ExtResource("6_death")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_die_1"]
+atlas = ExtResource("6_death")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_die_2"]
+atlas = ExtResource("6_death")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_die_3"]
+atlas = ExtResource("6_death")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_die_4"]
+atlas = ExtResource("6_death")
+region = Rect2(0, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hit_0"]
+atlas = ExtResource("5_hit")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hit_1"]
+atlas = ExtResource("5_hit")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hit_2"]
+atlas = ExtResource("5_hit")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hit_3"]
+atlas = ExtResource("5_hit")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hit_4"]
+atlas = ExtResource("5_hit")
+region = Rect2(0, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_0"]
+atlas = ExtResource("2_idle")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_1"]
+atlas = ExtResource("2_idle")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_2"]
+atlas = ExtResource("2_idle")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_3"]
+atlas = ExtResource("2_idle")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_run_0"]
+atlas = ExtResource("3_run")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_run_1"]
+atlas = ExtResource("3_run")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_run_2"]
+atlas = ExtResource("3_run")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_run_3"]
+atlas = ExtResource("3_run")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_golem"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atk_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atk_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atk_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atk_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atk_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atk_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atk_6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atk_7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atk_8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atk_9")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atk_10")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atk_11")
+}],
+"loop": 0,
+"name": &"attack",
+"speed": 14.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_die_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_die_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_die_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_die_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_die_4")
+}],
+"loop": 0,
+"name": &"die",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hit_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hit_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hit_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hit_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hit_4")
+}],
+"loop": 0,
+"name": &"hit",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_3")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_run_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_run_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_run_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_run_3")
+}],
+"loop": 1,
+"name": &"run",
+"speed": 8.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(28, 30)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_detect"]
+size = Vector2(320, 96)
+
+[node name="Golem" type="CharacterBody2D" unique_id=46529696]
+collision_layer = 4
+collision_mask = 5
+script = ExtResource("1_golem_script")
+
+[node name="Body" type="AnimatedSprite2D" parent="." unique_id=964707530]
+texture_filter = 1
+position = Vector2(0, -14)
+sprite_frames = SubResource("SpriteFrames_golem")
+animation = &"idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=299643340]
+position = Vector2(0, -15)
+shape = SubResource("RectangleShape2D_body")
+
+[node name="FloorCheck" type="RayCast2D" parent="." unique_id=1379453115]
+position = Vector2(-14, -8)
+target_position = Vector2(0, 20)
+
+[node name="DetectionArea" type="Area2D" parent="." unique_id=1173781401]
+position = Vector2(0, -15)
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea" unique_id=1825937037]
+shape = SubResource("RectangleShape2D_detect")
+
+[connection signal="body_entered" from="DetectionArea" to="." method="_on_detection_area_body_entered"]
+[connection signal="body_exited" from="DetectionArea" to="." method="_on_detection_area_body_exited"]
