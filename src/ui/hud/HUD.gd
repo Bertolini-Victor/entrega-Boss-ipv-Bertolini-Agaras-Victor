@@ -11,6 +11,8 @@ extends CanvasLayer
 
 @onready var fireball_panel: Control = $FireballOverlay
 @onready var fireball_timer: Timer = $FireballOverlay/FireballTimer
+@onready var fireball_title_label: Label = get_node_or_null("FireballOverlay/Margin/Content/Title")
+@onready var fireball_hint_label: Label = get_node_or_null("FireballOverlay/Margin/Content/Hint")
 
 func _ready() -> void:
 	update_health(2, 2)
@@ -31,11 +33,18 @@ func update_chi(current_chi: int, max_chi: int) -> void:
 	if chi_label:
 		chi_label.text = "Chi: %d / %d" % [current_chi, max_chi]
 
-func show_fireball_unlocked_overlay() -> void:
+func show_ability_unlocked_overlay(title: String, hint: String) -> void:
+	if fireball_title_label:
+		fireball_title_label.text = title
+	if fireball_hint_label:
+		fireball_hint_label.text = hint
 	if fireball_panel:
 		fireball_panel.visible = true
 		if fireball_timer:
 			fireball_timer.start(5.0)
+
+func show_fireball_unlocked_overlay() -> void:
+	show_ability_unlocked_overlay("¡BOLA DE FUEGO Y RAYO CONTROL!", "Bola de fuego: Q | Ataque cargado: E")
 
 func _on_tutorial_timer_timeout() -> void:
 	if tutorial_panel:

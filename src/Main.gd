@@ -23,6 +23,8 @@ func _ready() -> void:
 				player.health_changed.connect(hud.update_health)
 			if not player.chi_changed.is_connected(hud.update_chi):
 				player.chi_changed.connect(hud.update_chi)
+			if not player.ability_unlocked.is_connected(hud.show_ability_unlocked_overlay):
+				player.ability_unlocked.connect(hud.show_ability_unlocked_overlay)
 			if not player.fireball_unlocked.is_connected(hud.show_fireball_unlocked_overlay):
 				player.fireball_unlocked.connect(hud.show_fireball_unlocked_overlay)
 			

@@ -5,7 +5,10 @@ extends Projectile
 func _on_hitbox_body_entered(body: Node2D) -> void:
 	if _is_removing:
 		return
-	if body.has_method("take_damage"):
+	if body.has_method("hit_by_lightning"):
+		body.hit_by_lightning()
+		remove()
+	elif body.has_method("take_damage"):
 		body.take_damage(1)
 		remove()
 	elif body.has_method("die"):

@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://c017ns48ueaea"]
+
+[ext_resource type="Script" uid="uid://cwdiabmxhcspg" path="res://src/environment/Elevator.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://b84uhk1esv2tl" path="res://assets/textures/jumpable_platform.png" id="2_tex"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(112, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_trigger"]
+size = Vector2(96, 16)
+
+[node name="Elevator" type="AnimatableBody2D" unique_id=1922334455 groups=["terrain"]]
+collision_mask = 0
+script = ExtResource("1_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1922334456]
+shape = SubResource("RectangleShape2D_body")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1922334457]
+self_modulate = Color(0.45, 0.9, 1, 1)
+scale = Vector2(1.69697, 0.242424)
+texture = ExtResource("2_tex")
+
+[node name="TriggerArea" type="Area2D" parent="." unique_id=1922334458]
+position = Vector2(0, -14)
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TriggerArea" unique_id=1922334459]
+shape = SubResource("RectangleShape2D_trigger")
+
+[connection signal="body_entered" from="TriggerArea" to="." method="_on_trigger_area_body_entered"]
+[connection signal="body_exited" from="TriggerArea" to="." method="_on_trigger_area_body_exited"]

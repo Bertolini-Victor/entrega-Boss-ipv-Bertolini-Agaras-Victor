@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://bxm1bqpwq3bk5" path="res://src/entities/player/weapons/FireballController.gd" id="4"]
 [ext_resource type="PackedScene" uid="uid://c7ejb3ehyxs1r" path="res://src/entities/player/weapons/PlayerFireball.tscn" id="5"]
 [ext_resource type="Script" uid="uid://cwhpmfa22aekc" path="res://src/entities/player/abilities/MeleeAttack.gd" id="6"]
+[ext_resource type="Script" uid="uid://3wni4w3u1dxy" path="res://src/entities/player/weapons/FireBreathController.gd" id="7_breath"]
 [ext_resource type="Script" uid="uid://ce3i0obqlwy3k" path="res://src/entities/player/weapons/LightningController.gd" id="8_heavy"]
 [ext_resource type="PackedScene" uid="uid://bkl1natxpy03i" path="res://src/entities/player/weapons/LightningProjectile.tscn" id="9_blast_proj"]
 [ext_resource type="Script" uid="uid://261vhccsbf7r" path="res://src/entities/player/abilities/ParryController.gd" id="10_parry"]
@@ -161,6 +162,10 @@ one_shot = true
 
 [node name="MeleeAttack" type="Node2D" parent="WeaponContainer" unique_id=1461851317]
 script = ExtResource("6")
+
+[node name="FireBreathAttack" type="Node2D" parent="WeaponContainer" unique_id=1461851318]
+position = Vector2(0, -8)
+script = ExtResource("7_breath")
 
 [node name="LightningAttack" type="Node2D" parent="WeaponContainer" unique_id=817653554]
 position = Vector2(0, -6)

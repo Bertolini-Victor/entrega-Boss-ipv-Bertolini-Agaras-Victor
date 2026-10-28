@@ -5,12 +5,14 @@ signal player_died
 signal health_changed(current_hp: int, max_hp: int)
 signal chi_changed(current_chi: int, max_chi: int)
 signal fireball_unlocked
+signal ability_unlocked(title: String, hint: String)
 
 @onready var weapon: FireballController = $"%Weapon"
 @onready var body_animations: AnimationPlayer = $BodyAnimations
 @onready var body_pivot: Node2D = $BodyPivot
 @onready var body_sprite: Sprite2D = $BodyPivot/Body
 @onready var melee_attack: MeleeAttack = $WeaponContainer/MeleeAttack
+@onready var fire_breath_controller: FireBreathController = get_node_or_null("WeaponContainer/FireBreathAttack")
 @onready var lightning_controller: LightningController = $WeaponContainer/LightningAttack
 @onready var parry_controller: ParryController = $ParryController
 @onready var _hitbox_shape: CollisionShape2D = $CollisionShape2D
@@ -57,6 +59,7 @@ var _sprite_half_height: float = 0.0
 
 @export_group("Abilities")
 @export var can_melee: bool = true
+@export var can_fire_breath: bool = false
 @export var can_fireball: bool = false
 @export var can_lightning: bool = false
 @export var can_parry: bool = true
@@ -258,11 +261,12 @@ func _process_input() -> void:
 
 	# ── Exclusión mutua entre ataques ───────────────────────────────────────
 	var melee_busy: bool = can_melee and melee_attack != null and melee_attack.is_attacking()
+	var fire_breath_busy: bool = can_fire_breath and fire_breath_controller != null and fire_breath_controller.is_attacking()
 	var lightning_busy: bool = can_lightning and lightning_controller != null and lightning_controller.is_charging()
 	var cast_locked: bool = _cast_lock_timer > 0.0
 
-	# Melee — blocked while charging lightning or during the cast lock
-	if Input.is_action_just_pressed("attack_melee") and can_melee and not lightning_busy and not cast_locked:
+	# Melee (Click Izquierdo) — blocked while charging lightning, using fire breath, or during the cast lock
+	if Input.is_action_just_pressed("attack_melee") and can_melee and not lightning_busy and not fire_breath_busy and not cast_locked:
 		var mouse_offset_x: float = get_global_mouse_position().x - global_position.x
 		var facing_dir: float = sign(mouse_offset_x) if mouse_offset_x != 0.0 else body_pivot.scale.x
 		if facing_dir == 0.0:
@@ -271,9 +275,16 @@ func _process_input() -> void:
 		melee_attack.attack(facing_dir)
 		melee_busy = melee_attack.is_attacking()
 
-	# Fireball — blocked while melee is active, while charging lightning,
-	# or during the cast lock. Only locks the other attacks if it actually fired.
-	if Input.is_action_just_pressed("attack_1") and can_fireball and not lightning_busy and not melee_busy and not cast_locked:
+	# Fire Breath / Ataque hacia arriba (W)
+	if Input.is_action_just_pressed("attack_up") and can_fire_breath and fire_breath_controller != null and not lightning_busy and not melee_busy and not fire_breath_busy and not cast_locked:
+		if fire_breath_controller.is_ready():
+			fire_breath_controller.attack()
+			_cast_lock_timer = attack_lock_time
+			cast_locked = true
+			fire_breath_busy = true
+
+	# Fireball / Bola de fuego (Q) — blocked while melee or fire breath is active, while charging lightning, or during the cast lock
+	if Input.is_action_just_pressed("attack_1") and can_fireball and not lightning_busy and not melee_busy and not fire_breath_busy and not cast_locked:
 		if weapon.is_ready():
 			weapon.fire()
 			_cast_lock_timer = attack_lock_time
@@ -281,9 +292,9 @@ func _process_input() -> void:
 
 	weapon.process_input()
 
-	# Lightning attack — blocked while melee is active or during the cast lock.
+	# Lightning attack — blocked while melee or fire breath is active or during the cast lock.
 	if can_lightning and lightning_controller:
-		if not melee_busy and not cast_locked:
+		if not melee_busy and not fire_breath_busy and not cast_locked:
 			lightning_controller.process_input()
 
 	# Jump buffer: queue on press
@@ -327,7 +338,7 @@ func take_damage(amount: int = 1) -> void:
 		_is_invulnerable = true
 		_invulnerability_timer = 1.0
 
-# Recolecta energia Chi y desbloquea la Bola de Fuego al alcanzar 100 puntos.
+# Recolecta energia Chi y desbloquea progresivamente Aliento de Fuego (1er umbral) y Bola de Fuego + Rayo Control (2do umbral).
 func collect_chi(amount: int) -> void:
 	if dead:
 		return
@@ -335,9 +346,17 @@ func collect_chi(amount: int) -> void:
 	chi = min(max_chi, chi + amount)
 	chi_changed.emit(chi, max_chi)
 	
-	if chi >= max_chi and not can_fireball:
-		can_fireball = true
-		fireball_unlocked.emit()
+	if chi >= max_chi:
+		if not can_fire_breath:
+			can_fire_breath = true
+			chi = 0
+			chi_changed.emit(chi, max_chi)
+			ability_unlocked.emit("¡ALIENTO DE FUEGO DESBLOQUEADO!", "Ataque hacia arriba: W")
+		elif not can_fireball:
+			can_fireball = true
+			can_lightning = true
+			fireball_unlocked.emit()
+			ability_unlocked.emit("¡BOLA DE FUEGO Y RAYO CONTROL!", "Bola de fuego: Q | Ataque cargado: E")
 
 # Maneja la muerte del jugador.
 func die() -> void:
@@ -364,6 +383,9 @@ func die() -> void:
 	if melee_attack:
 		melee_attack.die()
 		melee_attack = null
+	if fire_breath_controller:
+		fire_breath_controller.die()
+		fire_breath_controller = null
 	if lightning_controller:
 		lightning_controller.die()
 		lightning_controller = null
