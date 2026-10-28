@@ -8,7 +8,8 @@ signal died
 @onready var raycast: RayCast2D = $RayCast2D
 @onready var body_anim: AnimatedSprite2D = $Body
 @export var projectile_scene: PackedScene
-@export var telegraph_duration: float = 0.4
+@export var attack_cooldown: float = 2.8
+@export var telegraph_duration: float = 0.55
 @export var telegraph_color: Color = Color(2.0, 0.4, 0.4, 1.0)
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 
@@ -21,6 +22,7 @@ var _telegraph_tween: Tween = null
 # Inicializa el temporizador y la animacion.
 func _ready() -> void:
 	add_to_group("enemies")
+	fire_timer.wait_time = maxf(attack_cooldown, 0.1)
 	fire_timer.timeout.connect(fire)
 	_play_animation("idle")
 
@@ -76,6 +78,7 @@ func fire() -> void:
 		fire_position.global_position,
 		fire_position.global_position.direction_to(_get_target_aim_point())
 	)
+	fire_timer.wait_time = maxf(attack_cooldown, 0.1)
 	fire_timer.start()
 
 # Apunta al objetivo y controla el temporizador de disparo.
@@ -87,6 +90,7 @@ func _physics_process(_delta: float) -> void:
 	raycast.force_raycast_update()
 	if raycast.is_colliding() && raycast.get_collider() == target:
 		if fire_timer.is_stopped() and not _is_telegraphing:
+			fire_timer.wait_time = maxf(attack_cooldown, 0.1)
 			fire_timer.start()
 	else:
 		if !fire_timer.is_stopped():

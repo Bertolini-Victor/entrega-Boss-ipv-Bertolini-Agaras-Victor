@@ -21,9 +21,10 @@ const CHI_ORB_SCENE: PackedScene = preload("res://src/environment/chi_orb/ChiOrb
 @export var patrol_distance: float = 64.0
 @export var attack_range: float = 46.0
 @export var attack_damage: int = 1
-@export var telegraph_duration: float = 0.45
+@export var telegraph_duration: float = 0.6
 @export var attack_active_duration: float = 0.20
-@export var attack_cooldown: float = 0.90
+@export var attack_cooldown: float = 2.2
+@export var attack_anim_speed: float = 0.75
 @export var stun_duration: float = 1.20
 @export var gravity_acceleration: float = 980.0
 @export var max_fall_speed: float = 650.0
@@ -179,7 +180,7 @@ func _start_attack_sequence() -> void:
 	_play_animation("attack")
 
 	if body_anim != null:
-		body_anim.speed_scale = 0.55
+		body_anim.speed_scale = attack_anim_speed
 		body_anim.self_modulate = Color.WHITE
 
 	if _telegraph_tween != null and _telegraph_tween.is_valid():
@@ -198,7 +199,7 @@ func _start_attack_sequence() -> void:
 
 	_state = State.ATTACK
 	if body_anim != null:
-		body_anim.speed_scale = 1.35
+		body_anim.speed_scale = attack_anim_speed
 		body_anim.self_modulate = Color(2.5, 0.9, 0.5, 1.0)
 
 	var parried: bool = _execute_melee_hit()

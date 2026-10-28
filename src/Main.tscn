@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://cpflpvswcorkq"]
 
 [ext_resource type="Script" uid="uid://coqxktsvv203r" path="res://src/Main.gd" id="1"]
-[ext_resource type="Script" uid="uid://25xetcj5a1il" path="res://src/entities/enemies/turret/TurretsSpawner.gd" id="2"]
 [ext_resource type="PackedScene" uid="uid://bl7rjy3ovwpvv" path="res://src/environment/Floor.tscn" id="4"]
 [ext_resource type="PackedScene" uid="uid://bd5hj26cc16d2" path="res://src/entities/enemies/turret/Turret.tscn" id="5"]
 [ext_resource type="PackedScene" uid="uid://dvchiotj4dluu" path="res://src/environment/Obstacle.tscn" id="6"]
@@ -20,7 +19,7 @@
 [node name="Main" type="Node" unique_id=1295602444]
 script = ExtResource("1")
 
-[node name="HUD" parent="." unique_id=1516348040 instance=ExtResource("12_hud")]
+[node name="HUD" parent="." unique_id=1516348040 unique_name_in_owner=true instance=ExtResource("12_hud")]
 
 [node name="Environment" type="Node2D" parent="." unique_id=668645349]
 
@@ -39,139 +38,202 @@ position = Vector2(112.506, 565.622)
 position = Vector2(31.8359, 298.952)
 
 [node name="Ramp" parent="Environment/Ground" unique_id=848085061 instance=ExtResource("10")]
-position = Vector2(1060, 598)
+position = Vector2(3820, 534)
 
 [node name="Ramp2" parent="Environment/Ground" unique_id=378321419 instance=ExtResource("10")]
-position = Vector2(635, 534)
+position = Vector2(1520, 534)
 rotation = 0.690548
 
 [node name="Ramp3" parent="Environment/Ground" unique_id=1336276695 instance=ExtResource("10")]
-position = Vector2(835, 605)
+position = Vector2(1880, 605)
 rotation = -0.601429
 
 [node name="Platform" parent="Environment/Ground" unique_id=321941200 instance=ExtResource("11")]
-position = Vector2(735, 390)
+position = Vector2(900, 470)
 
 [node name="Platform2" parent="Environment/Ground" unique_id=540949609 instance=ExtResource("11")]
-position = Vector2(1060, 445)
+position = Vector2(1040, 420)
 
 [node name="Platform3" parent="Environment/Ground" unique_id=304339450 instance=ExtResource("11")]
-position = Vector2(1260, 445)
+position = Vector2(1650, 465)
 
 [node name="Platform4" parent="Environment/Ground" unique_id=710609660 instance=ExtResource("11")]
-position = Vector2(540, 425)
+position = Vector2(1180, 420)
 
 [node name="Platform5" parent="Environment/Ground" unique_id=801628542 instance=ExtResource("11")]
-position = Vector2(735, 465)
+position = Vector2(1760, 465)
 
 [node name="BreakableWall" parent="Environment/Ground" unique_id=1811223344 instance=ExtResource("7_cj10r")]
-position = Vector2(1360, 453)
+position = Vector2(4180, 453)
 
 [node name="Elevator" parent="Environment/Ground" unique_id=1922334455 instance=ExtResource("8_e7jk0")]
-position = Vector2(1490, 525)
+position = Vector2(5450, 525)
 
 [node name="FloorBridge" parent="Environment/Ground" unique_id=1923861481 instance=ExtResource("4")]
-position = Vector2(1600, 149)
+position = Vector2(5560, -1)
 
 [node name="WallUpper" parent="Environment/Ground" unique_id=962527511 instance=ExtResource("8")]
-position = Vector2(1360, 77)
+position = Vector2(4180, 77)
 
 [node name="WallRight" parent="Environment/Ground" unique_id=8496817 instance=ExtResource("8")]
-position = Vector2(2180, 240)
+position = Vector2(7460, -200)
+
+[node name="Floor4" parent="Environment/Ground" unique_id=676118779 instance=ExtResource("4")]
+position = Vector2(2080.5, 565.622)
+
+[node name="Floor5" parent="Environment/Ground" unique_id=1726818057 instance=ExtResource("4")]
+position = Vector2(3100, 565.622)
+
+[node name="Floor6" parent="Environment/Ground" unique_id=544707545 instance=ExtResource("4")]
+position = Vector2(3756, 565.622)
+
+[node name="Floor7" parent="Environment/Ground" unique_id=1093368139 instance=ExtResource("4")]
+position = Vector2(4412, 565.622)
+
+[node name="Floor8" parent="Environment/Ground" unique_id=1683689628 instance=ExtResource("4")]
+position = Vector2(5068, 565.622)
+
+[node name="FloorBridge2" parent="Environment/Ground" unique_id=1544768376 instance=ExtResource("4")]
+position = Vector2(6216, -1)
+
+[node name="FloorBridge3" parent="Environment/Ground" unique_id=1687300472 instance=ExtResource("4")]
+position = Vector2(6872, -1)
+
+[node name="PlatformGap1" parent="Environment/Ground" unique_id=2067731818 instance=ExtResource("11")]
+position = Vector2(2770, 500)
+
+[node name="PlatformGap2" parent="Environment/Ground" unique_id=754525639 instance=ExtResource("11")]
+position = Vector2(2890, 470)
+
+[node name="PlatformGap3" parent="Environment/Ground" unique_id=1202171769 instance=ExtResource("11")]
+position = Vector2(3010, 500)
+
+[node name="PlatformMid" parent="Environment/Ground" unique_id=623196055 instance=ExtResource("11")]
+position = Vector2(3560, 440)
+
+[node name="BreakableWall2" parent="Environment/Ground" unique_id=1276127105 instance=ExtResource("7_cj10r")]
+position = Vector2(4650, 453)
+
+[node name="WallUpper2" parent="Environment/Ground" unique_id=1731421225 instance=ExtResource("8")]
+position = Vector2(4650, 77)
 
 [node name="Entities" type="Node2D" parent="Environment" unique_id=729562450]
 
-[node name="Player" parent="Environment/Entities" unique_id=1440153547 instance=ExtResource("7")]
+[node name="Player" parent="Environment/Entities" unique_id=1440153547 unique_name_in_owner=true instance=ExtResource("7")]
 position = Vector2(152.506, 477.622)
 
 [node name="Camera2D" type="Camera2D" parent="Environment/Entities/Player" unique_id=1143206512]
 
-[node name="TurretsSpawner" type="Marker2D" parent="Environment/Entities" unique_id=1543959206]
-position = Vector2(926, 507)
-script = ExtResource("2")
-turret_scene = ExtResource("5")
-amount = 3
-extents = Vector2(300, -100)
-
 [node name="Turret" parent="Environment/Entities" unique_id=1654059648 instance=ExtResource("5")]
-position = Vector2(1940, 117)
+position = Vector2(6350, -33)
+attack_cooldown = 1.6
+telegraph_duration = 0.4
 
 [node name="Golem" parent="Environment/Entities" unique_id=46529696 instance=ExtResource("10_0ri8u")]
-position = Vector2(960, 533)
+position = Vector2(2320, 533)
+telegraph_duration = 0.65
+attack_cooldown = 3.2
+attack_anim_speed = 0.65
 
 [node name="Golem2" parent="Environment/Entities" unique_id=323095555 instance=ExtResource("10_0ri8u")]
-position = Vector2(1190, 533)
+position = Vector2(3350, 533)
 
 [node name="TurretTramo1" parent="Environment/Entities" unique_id=669298701 instance=ExtResource("5")]
-position = Vector2(435, 498)
+position = Vector2(560, 520)
+attack_cooldown = 3.2
+telegraph_duration = 0.65
 
 [node name="TurretOverhead" parent="Environment/Entities" unique_id=1115677008 instance=ExtResource("5")]
-position = Vector2(540, 417)
+position = Vector2(1180, 412)
+attack_cooldown = 3.2
+telegraph_duration = 0.65
 
 [node name="GolemBridge" parent="Environment/Entities" unique_id=172727535 instance=ExtResource("10_0ri8u")]
-position = Vector2(1760, 117)
+position = Vector2(5900, -33)
+telegraph_duration = 0.4
+attack_cooldown = 1.6
+attack_anim_speed = 1.0
+
+[node name="TurretMid" parent="Environment/Entities" unique_id=1642115771 instance=ExtResource("5")]
+position = Vector2(3560, 432)
+attack_cooldown = 2.4
+telegraph_duration = 0.5
+
+[node name="TurretBridge2" parent="Environment/Entities" unique_id=1863430341 instance=ExtResource("5")]
+position = Vector2(7050, -33)
+attack_cooldown = 1.6
+telegraph_duration = 0.4
+
+[node name="GolemBridge2" parent="Environment/Entities" unique_id=1561589154 instance=ExtResource("10_0ri8u")]
+position = Vector2(6750, -33)
+telegraph_duration = 0.4
+attack_cooldown = 1.6
+attack_anim_speed = 1.0
 
 [node name="Objects" type="Node2D" parent="Environment" unique_id=278969547]
 
 [node name="Obstacles" type="Node2D" parent="Environment/Objects" unique_id=1779043528]
 
 [node name="Obstacle" parent="Environment/Objects/Obstacles" unique_id=1446246101 instance=ExtResource("6")]
-position = Vector2(1310, 510)
+position = Vector2(4020, 510)
 
 [node name="Obstacle2" parent="Environment/Objects/Obstacles" unique_id=302447555 instance=ExtResource("6")]
-position = Vector2(720, 435)
+position = Vector2(1730, 435)
 
 [node name="Obstacle3" parent="Environment/Objects/Obstacles" unique_id=609678864 instance=ExtResource("6")]
-position = Vector2(720, 398)
+position = Vector2(1730, 398)
 mass = 20.0
 
 [node name="Obstacle4" parent="Environment/Objects/Obstacles" unique_id=1738034693 instance=ExtResource("6")]
-position = Vector2(750, 435)
+position = Vector2(1760, 435)
 
 [node name="Obstacle5" parent="Environment/Objects/Obstacles" unique_id=1756566504 instance=ExtResource("6")]
-position = Vector2(750, 398)
+position = Vector2(1760, 398)
 
-[node name="Goal" parent="Environment/Objects" unique_id=786003239 instance=ExtResource("9")]
-position = Vector2(2080, 82)
+[node name="Goal" parent="Environment/Objects" unique_id=786003239 unique_name_in_owner=true instance=ExtResource("9")]
+position = Vector2(7320, -68)
 
 [node name="ChiOrbs" type="Node2D" parent="Environment" unique_id=897801088]
 
 [node name="ChiOrb1" parent="Environment/ChiOrbs" unique_id=592527033 instance=ExtResource("13_orb")]
-position = Vector2(230, 505)
+position = Vector2(300, 505)
 
 [node name="ChiOrb2" parent="Environment/ChiOrbs" unique_id=1808082855 instance=ExtResource("13_orb")]
-position = Vector2(280, 505)
+position = Vector2(380, 505)
 
 [node name="ChiOrb3" parent="Environment/ChiOrbs" unique_id=1812742095 instance=ExtResource("13_orb")]
-position = Vector2(490, 505)
+position = Vector2(740, 505)
 
 [node name="ChiOrb4" parent="Environment/ChiOrbs" unique_id=1452362548 instance=ExtResource("13_orb")]
-position = Vector2(665, 465)
+position = Vector2(2770, 465)
 
 [node name="ChiOrb5" parent="Environment/ChiOrbs" unique_id=1793425828 instance=ExtResource("13_orb")]
-position = Vector2(805, 465)
+position = Vector2(2830, 435)
 
 [node name="ChiOrb6" parent="Environment/ChiOrbs" unique_id=1398535768 instance=ExtResource("13_orb")]
-position = Vector2(875, 505)
+position = Vector2(2890, 430)
 
 [node name="ChiOrb7" parent="Environment/ChiOrbs" unique_id=1354734482 instance=ExtResource("13_orb")]
-position = Vector2(1110, 505)
+position = Vector2(2950, 435)
 
 [node name="ChiOrb8" parent="Environment/ChiOrbs" unique_id=1314941304 instance=ExtResource("13_orb")]
-position = Vector2(1290, 505)
+position = Vector2(3010, 465)
 
-[node name="SpaceBackdrop" type="Sprite2D" parent="Environment" unique_id=1453600018]
-z_index = -20
-position = Vector2(1150, 320)
-scale = Vector2(9, 5.5)
-texture = ExtResource("16_r7o8t")
+[node name="ChiOrb9" parent="Environment/ChiOrbs" unique_id=2023365530 instance=ExtResource("13_orb")]
+position = Vector2(4320, 505)
+
+[node name="ChiOrb10" parent="Environment/ChiOrbs" unique_id=1427137961 instance=ExtResource("13_orb")]
+position = Vector2(4480, 505)
 
 [node name="BackgroundLayer" type="CanvasLayer" parent="." unique_id=1521015961]
 layer = -10
 
 [node name="SpaceBackground" type="TextureRect" parent="BackgroundLayer" unique_id=1794800911]
-offset_right = 288.0
-offset_bottom = 216.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 texture = ExtResource("16_r7o8t")
 expand_mode = 1
 stretch_mode = 6

@@ -9,9 +9,9 @@ enum State {
 	MOVING_DOWN,
 }
 
-@export var travel_height: float = 400.0
-@export var travel_duration: float = 2.5
-@export var wait_time_at_top: float = 3.0
+@export var travel_height: float = 550.0
+@export var travel_duration: float = 3.0
+@export var wait_time_at_top: float = 3.5
 @export var activation_delay: float = 0.4
 
 var _state: State = State.IDLE_BOTTOM
