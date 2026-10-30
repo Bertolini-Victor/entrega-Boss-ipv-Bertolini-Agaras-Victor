@@ -3,13 +3,11 @@
 [ext_resource type="Script" uid="uid://coqxktsvv203r" path="res://src/Main.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://bl7rjy3ovwpvv" path="res://src/environment/Floor.tscn" id="4"]
 [ext_resource type="PackedScene" uid="uid://bd5hj26cc16d2" path="res://src/entities/enemies/turret/Turret.tscn" id="5"]
-[ext_resource type="PackedScene" uid="uid://dvchiotj4dluu" path="res://src/environment/Obstacle.tscn" id="6"]
 [ext_resource type="PackedScene" uid="uid://bg6s38wn8ss5x" path="res://src/entities/player/character/Player.tscn" id="7"]
 [ext_resource type="PackedScene" uid="uid://d2ghjxnb0k441" path="res://src/environment/BreakableWall.tscn" id="7_cj10r"]
 [ext_resource type="PackedScene" uid="uid://dt5o1uaulndt8" path="res://src/environment/Wall.tscn" id="8"]
 [ext_resource type="PackedScene" uid="uid://c017ns48ueaea" path="res://src/environment/Elevator.tscn" id="8_e7jk0"]
 [ext_resource type="PackedScene" uid="uid://2s81rbvgeowa" path="res://src/environment/Goal.tscn" id="9"]
-[ext_resource type="PackedScene" uid="uid://ca4mk7a5pbwy6" path="res://src/environment/Ramp.tscn" id="10"]
 [ext_resource type="PackedScene" uid="uid://c6golem7scn01" path="res://src/entities/enemies/golem/Golem.tscn" id="10_0ri8u"]
 [ext_resource type="PackedScene" uid="uid://e3w1dxk37h4j" path="res://src/environment/Platform.tscn" id="11"]
 [ext_resource type="PackedScene" uid="uid://cfl84b6ma6emi" path="res://src/ui/hud/HUD.tscn" id="12_hud"]
@@ -58,7 +56,7 @@ axis_stretch_vertical = 1
 modulate = Color(0.7, 0.75, 0.85, 0.8)
 texture_filter = 1
 offset_left = 270.0
-offset_top = -820.0
+offset_top = -1048.0
 offset_right = 450.0
 offset_bottom = -100.0
 texture = ExtResource("18_bg_pipes")
@@ -69,25 +67,10 @@ patch_margin_bottom = 16
 axis_stretch_horizontal = 1
 axis_stretch_vertical = 1
 
-[node name="MiddleCatwalksBg" type="NinePatchRect" parent="Environment/BackgroundPanels" unique_id=778899004]
-modulate = Color(0.65, 0.7, 0.8, 0.7)
-texture_filter = 1
-offset_left = 2200.0
-offset_top = -360.0
-offset_right = 3700.0
-offset_bottom = -100.0
-texture = ExtResource("17_bg_deck")
-patch_margin_left = 16
-patch_margin_top = 16
-patch_margin_right = 16
-patch_margin_bottom = 16
-axis_stretch_horizontal = 1
-axis_stretch_vertical = 1
-
 [node name="TopBridgeBg" type="NinePatchRect" parent="Environment/BackgroundPanels" unique_id=778899005]
 modulate = Color(0.65, 0.7, 0.8, 0.75)
 texture_filter = 1
-offset_left = 650.0
+offset_left = 453.0
 offset_top = -1050.0
 offset_right = 4420.0
 offset_bottom = -800.0
@@ -114,35 +97,27 @@ position = Vector2(50, 350)
 position = Vector2(700, 350)
 
 [node name="Wall_B_Left" parent="Environment/Ground" unique_id=904526812 instance=ExtResource("8")]
-position = Vector2(20, 360)
+position = Vector2(-35, 534)
 
-[node name="Ramp_B1" parent="Environment/Ground" unique_id=848085061 instance=ExtResource("10")]
-position = Vector2(1320, 568)
-rotation = 0.55
-
-[node name="Platform_RampRest1A" parent="Environment/Ground" unique_id=321941200 instance=ExtResource("11")]
-position = Vector2(1550, 480)
+[node name="Platform_RampRest1B2" parent="Environment/Ground" unique_id=2067731818 instance=ExtResource("11")]
+position = Vector2(1426, 561)
 
 [node name="Platform_RampRest1B" parent="Environment/Ground" unique_id=540949609 instance=ExtResource("11")]
-position = Vector2(1650, 480)
-
-[node name="Ramp_B2" parent="Environment/Ground" unique_id=378321419 instance=ExtResource("10")]
-position = Vector2(1780, 480)
-rotation = 0.55
+position = Vector2(1569, 484)
 
 [node name="Floor_RampRest2" parent="Environment/Ground" unique_id=1726818057 instance=ExtResource("4")]
-position = Vector2(2050, 420)
+position = Vector2(1815, 420)
 
 [node name="Ceiling_B_Overhang" parent="Environment/Ground" unique_id=544707545 instance=ExtResource("4")]
 position = Vector2(1450, 220)
 
 [node name="Platform_Pit1" parent="Environment/Ground" unique_id=710609660 instance=ExtResource("11")]
-position = Vector2(2550, 410)
+position = Vector2(2507, 411)
 
 [node name="Platform_Pit2" parent="Environment/Ground" unique_id=801628542 instance=ExtResource("11")]
 position = Vector2(2780, 460)
 
-[node name="Platform_Pit3" parent="Environment/Ground" unique_id=2067731818 instance=ExtResource("11")]
+[node name="Platform_Pit3" parent="Environment/Ground" unique_id=1367215015 instance=ExtResource("11")]
 position = Vector2(3010, 510)
 
 [node name="Platform_Pit4" parent="Environment/Ground" unique_id=754525639 instance=ExtResource("11")]
@@ -155,51 +130,48 @@ position = Vector2(3450, 600)
 position = Vector2(4050, 600)
 
 [node name="Ceiling_B3" parent="Environment/Ground" unique_id=1544768376 instance=ExtResource("4")]
-position = Vector2(3450, 440)
+position = Vector2(3450, 376)
 
 [node name="Ceiling_B4" parent="Environment/Ground" unique_id=1687300472 instance=ExtResource("4")]
-position = Vector2(4050, 440)
+position = Vector2(3633, 376)
 
 [node name="BreakableWall_1" parent="Environment/Ground" unique_id=1811223344 instance=ExtResource("7_cj10r")]
-position = Vector2(4160, 520)
+position = Vector2(4160, 488)
 
 [node name="Elevator_1" parent="Environment/Ground" unique_id=1922334455 instance=ExtResource("8_e7jk0")]
 position = Vector2(4320, 576)
 travel_height = 700.0
 travel_duration = 3.5
 
-[node name="Wall_B_Right" parent="Environment/Ground" unique_id=962527511 instance=ExtResource("8")]
-position = Vector2(4460, 400)
+[node name="Wall_B_Right2" parent="Environment/Ground" unique_id=962527511 instance=ExtResource("8")]
+position = Vector2(4451, -308)
+
+[node name="Wall_B_Right3" parent="Environment/Ground" unique_id=486265802 instance=ExtResource("8")]
+position = Vector2(4207, 168)
+
+[node name="Wall_B_Right" parent="Environment/Ground" unique_id=371663037 instance=ExtResource("8")]
+position = Vector2(4451, 273)
 
 [node name="Floor_M1" parent="Environment/Ground" unique_id=1923861481 instance=ExtResource("4")]
 position = Vector2(3650, -100)
 
+[node name="Floor_M4" parent="Environment/Ground" unique_id=2075697328 instance=ExtResource("4")]
+position = Vector2(2995, -100)
+
+[node name="Ceiling_M9" parent="Environment/Ground" unique_id=551142395 instance=ExtResource("4")]
+position = Vector2(4033, -320)
+
 [node name="Ceiling_M1" parent="Environment/Ground" unique_id=1731421225 instance=ExtResource("4")]
 position = Vector2(3650, -320)
 
-[node name="Floor_M2" parent="Environment/Ground" unique_id=8496817 instance=ExtResource("8")]
-position = Vector2(3050, -100)
-
 [node name="Catwalk_M1" parent="Environment/Ground" unique_id=1202171769 instance=ExtResource("11")]
-position = Vector2(2850, -160)
+position = Vector2(2778, -101)
 
 [node name="Catwalk_M2" parent="Environment/Ground" unique_id=623196055 instance=ExtResource("11")]
-position = Vector2(2600, -220)
+position = Vector2(2532, -130)
 
 [node name="Catwalk_M3" parent="Environment/Ground" unique_id=304339450 instance=ExtResource("11")]
-position = Vector2(2350, -160)
-
-[node name="Column_M1" parent="Environment/Ground" unique_id=1336276695 instance=ExtResource("8")]
-position = Vector2(2850, 40)
-scale = Vector2(0.3, 0.4)
-
-[node name="Column_M2" parent="Environment/Ground" unique_id=1276127105 instance=ExtResource("8")]
-position = Vector2(2600, 10)
-scale = Vector2(0.3, 0.5)
-
-[node name="Column_M3" parent="Environment/Ground" unique_id=1863430342 instance=ExtResource("8")]
-position = Vector2(2350, 40)
-scale = Vector2(0.3, 0.4)
+position = Vector2(2281, -106)
 
 [node name="Ceiling_M2" parent="Environment/Ground" unique_id=1863430343 instance=ExtResource("4")]
 position = Vector2(3050, -360)
@@ -208,49 +180,52 @@ position = Vector2(3050, -360)
 position = Vector2(2450, -360)
 
 [node name="Platform_U1" parent="Environment/Ground" unique_id=1863430345 instance=ExtResource("11")]
-position = Vector2(2050, -260)
+position = Vector2(2052, -171)
 
 [node name="Platform_U2" parent="Environment/Ground" unique_id=1863430346 instance=ExtResource("11")]
-position = Vector2(1750, -260)
+position = Vector2(1752, -171)
 
 [node name="Platform_U3" parent="Environment/Ground" unique_id=1863430347 instance=ExtResource("11")]
-position = Vector2(1450, -260)
+position = Vector2(1452, -171)
 
 [node name="Platform_U4" parent="Environment/Ground" unique_id=1863430348 instance=ExtResource("11")]
-position = Vector2(1150, -260)
+position = Vector2(1152, -171)
 
 [node name="Platform_U5" parent="Environment/Ground" unique_id=1863430349 instance=ExtResource("11")]
-position = Vector2(850, -220)
+position = Vector2(958, -86)
 
 [node name="Platform_L1" parent="Environment/Ground" unique_id=1863430350 instance=ExtResource("11")]
-position = Vector2(2050, -120)
+position = Vector2(2052, -31)
 
 [node name="Platform_L2" parent="Environment/Ground" unique_id=1863430351 instance=ExtResource("11")]
-position = Vector2(1750, -120)
+position = Vector2(1752, -31)
 
 [node name="Platform_L3" parent="Environment/Ground" unique_id=1863430352 instance=ExtResource("11")]
-position = Vector2(1450, -120)
+position = Vector2(1452, -31)
 
 [node name="Platform_L4" parent="Environment/Ground" unique_id=1863430353 instance=ExtResource("11")]
-position = Vector2(1150, -120)
-
-[node name="Platform_L5" parent="Environment/Ground" unique_id=1863430354 instance=ExtResource("11")]
-position = Vector2(850, -120)
+position = Vector2(1152, -31)
 
 [node name="Ceiling_M4" parent="Environment/Ground" unique_id=1863430355 instance=ExtResource("4")]
-position = Vector2(1850, -400)
+position = Vector2(1850, -419)
 
 [node name="Ceiling_M5" parent="Environment/Ground" unique_id=1863430356 instance=ExtResource("4")]
-position = Vector2(1250, -400)
+position = Vector2(1253, -421)
 
 [node name="Floor_M3" parent="Environment/Ground" unique_id=1863430357 instance=ExtResource("4")]
 position = Vector2(250, -100)
 
+[node name="Ceiling_M8" parent="Environment/Ground" unique_id=2057826861 instance=ExtResource("4")]
+position = Vector2(520, -325)
+
+[node name="Ceiling_M7" parent="Environment/Ground" unique_id=1430627927 instance=ExtResource("4")]
+position = Vector2(549, -363)
+
 [node name="Ceiling_M6" parent="Environment/Ground" unique_id=1863430358 instance=ExtResource("4")]
-position = Vector2(250, -260)
+position = Vector2(611, -421)
 
 [node name="BreakableWall_2" parent="Environment/Ground" unique_id=1863430359 instance=ExtResource("7_cj10r")]
-position = Vector2(520, -180)
+position = Vector2(520, -210)
 
 [node name="Elevator_2" parent="Environment/Ground" unique_id=1863430360 instance=ExtResource("8_e7jk0")]
 position = Vector2(350, -124)
@@ -258,16 +233,16 @@ travel_height = 700.0
 travel_duration = 3.5
 
 [node name="Wall_M_Left" parent="Environment/Ground" unique_id=1863430361 instance=ExtResource("8")]
-position = Vector2(200, -300)
+position = Vector2(235, -300)
+
+[node name="Wall_M_Left" parent="Environment/Ground/Wall_M_Left" unique_id=1423229734 instance=ExtResource("8")]
+position = Vector2(230, -236)
 
 [node name="Floor_T_Landing" parent="Environment/Ground" unique_id=1863430362 instance=ExtResource("4")]
-position = Vector2(150, -800)
+position = Vector2(480, -800)
 
 [node name="Wall_T_Left" parent="Environment/Ground" unique_id=1863430363 instance=ExtResource("8")]
-position = Vector2(120, -950)
-
-[node name="Ramp_T1" parent="Environment/Ground" unique_id=1863430364 instance=ExtResource("10")]
-position = Vector2(650, -832)
+position = Vector2(235, -892)
 
 [node name="Floor_T1" parent="Environment/Ground" unique_id=1863430365 instance=ExtResource("4")]
 position = Vector2(800, -800)
@@ -277,6 +252,9 @@ position = Vector2(1450, -800)
 
 [node name="Floor_T3" parent="Environment/Ground" unique_id=1863430367 instance=ExtResource("4")]
 position = Vector2(2100, -800)
+
+[node name="Ceiling_T4" parent="Environment/Ground" unique_id=330650683 instance=ExtResource("4")]
+position = Vector2(166, -1050)
 
 [node name="Ceiling_T1" parent="Environment/Ground" unique_id=1863430368 instance=ExtResource("4")]
 position = Vector2(800, -1050)
@@ -304,14 +282,6 @@ position = Vector2(3400, -1050)
 
 [node name="Ceiling_A3" parent="Environment/Ground" unique_id=1863430376 instance=ExtResource("4")]
 position = Vector2(4050, -1050)
-
-[node name="Column_A1" parent="Environment/Ground" unique_id=1863430377 instance=ExtResource("8")]
-position = Vector2(2600, -960)
-scale = Vector2(0.4, 0.4)
-
-[node name="Column_A2" parent="Environment/Ground" unique_id=1863430378 instance=ExtResource("8")]
-position = Vector2(3950, -960)
-scale = Vector2(0.4, 0.4)
 
 [node name="Platform_Pedestal" parent="Environment/Ground" unique_id=1863430379 instance=ExtResource("11")]
 position = Vector2(4300, -832)
@@ -352,18 +322,18 @@ telegraph_duration = 0.55
 attack_cooldown = 2.0
 
 [node name="Turret_M2" parent="Environment/Entities" unique_id=1863430383 instance=ExtResource("5")]
-position = Vector2(2600, -255)
-attack_cooldown = 2.0
+position = Vector2(2567, -247)
+attack_cooldown = 1.5
 telegraph_duration = 0.45
 
 [node name="Golem_M2" parent="Environment/Entities" unique_id=1863430384 instance=ExtResource("10_0ri8u")]
-position = Vector2(1450, -135)
+position = Vector2(1452, -46)
 move_speed = 60.0
 telegraph_duration = 0.5
 attack_cooldown = 2.0
 
 [node name="Turret_M3" parent="Environment/Entities" unique_id=1863430385 instance=ExtResource("5")]
-position = Vector2(1450, -295)
+position = Vector2(1452, -206)
 attack_cooldown = 1.8
 telegraph_duration = 0.4
 
@@ -400,17 +370,6 @@ attack_cooldown = 1.4
 telegraph_duration = 0.35
 
 [node name="Objects" type="Node2D" parent="Environment" unique_id=278969547]
-
-[node name="Obstacles" type="Node2D" parent="Environment/Objects" unique_id=1779043528]
-
-[node name="Obstacle1" parent="Environment/Objects/Obstacles" unique_id=1446246101 instance=ExtResource("6")]
-position = Vector2(1000, 550)
-
-[node name="Obstacle2" parent="Environment/Objects/Obstacles" unique_id=302447555 instance=ExtResource("6")]
-position = Vector2(3600, 550)
-
-[node name="Obstacle3" parent="Environment/Objects/Obstacles" unique_id=609678864 instance=ExtResource("6")]
-position = Vector2(1300, -850)
 
 [node name="Goal" parent="Environment/Objects" unique_id=786003239 instance=ExtResource("9")]
 position = Vector2(4300, -865)
@@ -451,19 +410,19 @@ position = Vector2(2635, 373)
 position = Vector2(2780, 415)
 
 [node name="ChiOrb_B12" parent="Environment/ChiOrbs" unique_id=1863430393 instance=ExtResource("13_orb")]
-position = Vector2(2895, 455)
+position = Vector2(2895, 433)
 
 [node name="ChiOrb_B13" parent="Environment/ChiOrbs" unique_id=1863430394 instance=ExtResource("13_orb")]
 position = Vector2(3010, 465)
 
 [node name="ChiOrb_B14" parent="Environment/ChiOrbs" unique_id=1863430395 instance=ExtResource("13_orb")]
-position = Vector2(3125, 500)
+position = Vector2(3125, 479)
 
 [node name="ChiOrb_B15" parent="Environment/ChiOrbs" unique_id=1863430396 instance=ExtResource("13_orb")]
 position = Vector2(3240, 505)
 
 [node name="ChiOrb_B16" parent="Environment/ChiOrbs" unique_id=1863430397 instance=ExtResource("13_orb")]
-position = Vector2(3360, 520)
+position = Vector2(3343, 519)
 
 [node name="ChiOrb_B17" parent="Environment/ChiOrbs" unique_id=1863430398 instance=ExtResource("13_orb")]
 position = Vector2(3550, 525)
@@ -480,12 +439,6 @@ position = Vector2(3940, 525)
 [node name="ChiOrb_B21" parent="Environment/ChiOrbs" unique_id=1863430402 instance=ExtResource("13_orb")]
 position = Vector2(4050, 525)
 
-[node name="ChiOrb_M1" parent="Environment/ChiOrbs" unique_id=1863430403 instance=ExtResource("13_orb")]
-position = Vector2(4220, -165)
-
-[node name="ChiOrb_M2" parent="Environment/ChiOrbs" unique_id=1863430404 instance=ExtResource("13_orb")]
-position = Vector2(4140, -165)
-
 [node name="ChiOrb_M3" parent="Environment/ChiOrbs" unique_id=1863430405 instance=ExtResource("13_orb")]
 position = Vector2(4060, -165)
 
@@ -496,25 +449,25 @@ position = Vector2(3980, -165)
 position = Vector2(3200, -165)
 
 [node name="ChiOrb_M6" parent="Environment/ChiOrbs" unique_id=1863430408 instance=ExtResource("13_orb")]
-position = Vector2(2850, -200)
+position = Vector2(2817, -148)
 
 [node name="ChiOrb_M7" parent="Environment/ChiOrbs" unique_id=1863430409 instance=ExtResource("13_orb")]
-position = Vector2(2600, -260)
+position = Vector2(2580, -174)
 
 [node name="ChiOrb_M8" parent="Environment/ChiOrbs" unique_id=1863430410 instance=ExtResource("13_orb")]
-position = Vector2(2350, -200)
+position = Vector2(2310, -141)
 
 [node name="ChiOrb_M9" parent="Environment/ChiOrbs" unique_id=1863430411 instance=ExtResource("13_orb")]
-position = Vector2(1750, -300)
+position = Vector2(1752, -211)
 
 [node name="ChiOrb_M10" parent="Environment/ChiOrbs" unique_id=1863430412 instance=ExtResource("13_orb")]
-position = Vector2(1150, -300)
+position = Vector2(1152, -211)
 
 [node name="ChiOrb_M11" parent="Environment/ChiOrbs" unique_id=1863430413 instance=ExtResource("13_orb")]
-position = Vector2(1750, -160)
+position = Vector2(1752, -71)
 
 [node name="ChiOrb_M12" parent="Environment/ChiOrbs" unique_id=1863430414 instance=ExtResource("13_orb")]
-position = Vector2(1150, -160)
+position = Vector2(1152, -71)
 
 [node name="ChiOrb_T1" parent="Environment/ChiOrbs" unique_id=1863430415 instance=ExtResource("13_orb")]
 position = Vector2(820, -870)
@@ -538,7 +491,7 @@ stretch_mode = 6
 
 [node name="BackgroundMusic" type="AudioStreamPlayer" parent="." unique_id=479686148]
 stream = ExtResource("18_7lugs")
-volume_db = -6.0
+volume_db = -31.821
 autoplay = true
 
 [connection signal="body_entered" from="Environment/FallKillzone" to="." method="_on_fall_killzone_body_entered"]
