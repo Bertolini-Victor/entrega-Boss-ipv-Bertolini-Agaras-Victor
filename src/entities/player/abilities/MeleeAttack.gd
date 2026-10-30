@@ -1,17 +1,53 @@
 extends Node2D
 class_name MeleeAttack
 
-@export var attack_duration: float = 0.15
+const SLASH_FRAMES: Array[Texture2D] = [
+	preload("res://assets/textures/melee_attack/Fire Slash_Frame_01.png"),
+	preload("res://assets/textures/melee_attack/Fire Slash_Frame_02.png"),
+	preload("res://assets/textures/melee_attack/Fire Slash_Frame_03.png"),
+	preload("res://assets/textures/melee_attack/Fire Slash_Frame_04.png"),
+	preload("res://assets/textures/melee_attack/Fire Slash_Frame_05.png"),
+	preload("res://assets/textures/melee_attack/Fire Slash_Frame_06.png"),
+	preload("res://assets/textures/melee_attack/Fire Slash_Frame_07.png"),
+	preload("res://assets/textures/melee_attack/Fire Slash_Frame_08.png"),
+	preload("res://assets/textures/melee_attack/Fire Slash_Frame_09.png"),
+	preload("res://assets/textures/melee_attack/Fire Slash_Frame_10.png"),
+	preload("res://assets/textures/melee_attack/Fire Slash_Frame_11.png"),
+	preload("res://assets/textures/melee_attack/Fire Slash_Frame_12.png"),
+]
+
+@export var attack_duration: float = 0.24
 @export var attack_range: float = 40.0
 @export var wall_check_distance: float = 18.0
+@export var slash_scale: Vector2 = Vector2(0.085, 0.085)
+@export var slash_offset: Vector2 = Vector2(22.0, -2.0)
 
 var _is_attacking: bool = false
-var _draw_slash: bool = false
-var _slash_facing: float = 1.0
 var _player: CharacterBody2D = null
+var _slash_sprite: AnimatedSprite2D = null
 
 func _ready() -> void:
 	_player = _get_player()
+	_setup_slash_sprite()
+
+func _setup_slash_sprite() -> void:
+	_slash_sprite = get_node_or_null("SlashSprite") as AnimatedSprite2D
+	if _slash_sprite == null:
+		_slash_sprite = AnimatedSprite2D.new()
+		_slash_sprite.name = "SlashSprite"
+		add_child(_slash_sprite)
+
+	var frames := SpriteFrames.new()
+	if not frames.has_animation("slash"):
+		frames.add_animation("slash")
+	frames.set_animation_loop("slash", false)
+	frames.set_animation_speed("slash", float(SLASH_FRAMES.size()) / maxf(attack_duration, 0.05))
+	for tex: Texture2D in SLASH_FRAMES:
+		frames.add_frame("slash", tex)
+
+	_slash_sprite.sprite_frames = frames
+	_slash_sprite.scale = slash_scale
+	_slash_sprite.visible = false
 
 func _get_player() -> CharacterBody2D:
 	if owner is CharacterBody2D:
@@ -60,10 +96,14 @@ func attack(facing_direction: float = 1.0) -> void:
 
 	_is_attacking = true
 
-	# Activar el efecto visual del corte
-	_slash_facing = facing
-	_draw_slash = true
-	queue_redraw()
+	if _slash_sprite != null:
+		_slash_sprite.position = Vector2(slash_offset.x * facing, slash_offset.y)
+		_slash_sprite.scale = slash_scale
+		_slash_sprite.flip_h = facing > 0.0
+		_slash_sprite.sprite_frames.set_animation_speed("slash", float(SLASH_FRAMES.size()) / maxf(attack_duration, 0.05))
+		_slash_sprite.visible = true
+		_slash_sprite.frame = 0
+		_slash_sprite.play("slash")
 
 	# Usar PhysicsShapeQueryParameters2D para detección instantánea y confiable
 	var shape := RectangleShape2D.new()
@@ -91,48 +131,10 @@ func attack(facing_direction: float = 1.0) -> void:
 	await get_tree().create_timer(attack_duration).timeout
 	if not is_inside_tree():
 		return
-	_draw_slash = false
-	queue_redraw()
+	if _slash_sprite != null:
+		_slash_sprite.stop()
+		_slash_sprite.visible = false
 	_is_attacking = false
-
-func _draw() -> void:
-	if not _draw_slash:
-		return
-
-	# Dibujar un arco semitransparente amarillo/blanco como efecto de corte
-	var slash_color := Color(1.0, 0.95, 0.6, 0.55)
-	var center := Vector2((attack_range * 0.25) * _slash_facing, -3.0)
-	var radius := attack_range * 0.55
-	# Ángulo del arco: de -60° a +60° (mirando a la derecha) o invertido
-	var start_angle: float
-	var end_angle: float
-	if _slash_facing > 0:
-		start_angle = deg_to_rad(-60.0)
-		end_angle = deg_to_rad(60.0)
-	else:
-		start_angle = deg_to_rad(120.0)
-		end_angle = deg_to_rad(240.0)
-
-	# Construir los puntos del arco como un polígono relleno
-	var point_count: int = 12
-	var arc_points: PackedVector2Array = PackedVector2Array()
-	arc_points.append(center)
-	for i in range(point_count + 1):
-		var angle: float = start_angle + (end_angle - start_angle) * float(i) / float(point_count)
-		arc_points.append(center + Vector2(cos(angle), sin(angle)) * radius)
-	var colors: PackedColorArray = PackedColorArray()
-	for i in range(arc_points.size()):
-		colors.append(slash_color)
-	draw_polygon(arc_points, colors)
-
-	# Borde exterior más brillante
-	var edge_color := Color(1.0, 1.0, 0.8, 0.8)
-	for i in range(point_count):
-		var angle_a: float = start_angle + (end_angle - start_angle) * float(i) / float(point_count)
-		var angle_b: float = start_angle + (end_angle - start_angle) * float(i + 1) / float(point_count)
-		var pa: Vector2 = center + Vector2(cos(angle_a), sin(angle_a)) * radius
-		var pb: Vector2 = center + Vector2(cos(angle_b), sin(angle_b)) * radius
-		draw_line(pa, pb, edge_color, 2.0)
 
 func is_attacking() -> bool:
 	return _is_attacking

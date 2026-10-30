@@ -1,15 +1,25 @@
 [gd_scene format=3 uid="uid://dt5o1uaulndt8"]
 
-[ext_resource type="Texture2D" uid="uid://dtauxsfuyen6q" path="res://assets/textures/gray_square.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://cyk6yiadgrkd1" path="res://assets/textures/tilesets/1_Industrial_Tileset_1C.png" id="1_tileset"]
 
 [sub_resource type="RectangleShape2D" id="1"]
 size = Vector2(64, 592)
 
 [node name="Wall" type="StaticBody2D" groups=["terrain"] unique_id=962527511]
 
-[node name="gray_square" type="Sprite2D" parent="." unique_id=478684930]
-scale = Vector2(0.3, 3)
-texture = ExtResource("1")
+[node name="Visuals" type="NinePatchRect" parent="." unique_id=478684930]
+texture_filter = 1
+offset_left = -32.0
+offset_top = -296.0
+offset_right = 32.0
+offset_bottom = 296.0
+texture = ExtResource("1_tileset")
+patch_margin_left = 16
+patch_margin_top = 16
+patch_margin_right = 16
+patch_margin_bottom = 16
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=397726018]
 shape = SubResource("1")

@@ -2,115 +2,88 @@
 
 [ext_resource type="Script" uid="uid://mvifnud8nrv3" path="res://src/entities/enemies/turret/Turret.gd" id="2"]
 [ext_resource type="PackedScene" uid="uid://22mlxu8p1pyp" path="res://src/entities/enemies/turret/TurretProjectile.tscn" id="3"]
-[ext_resource type="Texture2D" uid="uid://3a1qy8iqfgr5" path="res://assets/textures/enemies/golem/Golem_DeathB.png" id="3_aag6v"]
-[ext_resource type="Texture2D" uid="uid://dwv400d0h5eec" path="res://assets/textures/enemies/golem/Golem_IdleB.png" id="3_chgy7"]
+[ext_resource type="Texture2D" uid="uid://ej6hhf4ayyrn" path="res://assets/textures/enemies/idle_animation.png" id="4_idle_tex"]
+[ext_resource type="Texture2D" uid="uid://0vu7dbq2i0xg" path="res://assets/textures/enemies/attack_animation.png" id="5_attack_tex"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_njpiu"]
-atlas = ExtResource("3_aag6v")
-region = Rect2(0, 0, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_atk_0"]
+atlas = ExtResource("5_attack_tex")
+region = Rect2(8, 0, 138, 331)
+margin = Rect2(112, 20, 222, 20)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_mf6ap"]
-atlas = ExtResource("3_aag6v")
-region = Rect2(64, 0, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_atk_1"]
+atlas = ExtResource("5_attack_tex")
+region = Rect2(147, 0, 185, 331)
+margin = Rect2(91, 20, 175, 20)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_5vei5"]
-atlas = ExtResource("3_aag6v")
-region = Rect2(128, 0, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_atk_2"]
+atlas = ExtResource("5_attack_tex")
+region = Rect2(356, 0, 228, 331)
+margin = Rect2(106, 20, 132, 20)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_wkjny"]
-atlas = ExtResource("3_aag6v")
-region = Rect2(192, 0, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_atk_3"]
+atlas = ExtResource("5_attack_tex")
+region = Rect2(588, 0, 113, 331)
+margin = Rect2(119, 20, 247, 20)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_i6dqk"]
-atlas = ExtResource("3_aag6v")
-region = Rect2(0, 64, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_0"]
+atlas = ExtResource("4_idle_tex")
+region = Rect2(25, 0, 120, 351)
+margin = Rect2(125, 0, 240, 0)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_mxww5"]
-atlas = ExtResource("3_aag6v")
-region = Rect2(64, 64, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_1"]
+atlas = ExtResource("4_idle_tex")
+region = Rect2(210, 0, 124, 351)
+margin = Rect2(123, 0, 236, 0)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_iiepl"]
-atlas = ExtResource("3_aag6v")
-region = Rect2(128, 64, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_2"]
+atlas = ExtResource("4_idle_tex")
+region = Rect2(384, 0, 120, 351)
+margin = Rect2(124, 0, 240, 0)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_p28ma"]
-atlas = ExtResource("3_aag6v")
-region = Rect2(192, 64, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_3"]
+atlas = ExtResource("4_idle_tex")
+region = Rect2(570, 0, 120, 351)
+margin = Rect2(125, 0, 240, 0)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_kdf0b"]
-atlas = ExtResource("3_aag6v")
-region = Rect2(0, 128, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_aag6v"]
-atlas = ExtResource("3_chgy7")
-region = Rect2(0, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_6wtxx"]
-atlas = ExtResource("3_chgy7")
-region = Rect2(64, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_tcn5k"]
-atlas = ExtResource("3_chgy7")
-region = Rect2(128, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_jnkdk"]
-atlas = ExtResource("3_chgy7")
-region = Rect2(192, 0, 64, 64)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_njpiu"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_turret"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_njpiu")
+"texture": SubResource("AtlasTexture_atk_0")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_mf6ap")
+"texture": SubResource("AtlasTexture_atk_1")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_5vei5")
+"texture": SubResource("AtlasTexture_atk_2")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_wkjny")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_i6dqk")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_mxww5")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_iiepl")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_p28ma")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_kdf0b")
+"texture": SubResource("AtlasTexture_atk_3")
 }],
-"loop": 0,
-"name": &"die",
-"speed": 5.0
+"loop": false,
+"name": &"attack",
+"speed": 6.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_aag6v")
+"texture": SubResource("AtlasTexture_idle_0")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_6wtxx")
+"texture": SubResource("AtlasTexture_idle_1")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_tcn5k")
+"texture": SubResource("AtlasTexture_idle_2")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_jnkdk")
+"texture": SubResource("AtlasTexture_idle_3")
 }],
-"loop": 1,
+"loop": true,
 "name": &"idle",
-"speed": 5.0
+"speed": 6.0
 }]
 
 [sub_resource type="RectangleShape2D" id="1"]
-size = Vector2(34, 31)
+size = Vector2(28, 31)
 
 [sub_resource type="CircleShape2D" id="2"]
 radius = 184.0978
@@ -127,11 +100,12 @@ one_shot = true
 [node name="FirePosition" type="Marker2D" parent="." unique_id=1314620399]
 position = Vector2(0, -15)
 
-[node name="Body" type="AnimatedSprite2D" parent="." unique_id=158290192]
+[node name="Visuals" type="AnimatedSprite2D" parent="." unique_id=158290192]
 texture_filter = 1
-position = Vector2(0, -15)
-sprite_frames = SubResource("SpriteFrames_njpiu")
+scale = Vector2(0.095, 0.095)
+sprite_frames = SubResource("SpriteFrames_turret")
 animation = &"idle"
+offset = Vector2(0, -161.5)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1867534974]
 position = Vector2(0, -15.5)

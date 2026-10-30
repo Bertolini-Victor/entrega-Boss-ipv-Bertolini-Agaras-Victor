@@ -4,10 +4,10 @@
 [ext_resource type="Texture2D" uid="uid://bov7a3ffc82xs" path="res://assets/textures/fx/charged/charged1.png" id="2_t2gel"]
 
 [node name="TurretProjectile" unique_id=2047043401 instance=ExtResource("1_uid2m")]
-velocity_speed = 400.0
+velocity_speed = 165.0
 
 [node name="LifetimeTimer" parent="." index="0" unique_id=1300439819]
-wait_time = 3.0
+wait_time = 5.0
 
 [node name="Hitbox" parent="." index="2" unique_id=983099697]
 collision_layer = 16

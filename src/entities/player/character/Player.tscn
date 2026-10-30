@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://bg6s38wn8ss5x"]
 
 [ext_resource type="Script" uid="uid://tp4fxm4jsgcy" path="res://src/entities/player/character/Player.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://de1m14eyfnc8c" path="res://assets/textures/player/player_sheet.png" id="2_lvau8"]
-[ext_resource type="Texture2D" uid="uid://7v68qc6wpxn0" path="res://assets/textures/player/staff.png" id="3_lvau8"]
+[ext_resource type="Texture2D" uid="uid://dikuv6n0lqixp" path="res://assets/textures/player/Iroh_Idle_00.png" id="2_iroh0"]
+[ext_resource type="Texture2D" uid="uid://cov2crxqokfjg" path="res://assets/textures/player/Iroh_Idle_01.png" id="3_iroh1"]
 [ext_resource type="Script" uid="uid://bxm1bqpwq3bk5" path="res://src/entities/player/weapons/FireballController.gd" id="4"]
 [ext_resource type="PackedScene" uid="uid://c7ejb3ehyxs1r" path="res://src/entities/player/weapons/PlayerFireball.tscn" id="5"]
 [ext_resource type="Script" uid="uid://cwhpmfa22aekc" path="res://src/entities/player/abilities/MeleeAttack.gd" id="6"]
@@ -13,100 +13,45 @@
 [ext_resource type="PackedScene" uid="uid://ckj4yq1m2a3b4" path="res://src/entities/player/abilities/ParryZone.tscn" id="11_parry"]
 
 [sub_resource type="RectangleShape2D" id="1"]
-size = Vector2(18, 20)
+size = Vector2(24, 30)
 
 [sub_resource type="Animation" id="Animation_j0f6w"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("BodyPivot/Body:frame")
+tracks/0/path = NodePath("BodyPivot/Body:texture")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [1]
-}
-
-[sub_resource type="Animation" id="Animation_4niw5"]
-resource_name = "die"
-step = 0.1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("BodyPivot/Body:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.90000004),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [27, 27, 28, 29, 30, 31, 32, 33, 34, 35]
+"values": [ExtResource("2_iroh0")]
 }
 
 [sub_resource type="Animation" id="Animation_gc66i"]
 resource_name = "idle"
-length = 0.6
+length = 0.7
 loop_mode = 1
-step = 0.1
+step = 0.05
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("BodyPivot/Body:frame")
+tracks/0/path = NodePath("BodyPivot/Body:texture")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.35),
+"transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [1, 2, 3, 4, 5]
-}
-
-[sub_resource type="Animation" id="Animation_3g2ip"]
-resource_name = "jump"
-length = 0.3
-loop_mode = 1
-step = 0.1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("BodyPivot/Body:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 1,
-"values": [18, 19, 20]
-}
-
-[sub_resource type="Animation" id="Animation_lvau8"]
-resource_name = "walk"
-length = 0.8
-loop_mode = 1
-step = 0.1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("BodyPivot/Body:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [9, 10, 11, 12, 13, 14, 15, 16]
+"values": [ExtResource("2_iroh0"), ExtResource("3_iroh1")]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_3g2ip"]
 _data = {
 &"RESET": SubResource("Animation_j0f6w"),
-&"die": SubResource("Animation_4niw5"),
-&"idle": SubResource("Animation_gc66i"),
-&"jump": SubResource("Animation_3g2ip"),
-&"walk": SubResource("Animation_lvau8")
+&"idle": SubResource("Animation_gc66i")
 }
 
 [node name="Player" type="CharacterBody2D" unique_id=80550071]
@@ -118,7 +63,7 @@ platform_floor_layers = 4294901761
 script = ExtResource("1")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=72660534]
-position = Vector2(-5, -10)
+position = Vector2(0, -15)
 shape = SubResource("1")
 
 [node name="BodyAnimations" type="AnimationPlayer" parent="." unique_id=589599093]
@@ -128,20 +73,18 @@ libraries/ = SubResource("AnimationLibrary_3g2ip")
 
 [node name="Body" type="Sprite2D" parent="BodyPivot" unique_id=1697862942]
 texture_filter = 1
-position = Vector2(-3, -11)
-texture = ExtResource("2_lvau8")
-hframes = 9
-vframes = 5
-frame = 1
+position = Vector2(0, -15.5)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_iroh0")
 
 [node name="ParryController" type="Node2D" parent="." unique_id=2142619956]
-position = Vector2(-5, -10)
+position = Vector2(0, -15)
 script = ExtResource("10_parry")
 
 [node name="ParryZone" parent="ParryController" unique_id=737919550 instance=ExtResource("11_parry")]
 
 [node name="WeaponContainer" type="Node2D" parent="." unique_id=1392024065]
-position = Vector2(-5, -7)
+position = Vector2(0, -15)
 
 [node name="Weapon" type="Node2D" parent="WeaponContainer" unique_id=2030513493]
 unique_name_in_owner = true
@@ -149,12 +92,8 @@ texture_filter = 1
 script = ExtResource("4")
 projectile_scene = ExtResource("5")
 
-[node name="Sprite2D" type="Sprite2D" parent="WeaponContainer/Weapon" unique_id=1207225079]
-rotation = 1.5708
-texture = ExtResource("3_lvau8")
-
 [node name="WeaponTip" type="Marker2D" parent="WeaponContainer/Weapon" unique_id=1289130225]
-position = Vector2(9, 0)
+position = Vector2(10, 0)
 
 [node name="FireTimer" type="Timer" parent="WeaponContainer/Weapon" unique_id=1389130225]
 wait_time = 0.5
@@ -168,12 +107,11 @@ position = Vector2(0, -8)
 script = ExtResource("7_breath")
 
 [node name="LightningAttack" type="Node2D" parent="WeaponContainer" unique_id=817653554]
-position = Vector2(0, -6)
 script = ExtResource("8_heavy")
 projectile_scene = ExtResource("9_blast_proj")
 
 [node name="WeaponTip" type="Marker2D" parent="WeaponContainer/LightningAttack" unique_id=691525727]
-position = Vector2(16, 0)
+position = Vector2(12, 0)
 
 [node name="ChargeTimer" type="Timer" parent="WeaponContainer/LightningAttack" unique_id=1110792107]
 wait_time = 0.6

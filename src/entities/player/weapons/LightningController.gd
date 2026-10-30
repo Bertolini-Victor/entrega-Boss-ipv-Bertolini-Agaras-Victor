@@ -11,7 +11,6 @@ var _on_cooldown: bool = false
 
 var _sprite: CanvasItem = null
 var _original_modulate: Color = Color.WHITE
-var _original_scale: Vector2 = Vector2.ONE
 
 @onready var weapon_tip: Marker2D = $WeaponTip
 @onready var charge_timer: Timer = $ChargeTimer
@@ -23,43 +22,35 @@ func _ready() -> void:
 func _init_visual_feedback() -> void:
 	var target: CanvasItem = _get_sprite()
 	if target != null:
-		_original_modulate = target.modulate
-		_original_scale = target.scale
+		_original_modulate = target.self_modulate
 	else:
-		_original_modulate = modulate
-		_original_scale = scale
+		_original_modulate = Color.WHITE
 
 func _get_sprite() -> CanvasItem:
 	if _sprite != null and is_instance_valid(_sprite):
 		return _sprite
 	if has_node("Sprite2D"):
 		_sprite = get_node("Sprite2D") as CanvasItem
-	elif get_parent() and get_parent().has_node("Weapon/Sprite2D"):
-		_sprite = get_parent().get_node("Weapon/Sprite2D") as CanvasItem
-	elif get_parent() and get_parent().has_node("%Weapon/Sprite2D"):
-		_sprite = get_parent().get_node("%Weapon/Sprite2D") as CanvasItem
-	
+	elif owner != null and owner.has_node("BodyPivot/Body"):
+		_sprite = owner.get_node("BodyPivot/Body") as CanvasItem
+	elif get_parent() and get_parent().get_parent() and get_parent().get_parent().has_node("BodyPivot/Body"):
+		_sprite = get_parent().get_parent().get_node("BodyPivot/Body") as CanvasItem
+
 	if _sprite != null:
-		_original_modulate = _sprite.modulate
-		_original_scale = _sprite.scale
+		_original_modulate = _sprite.self_modulate
 	return _sprite
 
 func _apply_charge_feedback(charging: bool) -> void:
 	var target: CanvasItem = _get_sprite()
 	if charging:
 		var charge_color: Color = Color(1.8, 1.2, 0.2, 1.0)
-		var charge_scale: Vector2 = _original_scale * 1.15
 		if target != null:
-			target.modulate = charge_color
-			target.scale = charge_scale
+			target.self_modulate = charge_color
 		modulate = charge_color
-		scale = charge_scale
 	else:
 		if target != null:
-			target.modulate = _original_modulate
-			target.scale = _original_scale
-		modulate = _original_modulate
-		scale = _original_scale
+			target.self_modulate = _original_modulate
+		modulate = Color.WHITE
 
 # Procesa la entrada y maneja la carga y orientación del ataque de rayo.
 func process_input() -> void:

@@ -18,6 +18,7 @@ signal ability_unlocked(title: String, hint: String)
 @onready var _hitbox_shape: CollisionShape2D = $CollisionShape2D
 
 var _sprite_base_pos: Vector2 = Vector2.ZERO
+var _sprite_base_scale: Vector2 = Vector2.ONE
 var _sprite_half_height: float = 0.0
 
 @export_group("Stats")
@@ -108,6 +109,7 @@ func _cache_sprite_metrics() -> void:
 	if body_sprite == null:
 		return
 	_sprite_base_pos = body_sprite.position
+	_sprite_base_scale = body_sprite.scale
 	_sprite_half_height = absf(_sprite_base_pos.y)
 
 func _compute_jump_physics() -> void:
@@ -286,6 +288,7 @@ func _process_input() -> void:
 	# Fireball / Bola de fuego (Q) — blocked while melee or fire breath is active, while charging lightning, or during the cast lock
 	if Input.is_action_just_pressed("attack_1") and can_fireball and not lightning_busy and not melee_busy and not fire_breath_busy and not cast_locked:
 		if weapon.is_ready():
+			body_pivot.scale.x = 1.0 if get_global_mouse_position().x >= global_position.x else -1.0
 			weapon.fire()
 			_cast_lock_timer = attack_lock_time
 			cast_locked = true
@@ -295,6 +298,8 @@ func _process_input() -> void:
 	# Lightning attack — blocked while melee or fire breath is active or during the cast lock.
 	if can_lightning and lightning_controller:
 		if not melee_busy and not fire_breath_busy and not cast_locked:
+			if Input.is_action_pressed("attack_lightning"):
+				body_pivot.scale.x = 1.0 if get_global_mouse_position().x >= global_position.x else -1.0
 			lightning_controller.process_input()
 
 	# Jump buffer: queue on press
@@ -368,7 +373,7 @@ func die() -> void:
 	_dust_particles.clear()
 	queue_redraw()
 	if body_sprite:
-		body_sprite.scale = Vector2.ONE
+		body_sprite.scale = _sprite_base_scale
 		body_sprite.rotation = 0.0
 		body_sprite.position = _sprite_base_pos
 	if body_animations:
@@ -404,23 +409,19 @@ func die() -> void:
 		return
 	player_died.emit()
 
-# Actualiza la animacion segun el estado de movimiento y modula la cadencia de caminata.
+# Actualiza la animacion segun el estado del personaje.
 func _update_animation() -> void:
-	if not is_on_floor():
-		body_animations.speed_scale = 1.0
-		_play_animation("jump")
-	elif h_movement_direction != 0:
-		var speed_ratio: float = clampf(absf(velocity.x) / maxf(h_speed_limit, 1.0), 0.0, 1.0)
-		body_animations.speed_scale = lerpf(0.75, 1.35, speed_ratio)
-		_play_animation("walk")
-	else:
-		body_animations.speed_scale = 1.0
-		_play_animation("idle")
+	body_animations.speed_scale = 1.0
+	_play_animation("idle")
 
 # Reproduce una animacion del cuerpo.
 func _play_animation(animation: String) -> void:
 	if body_animations.has_animation(animation):
-		body_animations.play(animation)
+		if body_animations.current_animation != animation or not body_animations.is_playing():
+			body_animations.play(animation)
+	elif body_animations.has_animation("idle"):
+		if body_animations.current_animation != "idle" or not body_animations.is_playing():
+			body_animations.play("idle")
 
 # Evalua colisiones superiores y redondea esquinas si el hueco esta a pocos pixeles.
 func _check_corner_correction(delta: float) -> void:
@@ -444,8 +445,8 @@ func _check_corner_correction(delta: float) -> void:
 # Aplica estiramiento visual y polvo al despegar.
 func _apply_jump_juice(was_on_ground: bool) -> void:
 	if body_sprite:
-		body_sprite.scale = jump_stretch_scale
-		body_sprite.position.y = -_sprite_half_height * body_sprite.scale.y
+		body_sprite.scale = _sprite_base_scale * jump_stretch_scale
+		body_sprite.position.y = -_sprite_half_height * jump_stretch_scale.y
 	if was_on_ground:
 		_spawn_jump_dust()
 
@@ -453,18 +454,20 @@ func _apply_jump_juice(was_on_ground: bool) -> void:
 func _apply_landing_juice() -> void:
 	var impact_ratio: float = clampf(_pre_land_velocity_y / max_fall_speed, 0.15, 1.0)
 	if body_sprite:
-		body_sprite.scale = Vector2.ONE.lerp(land_squash_max_scale, impact_ratio)
-		body_sprite.position.y = -_sprite_half_height * body_sprite.scale.y
+		var squash_factor: Vector2 = Vector2.ONE.lerp(land_squash_max_scale, impact_ratio)
+		body_sprite.scale = _sprite_base_scale * squash_factor
+		body_sprite.position.y = -_sprite_half_height * squash_factor.y
 	if _pre_land_velocity_y >= max_fall_speed * 0.40:
 		_spawn_hard_landing_dust()
 
-# Recupera la escala del sprite hacia Vector2.ONE, ajusta posicion y calcula inclinacion.
+# Recupera la escala del sprite hacia su escala base, ajusta posicion y calcula inclinacion.
 func _update_visual_juice(delta: float, on_floor_now: bool) -> void:
 	if not body_sprite or dead:
 		return
 	
-	body_sprite.scale = body_sprite.scale.lerp(Vector2.ONE, clampf(squash_recovery_speed * delta, 0.0, 1.0))
-	body_sprite.position.y = -_sprite_half_height * body_sprite.scale.y
+	body_sprite.scale = body_sprite.scale.lerp(_sprite_base_scale, clampf(squash_recovery_speed * delta, 0.0, 1.0))
+	var scale_ratio_y: float = body_sprite.scale.y / maxf(_sprite_base_scale.y, 0.001)
+	body_sprite.position.y = -_sprite_half_height * scale_ratio_y
 	body_sprite.position.x = _sprite_base_pos.x
 	
 	var target_tilt: float = 0.0

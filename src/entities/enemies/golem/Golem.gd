@@ -14,6 +14,8 @@ enum State {
 }
 
 const CHI_ORB_SCENE: PackedScene = preload("res://src/environment/chi_orb/ChiOrb.tscn")
+const IDLE_SCALE: Vector2 = Vector2(0.095, 0.095)
+const ACTION_SCALE: Vector2 = Vector2(0.117, 0.117)
 
 @export var max_health: int = 3
 @export var move_speed: float = 65.0
@@ -22,16 +24,16 @@ const CHI_ORB_SCENE: PackedScene = preload("res://src/environment/chi_orb/ChiOrb
 @export var attack_range: float = 46.0
 @export var attack_damage: int = 1
 @export var telegraph_duration: float = 0.6
-@export var attack_active_duration: float = 0.20
+@export var attack_active_duration: float = 0.24
 @export var attack_cooldown: float = 2.2
 @export var attack_anim_speed: float = 0.75
 @export var stun_duration: float = 1.20
 @export var gravity_acceleration: float = 980.0
 @export var max_fall_speed: float = 650.0
-@export var telegraph_color: Color = Color(2.2, 0.55, 0.3, 1.0)
+@export var telegraph_color: Color = Color(2.0, 0.5, 0.5, 1.0)
 @export var stun_color: Color = Color(0.55, 0.75, 1.4, 1.0)
 
-@onready var body_anim: AnimatedSprite2D = $Body
+@onready var sprite: AnimatedSprite2D = $Visuals
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var floor_check: RayCast2D = $FloorCheck
 @onready var detection_area: Area2D = $DetectionArea
@@ -47,6 +49,7 @@ var _cooldown_timer: float = 0.0
 var _state_timer: float = 0.0
 var _parryable_window: bool = false
 var _telegraph_tween: Tween = null
+var _hit_tween: Tween = null
 
 func _ready() -> void:
 	add_to_group("enemies")
@@ -72,18 +75,20 @@ func _physics_process(delta: float) -> void:
 			velocity.x = move_toward(velocity.x, 0.0, 220.0 * delta)
 			_state_timer -= delta
 			if _state_timer <= 0.0:
-				if body_anim != null:
-					body_anim.self_modulate = Color.WHITE
-					body_anim.speed_scale = 1.0
+				if sprite != null:
+					sprite.self_modulate = Color.WHITE
+					sprite.rotation = 0.0
+					sprite.speed_scale = 1.0
 				_cooldown_timer = maxf(_cooldown_timer, attack_cooldown * 0.4)
 				_state = State.CHASE if _has_valid_target() else State.IDLE
 		State.HURT:
 			velocity.x = move_toward(velocity.x, 0.0, 300.0 * delta)
 			_state_timer -= delta
 			if _state_timer <= 0.0:
-				if body_anim != null:
-					body_anim.self_modulate = Color.WHITE
-					body_anim.speed_scale = 1.0
+				if sprite != null:
+					sprite.self_modulate = Color.WHITE
+					sprite.rotation = 0.0
+					sprite.speed_scale = 1.0
 				_state = State.CHASE if _has_valid_target() else State.IDLE
 		State.TELEGRAPH, State.ATTACK:
 			velocity.x = 0.0
@@ -124,7 +129,7 @@ func _process_chase_state() -> void:
 
 	if _can_advance_on_floor():
 		velocity.x = _facing * move_speed
-		_play_animation("run")
+		_play_animation("walk")
 	else:
 		velocity.x = 0.0
 		_play_animation("idle")
@@ -142,7 +147,7 @@ func _process_idle_state() -> void:
 
 	if _can_advance_on_floor():
 		velocity.x = _facing * patrol_speed
-		_play_animation("run")
+		_play_animation("walk")
 	else:
 		velocity.x = 0.0
 		_play_animation("idle")
@@ -157,18 +162,43 @@ func _can_advance_on_floor() -> bool:
 
 func _set_facing(dir: float) -> void:
 	_facing = 1.0 if dir >= 0.0 else -1.0
-	if body_anim != null:
-		body_anim.flip_h = _facing < 0.0
+	if sprite != null:
+		sprite.flip_h = _facing < 0.0
 	if floor_check != null:
 		floor_check.position.x = absf(floor_check.position.x) * _facing
+
+func _play_animation(anim_name: String) -> void:
+	if sprite == null or sprite.sprite_frames == null:
+		return
+	if not sprite.sprite_frames.has_animation(anim_name):
+		return
+	sprite.scale = IDLE_SCALE if anim_name == "idle" else ACTION_SCALE
+	if sprite.animation != anim_name or not sprite.is_playing():
+		sprite.play(anim_name)
 
 func _cancel_telegraph() -> void:
 	if _telegraph_tween != null and _telegraph_tween.is_valid():
 		_telegraph_tween.kill()
 	_telegraph_tween = null
-	if body_anim != null:
-		body_anim.self_modulate = Color.WHITE
-		body_anim.speed_scale = 1.0
+	if sprite != null:
+		sprite.self_modulate = Color.WHITE
+		sprite.rotation = 0.0
+		sprite.speed_scale = 1.0
+
+func play_hit_anim() -> void:
+	if sprite == null:
+		return
+	if _hit_tween != null and _hit_tween.is_valid():
+		_hit_tween.kill()
+
+	sprite.self_modulate = Color(3.0, 3.0, 3.0)
+	var shake_dir: float = 1.0 if randf() >= 0.5 else -1.0
+	sprite.rotation = randf_range(0.10, 0.18) * shake_dir
+
+	_hit_tween = create_tween()
+	_hit_tween.set_parallel(true)
+	_hit_tween.tween_property(sprite, "self_modulate", Color.WHITE, 0.2)
+	_hit_tween.tween_property(sprite, "rotation", 0.0, 0.2)
 
 func _start_attack_sequence() -> void:
 	if dead or _state == State.TELEGRAPH or _state == State.ATTACK or _state == State.STUNNED:
@@ -177,17 +207,21 @@ func _start_attack_sequence() -> void:
 	_state = State.TELEGRAPH
 	_parryable_window = true
 	velocity.x = 0.0
-	_play_animation("attack")
 
-	if body_anim != null:
-		body_anim.speed_scale = attack_anim_speed
-		body_anim.self_modulate = Color.WHITE
+	var total_duration: float = maxf(telegraph_duration + attack_active_duration, 0.2)
+	if sprite != null:
+		sprite.scale = ACTION_SCALE
+		sprite.self_modulate = Color.WHITE
+		sprite.frame = 0
+		var base_fps: float = sprite.sprite_frames.get_animation_speed("attack")
+		sprite.speed_scale = (4.0 / total_duration) / maxf(base_fps, 1.0)
+		sprite.play("attack")
 
 	if _telegraph_tween != null and _telegraph_tween.is_valid():
 		_telegraph_tween.kill()
 	_telegraph_tween = create_tween()
-	if body_anim != null:
-		_telegraph_tween.tween_property(body_anim, "self_modulate", telegraph_color, telegraph_duration)
+	if sprite != null:
+		_telegraph_tween.tween_property(sprite, "self_modulate", telegraph_color, telegraph_duration)
 	else:
 		_telegraph_tween.tween_interval(telegraph_duration)
 
@@ -198,9 +232,8 @@ func _start_attack_sequence() -> void:
 		return
 
 	_state = State.ATTACK
-	if body_anim != null:
-		body_anim.speed_scale = attack_anim_speed
-		body_anim.self_modulate = Color(2.5, 0.9, 0.5, 1.0)
+	if sprite != null:
+		sprite.self_modulate = Color.WHITE
 
 	var parried: bool = _execute_melee_hit()
 	if parried or _state == State.STUNNED or dead:
@@ -213,11 +246,12 @@ func _start_attack_sequence() -> void:
 		return
 
 	_parryable_window = false
-	if body_anim != null:
-		body_anim.speed_scale = 1.0
-		body_anim.self_modulate = Color.WHITE
+	if sprite != null:
+		sprite.speed_scale = 1.0
+		sprite.self_modulate = Color.WHITE
 	_cooldown_timer = attack_cooldown
 	_state = State.CHASE if _has_valid_target() else State.IDLE
+	_play_animation("idle")
 
 func _execute_melee_hit() -> bool:
 	if dead or not _has_valid_target():
@@ -250,10 +284,10 @@ func on_parried() -> void:
 	_state = State.STUNNED
 	_state_timer = stun_duration
 	velocity.x = -_facing * 45.0
-	if body_anim != null:
-		body_anim.speed_scale = 1.0
-		body_anim.self_modulate = stun_color
-	_play_animation("hit")
+	_play_animation("idle")
+	play_hit_anim()
+	if sprite != null:
+		sprite.self_modulate = stun_color
 
 func take_damage(amount: int = 1) -> void:
 	if dead:
@@ -270,10 +304,8 @@ func take_damage(amount: int = 1) -> void:
 	if _state != State.STUNNED:
 		_state = State.HURT
 		_state_timer = 0.28
-	if body_anim != null:
-		body_anim.speed_scale = 1.0
-		body_anim.self_modulate = Color(2.2, 2.2, 2.2, 1.0)
-	_play_animation("hit")
+	_play_animation("idle")
+	play_hit_anim()
 
 func die() -> void:
 	if dead:
@@ -290,16 +322,17 @@ func die() -> void:
 	if detection_area != null:
 		detection_area.set_deferred("monitoring", false)
 	set_physics_process(false)
-	if body_anim != null:
-		body_anim.speed_scale = 1.0
-		body_anim.self_modulate = Color.WHITE
 	_spawn_chi_orb()
-	_play_animation("die")
 	died.emit()
-	if body_anim != null and body_anim.sprite_frames != null and body_anim.sprite_frames.has_animation("die"):
-		await body_anim.animation_finished
+	if sprite != null:
+		sprite.stop()
+		var death_tween: Tween = create_tween()
+		death_tween.set_parallel(true)
+		death_tween.tween_property(sprite, "scale", Vector2(IDLE_SCALE.x * 1.2, 0.0), 0.25)
+		death_tween.tween_property(sprite, "modulate:a", 0.0, 0.25)
+		await death_tween.finished
 	else:
-		await get_tree().create_timer(0.5).timeout
+		await get_tree().create_timer(0.25).timeout
 	if not is_inside_tree():
 		return
 	queue_free()
@@ -323,8 +356,3 @@ func _on_detection_area_body_exited(body: Node2D) -> void:
 		return
 	if body == target:
 		target = null
-
-func _play_animation(animation: String) -> void:
-	if body_anim != null and body_anim.sprite_frames != null and body_anim.sprite_frames.has_animation(animation):
-		if body_anim.animation != animation or not body_anim.is_playing():
-			body_anim.play(animation)

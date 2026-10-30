@@ -35,7 +35,7 @@ theme_override_constants/separation = 8
 [node name="Title" type="Label" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
-text = "ENTREGA FINAL BOSS"
+text = "Dragon In Space"
 horizontal_alignment = 1
 
 [node name="Authors" type="Label" parent="CenterContainer/VBoxContainer"]
