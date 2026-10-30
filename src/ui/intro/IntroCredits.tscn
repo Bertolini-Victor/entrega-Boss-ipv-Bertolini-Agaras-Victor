@@ -1,8 +1,25 @@
-[gd_scene load_steps=2 format=3 uid="uid://cintrocredits01"]
+[gd_scene format=3 uid="uid://lmtwto2yxnr5"]
 
-[ext_resource type="Script" path="res://src/ui/intro/IntroCredits.gd" id="1_intro"]
+[ext_resource type="Script" uid="uid://g74cj2j0lvia" path="res://src/ui/intro/IntroCredits.gd" id="1_intro"]
+[ext_resource type="Texture2D" uid="uid://qh1p03vntfxu" path="res://assets/textures/ui/main_image.jpg" id="2_mainbg"]
 
-[node name="IntroCredits" type="Control"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 20.0
+content_margin_top = 16.0
+content_margin_right = 20.0
+content_margin_bottom = 16.0
+bg_color = Color(0.06, 0.07, 0.11, 0.78)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.878431, 0.478431, 0.168627, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="IntroCredits" type="Control" unique_id=1855370129]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,16 +28,21 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_intro")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="BackgroundTexture" type="TextureRect" parent="." unique_id=1101949146]
+self_modulate = Color(0.6, 0.6, 0.6, 1)
+texture_filter = 1
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.05, 0.05, 0.07, 1)
+mouse_filter = 2
+texture = ExtResource("2_mainbg")
+expand_mode = 1
+stretch_mode = 6
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=633407646]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -28,30 +50,40 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=552404596]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer" unique_id=1670474542]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Title" type="Label" parent="CenterContainer/VBoxContainer"]
+[node name="Title" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer" unique_id=1516213240]
 layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 6
 theme_override_font_sizes/font_size = 14
 text = "Dragon In Space"
 horizontal_alignment = 1
 
-[node name="Authors" type="Label" parent="CenterContainer/VBoxContainer"]
+[node name="Authors" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer" unique_id=1734651401]
 layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 9
-text = "Bertolini - Agaras"
+text = "Victor Bertolini Agaras"
 horizontal_alignment = 1
 
-[node name="Hint" type="Label" parent="CenterContainer/VBoxContainer"]
+[node name="Hint" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer" unique_id=390364792]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_colors/font_color = Color(0.75, 0.75, 0.8, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 7
 text = "Espacio o Clic para continuar..."
 horizontal_alignment = 1
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="." unique_id=1258117681]
 wait_time = 5.0
 one_shot = true
 autostart = true

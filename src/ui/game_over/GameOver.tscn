@@ -1,6 +1,73 @@
-[gd_scene load_steps=2 format=3 uid="uid://cgameover0001"]
+[gd_scene load_steps=8 format=3 uid="uid://cgameover0001"]
 
-[ext_resource type="Script" path="res://src/ui/game_over/GameOver.gd" id="1_gover"]
+[ext_resource type="Script" uid="uid://c83kndr2pql4x" path="res://src/ui/game_over/GameOver.gd" id="1_gover"]
+[ext_resource type="Texture2D" uid="uid://cta2b7g2heu1r" path="res://assets/textures/ui/lose_image.jpg" id="2_lose"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_focus"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_hover"]
+content_margin_left = 10.0
+content_margin_top = 3.0
+content_margin_right = 10.0
+content_margin_bottom = 3.0
+bg_color = Color(0.22, 0.14, 0.18, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.95, 0.25, 0.25, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_normal"]
+content_margin_left = 10.0
+content_margin_top = 3.0
+content_margin_right = 10.0
+content_margin_bottom = 3.0
+bg_color = Color(0.12, 0.14, 0.2, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.45, 0.3, 0.3, 0.7)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_pressed"]
+content_margin_left = 10.0
+content_margin_top = 3.0
+content_margin_right = 10.0
+content_margin_bottom = 3.0
+bg_color = Color(0.12, 0.06, 0.08, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.7, 0.15, 0.15, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 20.0
+content_margin_top = 16.0
+content_margin_right = 20.0
+content_margin_bottom = 16.0
+bg_color = Color(0.06, 0.07, 0.11, 0.78)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.658824, 0.196078, 0.196078, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [node name="GameOver" type="Control"]
 layout_mode = 3
@@ -11,14 +78,18 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_gover")
 
-[node name="TintOverlay" type="ColorRect" parent="."]
+[node name="BackgroundTexture" type="TextureRect" parent="."]
+texture_filter = 1
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.2, 0.03, 0.03, 0.82)
+mouse_filter = 2
+texture = ExtResource("2_lose")
+expand_mode = 1
+stretch_mode = 6
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -28,30 +99,52 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer"]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Title" type="Label" parent="CenterContainer/VBoxContainer"]
+[node name="Title" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.25, 0.25, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 6
 theme_override_font_sizes/font_size = 18
 text = "¡HAS MUERTO!"
 horizontal_alignment = 1
 
-[node name="Buttons" type="VBoxContainer" parent="CenterContainer/VBoxContainer"]
+[node name="Buttons" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="RetryButton" type="Button" parent="CenterContainer/VBoxContainer/Buttons"]
+[node name="RetryButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/Buttons"]
 layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 0.85, 0.85, 1)
+theme_override_colors/font_color = Color(0.95, 0.92, 0.92, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 9
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
 text = "Reintentar"
 
-[node name="MenuButton" type="Button" parent="CenterContainer/VBoxContainer/Buttons"]
+[node name="MenuButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/Buttons"]
 layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 0.85, 0.85, 1)
+theme_override_colors/font_color = Color(0.95, 0.92, 0.92, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 9
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
 text = "Menú Principal"
 
-[connection signal="pressed" from="CenterContainer/VBoxContainer/Buttons/RetryButton" to="." method="_on_retry_button_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/Buttons/MenuButton" to="." method="_on_menu_button_pressed"]
+[connection signal="pressed" from="CenterContainer/PanelContainer/VBoxContainer/Buttons/RetryButton" to="." method="_on_retry_button_pressed"]
+[connection signal="pressed" from="CenterContainer/PanelContainer/VBoxContainer/Buttons/MenuButton" to="." method="_on_menu_button_pressed"]

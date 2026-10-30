@@ -1,6 +1,19 @@
-[gd_scene load_steps=2 format=3 uid="uid://cwincredits001"]
+[gd_scene load_steps=5 format=3 uid="uid://cwincredits001"]
 
-[ext_resource type="Script" path="res://src/ui/win/WinCredits.gd" id="1_win"]
+[ext_resource type="Script" uid="uid://bv51r8q05g3k8" path="res://src/ui/win/WinCredits.gd" id="1_win"]
+[ext_resource type="Texture2D" uid="uid://cgndf2ns1wogv" path="res://assets/textures/ui/win_image.jpg" id="2_winbg"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_win_panel"]
+bg_color = Color(0.06, 0.07, 0.11, 0.78)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.878431, 0.478431, 0.168627, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [node name="WinCredits" type="Control"]
 layout_mode = 3
@@ -11,14 +24,33 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_win")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="BackgroundTexture" type="TextureRect" parent="."]
+texture_filter = 1
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.04, 0.04, 0.06, 1)
+mouse_filter = 2
+texture = ExtResource("2_winbg")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="ContrastPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -110.0
+offset_top = 8.0
+offset_right = 110.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_win_panel")
 
 [node name="CreditsContent" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -31,54 +63,70 @@ theme_override_constants/separation = 12
 [node name="VictoryTitle" type="Label" parent="CreditsContent"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.84, 0.25, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 6
 theme_override_font_sizes/font_size = 18
 text = "¡VICTORIA!"
 horizontal_alignment = 1
 
 [node name="SubTitle" type="Label" parent="CreditsContent"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
+theme_override_colors/font_color = Color(0.92, 0.92, 0.92, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 10
 text = "Has superado el desafío"
 horizontal_alignment = 1
 
 [node name="Separator1" type="Label" parent="CreditsContent"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.5, 0.5, 0.5, 1)
+theme_override_colors/font_color = Color(0.878431, 0.478431, 0.168627, 0.8)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
+theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 8
 text = "───────────────"
 horizontal_alignment = 1
 
 [node name="ProjectTitle" type="Label" parent="CreditsContent"]
 layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 10
 text = "Dragon In Space"
 horizontal_alignment = 1
 
 [node name="Authors" type="Label" parent="CreditsContent"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 9
 text = "Bertolini - Agaras"
 horizontal_alignment = 1
 
 [node name="Engine" type="Label" parent="CreditsContent"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.65, 0.65, 0.65, 1)
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 8
 text = "Desarrollado en Godot Engine 4"
 horizontal_alignment = 1
 
 [node name="Separator2" type="Label" parent="CreditsContent"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.5, 0.5, 0.5, 1)
+theme_override_colors/font_color = Color(0.878431, 0.478431, 0.168627, 0.8)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
+theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 8
 text = "───────────────"
 horizontal_alignment = 1
 
 [node name="Thanks" type="Label" parent="CreditsContent"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 10
 text = "¡Gracias por jugar!"
 horizontal_alignment = 1
@@ -92,7 +140,9 @@ anchor_bottom = 1.0
 offset_top = -16.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_colors/font_color = Color(0.55, 0.55, 0.55, 0.8)
+theme_override_colors/font_color = Color(0.8, 0.8, 0.85, 0.9)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
+theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 7
 text = "Pulsa Espacio o Clic para volver al Menú"
 horizontal_alignment = 1
