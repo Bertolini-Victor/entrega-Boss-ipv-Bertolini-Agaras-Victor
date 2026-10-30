@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://cgameover0001"]
 
-[ext_resource type="Script" uid="uid://c83kndr2pql4x" path="res://src/ui/game_over/GameOver.gd" id="1_gover"]
+[ext_resource type="Script" uid="uid://bcr4u3we1o0q7" path="res://src/ui/game_over/GameOver.gd" id="1_gover"]
 [ext_resource type="Texture2D" uid="uid://cta2b7g2heu1r" path="res://assets/textures/ui/lose_image.jpg" id="2_lose"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_focus"]

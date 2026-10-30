@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://cwincredits001"]
 
-[ext_resource type="Script" uid="uid://bv51r8q05g3k8" path="res://src/ui/win/WinCredits.gd" id="1_win"]
+[ext_resource type="Script" uid="uid://hkvifapgakic" path="res://src/ui/win/WinCredits.gd" id="1_win"]
 [ext_resource type="Texture2D" uid="uid://cgndf2ns1wogv" path="res://assets/textures/ui/win_image.jpg" id="2_winbg"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_win_panel"]

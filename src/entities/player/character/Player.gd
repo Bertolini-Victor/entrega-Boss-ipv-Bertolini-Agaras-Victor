@@ -69,6 +69,9 @@ var _sprite_half_height: float = 0.0
 @export_group("Combat")
 @export var attack_lock_time: float = 0.18
 
+@export_group("Abyss / Fall Death")
+@export var fall_death_y: float = 1050.0
+
 var health: int = 2
 var chi: int = 0
 var _is_invulnerable: bool = false
@@ -78,6 +81,7 @@ var projectile_container: Node
 var h_movement_direction: int = 0
 var jump: bool = false
 var dead: bool = false
+var _is_dead: bool = false
 
 var _gravity_rise: float = 0.0
 var _gravity_fall: float = 0.0
@@ -99,6 +103,8 @@ func _ready() -> void:
 	initialize()
 	health = max_health
 	chi = 0
+	dead = false
+	_is_dead = false
 	health_changed.emit(health, max_health)
 	chi_changed.emit(chi, max_chi)
 
@@ -128,6 +134,13 @@ func initialize(p_projectile_container: Node = get_parent()) -> void:
 
 # Procesa el movimiento y las colisiones del jugador.
 func _physics_process(delta: float) -> void:
+	# ── Verificación de caída al abismo ─────────────────────────────────────
+	if not _is_dead and not dead and global_position.y > fall_death_y:
+		_is_dead = true
+		health = 0
+		health_changed.emit(health, max_health)
+		die()
+
 	if _cast_lock_timer > 0.0:
 		_cast_lock_timer -= delta
 
@@ -369,6 +382,7 @@ func die() -> void:
 		return 
 	
 	dead = true
+	_is_dead = true
 	_is_invulnerable = false
 	_dust_particles.clear()
 	queue_redraw()

@@ -39,6 +39,15 @@ func _ready() -> void:
 func _on_player_player_died() -> void:
 	get_tree().call_deferred("change_scene_to_file", "res://src/ui/game_over/GameOver.tscn")
 
+# Callback cuando el jugador cae al vacio en FallKillzone (respaldo fisico).
+func _on_fall_killzone_body_entered(body: Node2D) -> void:
+	if body is Player:
+		var p := body as Player
+		if not p.dead:
+			p.health = 0
+			p.health_changed.emit(0, p.max_health)
+			p.die()
+
 # Callback cuando el jugador llega a la meta.
 func _on_goal_level_completed() -> void:
 	get_tree().call_deferred("change_scene_to_file", "res://src/ui/win/WinCredits.tscn")
