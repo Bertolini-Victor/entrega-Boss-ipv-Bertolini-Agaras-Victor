@@ -4,8 +4,14 @@ extends Node
 @onready var player: Player = get_node_or_null("%Player")
 @onready var goal: Goal = get_node_or_null("%Goal")
 @onready var hud: HUD = get_node_or_null("%HUD")
+@onready var background_music: AudioStreamPlayer = get_node_or_null("BackgroundMusic")
 
 func _ready() -> void:
+	if background_music:
+		if not background_music.finished.is_connected(background_music.play):
+			background_music.finished.connect(background_music.play)
+		if not background_music.playing:
+			background_music.play()
 	# Fallback si no usan unique names
 	if player == null and has_node("Environment/Entities/Player"):
 		player = get_node("Environment/Entities/Player") as Player

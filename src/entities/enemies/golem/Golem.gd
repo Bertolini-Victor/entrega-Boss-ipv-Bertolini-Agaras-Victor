@@ -37,6 +37,7 @@ const ACTION_SCALE: Vector2 = Vector2(0.117, 0.117)
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var floor_check: RayCast2D = $FloorCheck
 @onready var detection_area: Area2D = $DetectionArea
+@onready var footstep_player: AudioStreamPlayer2D = get_node_or_null("FootstepPlayer")
 
 var health: int = 3
 var dead: bool = false
@@ -53,6 +54,8 @@ var _hit_tween: Tween = null
 
 func _ready() -> void:
 	add_to_group("enemies")
+	if footstep_player and footstep_player.stream is AudioStreamWAV:
+		(footstep_player.stream as AudioStreamWAV).loop_mode = AudioStreamWAV.LOOP_FORWARD
 	health = max_health
 	_spawn_x = global_position.x
 	_set_facing(_facing)
@@ -98,6 +101,15 @@ func _physics_process(delta: float) -> void:
 			_process_idle_state()
 
 	move_and_slide()
+
+	# Footstep audio
+	var is_walking: bool = not dead and is_on_floor() and absf(velocity.x) > 5.0 and _state != State.TELEGRAPH and _state != State.ATTACK and _state != State.STUNNED and _state != State.HURT and _state != State.DEAD
+	if is_walking:
+		if footstep_player and not footstep_player.playing:
+			footstep_player.play()
+	else:
+		if footstep_player and footstep_player.playing:
+			footstep_player.stop()
 
 func _has_valid_target() -> bool:
 	if target == null or not is_instance_valid(target):
@@ -313,6 +325,8 @@ func die() -> void:
 
 	dead = true
 	_state = State.DEAD
+	if footstep_player and footstep_player.playing:
+		footstep_player.stop()
 	_cancel_telegraph()
 	_parryable_window = false
 	remove_from_group("enemies")

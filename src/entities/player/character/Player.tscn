@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://bkl1natxpy03i" path="res://src/entities/player/weapons/LightningProjectile.tscn" id="9_blast_proj"]
 [ext_resource type="Script" uid="uid://261vhccsbf7r" path="res://src/entities/player/abilities/ParryController.gd" id="10_parry"]
 [ext_resource type="PackedScene" uid="uid://ckj4yq1m2a3b4" path="res://src/entities/player/abilities/ParryZone.tscn" id="11_parry"]
+[ext_resource type="AudioStream" uid="uid://bqk88pi0gx1n3" path="res://assets/music/Footstep_2.wav" id="12_knsmn"]
 
 [sub_resource type="RectangleShape2D" id="1"]
 size = Vector2(24, 30)
@@ -58,7 +59,7 @@ _data = {
 collision_layer = 2
 collision_mask = 7
 floor_max_angle = 0.802851
-floor_snap_length = 16.0
+floor_snap_length = 8.0
 platform_floor_layers = 4294901761
 script = ExtResource("1")
 
@@ -120,6 +121,10 @@ one_shot = true
 [node name="CooldownTimer" type="Timer" parent="WeaponContainer/LightningAttack" unique_id=1976297967]
 wait_time = 1.2
 one_shot = true
+
+[node name="FootstepPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1624925630]
+stream = ExtResource("12_knsmn")
+volume_db = -6.0
 
 [connection signal="area_entered" from="ParryController/ParryZone" to="ParryController" method="_on_parry_zone_area_entered"]
 [connection signal="timeout" from="WeaponContainer/LightningAttack/ChargeTimer" to="WeaponContainer/LightningAttack" method="_on_charge_timer_timeout"]

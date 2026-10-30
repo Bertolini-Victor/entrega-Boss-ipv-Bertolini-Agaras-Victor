@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://ej6hhf4ayyrn" path="res://assets/textures/enemies/idle_animation.png" id="2_idle_tex"]
 [ext_resource type="Texture2D" uid="uid://byquuu1rqwd8n" path="res://assets/textures/enemies/walk_animation.png" id="3_walk_tex"]
 [ext_resource type="Texture2D" uid="uid://0vu7dbq2i0xg" path="res://assets/textures/enemies/attack_animation.png" id="4_attack_tex"]
+[ext_resource type="AudioStream" uid="uid://cfwxorqnqg8hg" path="res://assets/music/Footstep_4.wav" id="5_step"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_atk_0"]
 atlas = ExtResource("4_attack_tex")
@@ -90,7 +91,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_atk_3")
 }],
-"loop": false,
+"loop": 0,
 "name": &"attack",
 "speed": 6.0
 }, {
@@ -107,7 +108,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_idle_3")
 }],
-"loop": true,
+"loop": 1,
 "name": &"idle",
 "speed": 6.0
 }, {
@@ -130,7 +131,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_walk_5")
 }],
-"loop": true,
+"loop": 1,
 "name": &"walk",
 "speed": 9.0
 }]
@@ -168,6 +169,11 @@ collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea" unique_id=1825937037]
 shape = SubResource("RectangleShape2D_detect")
+
+[node name="FootstepPlayer" type="AudioStreamPlayer2D" parent="." unique_id=964707535]
+stream = ExtResource("5_step")
+volume_db = -6.0
+max_distance = 700.0
 
 [connection signal="body_entered" from="DetectionArea" to="." method="_on_detection_area_body_entered"]
 [connection signal="body_exited" from="DetectionArea" to="." method="_on_detection_area_body_exited"]

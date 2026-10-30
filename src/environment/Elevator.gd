@@ -40,12 +40,9 @@ func _physics_process(delta: float) -> void:
 				_state = State.MOVING_UP
 				_state_timer = 0.0
 		State.MOVING_UP:
-			_state_timer += delta
-			var duration: float = maxf(travel_duration, 0.05)
-			var progress: float = clampf(_state_timer / duration, 0.0, 1.0)
-			var eased: float = smoothstep(0.0, 1.0, progress)
-			global_position = _bottom_position.lerp(top_position, eased)
-			if progress >= 1.0:
+			var speed: float = travel_height / maxf(travel_duration, 0.05)
+			global_position.y = move_toward(global_position.y, top_position.y, speed * delta)
+			if is_equal_approx(global_position.y, top_position.y):
 				global_position = top_position
 				_state = State.WAITING_TOP
 				_state_timer = 0.0
@@ -55,12 +52,9 @@ func _physics_process(delta: float) -> void:
 				_state = State.MOVING_DOWN
 				_state_timer = 0.0
 		State.MOVING_DOWN:
-			_state_timer += delta
-			var duration: float = maxf(travel_duration, 0.05)
-			var progress: float = clampf(_state_timer / duration, 0.0, 1.0)
-			var eased: float = smoothstep(0.0, 1.0, progress)
-			global_position = top_position.lerp(_bottom_position, eased)
-			if progress >= 1.0:
+			var speed: float = travel_height / maxf(travel_duration, 0.05)
+			global_position.y = move_toward(global_position.y, _bottom_position.y, speed * delta)
+			if is_equal_approx(global_position.y, _bottom_position.y):
 				global_position = _bottom_position
 				_state = State.IDLE_BOTTOM
 				_state_timer = 0.0

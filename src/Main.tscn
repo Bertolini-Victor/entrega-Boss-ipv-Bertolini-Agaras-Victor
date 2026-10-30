@@ -14,8 +14,9 @@
 [ext_resource type="PackedScene" uid="uid://e3w1dxk37h4j" path="res://src/environment/Platform.tscn" id="11"]
 [ext_resource type="PackedScene" uid="uid://cfl84b6ma6emi" path="res://src/ui/hud/HUD.tscn" id="12_hud"]
 [ext_resource type="PackedScene" uid="uid://cchiorb000001" path="res://src/environment/chi_orb/ChiOrb.tscn" id="13_orb"]
-[ext_resource type="Texture2D" uid="uid://ctr8khlrbhmg7" path="res://assets/textures/background/Space Background.png" id="16_r7o8t"]
 [ext_resource type="Texture2D" uid="uid://cwmo5c2nu20wc" path="res://assets/textures/tilesets/2_Industrial_Tileset_1_Background.png" id="17_bg_deck"]
+[ext_resource type="Texture2D" uid="uid://dgpvqwbwfm0v" path="res://assets/textures/background/background.jpg" id="17_r7o8t"]
+[ext_resource type="AudioStream" uid="uid://b7bjel32qk382" path="res://assets/music/Riot_theme.wav" id="18_7lugs"]
 [ext_resource type="Texture2D" uid="uid://dgvar5rnlhna6" path="res://assets/textures/tilesets/2_Industrial_Tileset_1B_Background.png" id="18_bg_pipes"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_kill"]
@@ -525,13 +526,20 @@ position = Vector2(920, -870)
 layer = -10
 
 [node name="SpaceBackground" type="TextureRect" parent="BackgroundLayer" unique_id=1794800911]
+texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("16_r7o8t")
-stretch_mode = 1
+texture = ExtResource("17_r7o8t")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="BackgroundMusic" type="AudioStreamPlayer" parent="." unique_id=479686148]
+stream = ExtResource("18_7lugs")
+volume_db = -6.0
+autoplay = true
 
 [connection signal="body_entered" from="Environment/FallKillzone" to="." method="_on_fall_killzone_body_entered"]
 [connection signal="player_died" from="Environment/Entities/Player" to="." method="_on_player_player_died"]

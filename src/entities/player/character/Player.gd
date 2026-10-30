@@ -16,6 +16,7 @@ signal ability_unlocked(title: String, hint: String)
 @onready var lightning_controller: LightningController = $WeaponContainer/LightningAttack
 @onready var parry_controller: ParryController = $ParryController
 @onready var _hitbox_shape: CollisionShape2D = $CollisionShape2D
+@onready var footstep_player: AudioStreamPlayer2D = get_node_or_null("FootstepPlayer")
 
 var _sprite_base_pos: Vector2 = Vector2.ZERO
 var _sprite_base_scale: Vector2 = Vector2.ONE
@@ -98,6 +99,10 @@ var _skid_dust_timer: float = 0.0
 
 # Configura el estado inicial del jugador.
 func _ready() -> void:
+	floor_stop_on_slope = true
+	floor_snap_length = 8.0
+	if footstep_player and footstep_player.stream is AudioStreamWAV:
+		(footstep_player.stream as AudioStreamWAV).loop_mode = AudioStreamWAV.LOOP_FORWARD
 	_cache_sprite_metrics()
 	_compute_jump_physics()
 	initialize()
@@ -239,6 +244,15 @@ func _physics_process(delta: float) -> void:
 
 	_was_on_floor = on_floor
 	move_and_slide()
+
+	# ── Pasos del jugador (Audio) ──────────────────────────────────────────
+	var is_running: bool = not dead and is_on_floor() and absf(velocity.x) > 10.0
+	if is_running:
+		if footstep_player and not footstep_player.playing:
+			footstep_player.play()
+	else:
+		if footstep_player and footstep_player.playing:
+			footstep_player.stop()
 
 	# ── Landing Juice ────────────────────────────────
 	var just_landed: bool = not _was_on_floor and is_on_floor()
@@ -384,6 +398,8 @@ func die() -> void:
 	dead = true
 	_is_dead = true
 	_is_invulnerable = false
+	if footstep_player and footstep_player.playing:
+		footstep_player.stop()
 	_dust_particles.clear()
 	queue_redraw()
 	if body_sprite:
