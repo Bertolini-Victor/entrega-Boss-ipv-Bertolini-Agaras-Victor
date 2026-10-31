@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://coiny42y5para"
-path="res://.godot/imported/hits-1-2.png-336d8b5e953552b5d2b32f181be87a00.ctex"
+uid="uid://bip618axjtnti"
+path="res://.godot/imported/lightning_attack_animations.png-2d35c6c107af13805bd2a729c367f043.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/fx/hits/hits-1/hits-1-2.png"
-dest_files=["res://.godot/imported/hits-1-2.png-336d8b5e953552b5d2b32f181be87a00.ctex"]
+source_file="res://assets/textures/player/lightning_attack_animations.png"
+dest_files=["res://.godot/imported/lightning_attack_animations.png-2d35c6c107af13805bd2a729c367f043.ctex"]
 
 [params]
 

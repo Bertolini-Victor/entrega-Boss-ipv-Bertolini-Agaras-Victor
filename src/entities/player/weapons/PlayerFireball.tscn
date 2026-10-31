@@ -1,8 +1,112 @@
 [gd_scene format=3 uid="uid://c7ejb3ehyxs1r"]
 
-[ext_resource type="Script" uid="uid://cvdwn73c31ghn" path="res://src/entities/player/weapons/FireballProjectile.gd" id="1_fireball"]
-[ext_resource type="PackedScene" uid="uid://dnl107pupmqic" path="res://src/entities/player/weapons/PlayerProjectile.tscn" id="2_base"]
+[ext_resource type="PackedScene" uid="uid://cgadr55reetnl" path="res://src/entities/projectiles/Projectile.tscn" id="1_proj"]
+[ext_resource type="Script" uid="uid://cvdwn73c31ghn" path="res://src/entities/player/weapons/FireballProjectile.gd" id="2_script"]
+[ext_resource type="Texture2D" uid="uid://24u4u8xmlp2" path="res://assets/textures/player/fireball_attack_animations.png" id="3_texture"]
 
-[node name="PlayerFireball" unique_id=-2057745685 instance=ExtResource("2_base")]
-script = ExtResource("1_fireball")
+[sub_resource type="AtlasTexture" id="AtlasTexture_f7"]
+atlas = ExtResource("3_texture")
+region = Rect2(700, 0, 100, 249)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f8"]
+atlas = ExtResource("3_texture")
+region = Rect2(800, 0, 100, 249)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f9"]
+atlas = ExtResource("3_texture")
+region = Rect2(900, 0, 100, 249)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f4"]
+atlas = ExtResource("3_texture")
+region = Rect2(400, 0, 100, 249)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f5"]
+atlas = ExtResource("3_texture")
+region = Rect2(500, 0, 100, 249)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f6"]
+atlas = ExtResource("3_texture")
+region = Rect2(600, 0, 100, 249)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f1"]
+atlas = ExtResource("3_texture")
+region = Rect2(100, 0, 100, 249)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f2"]
+atlas = ExtResource("3_texture")
+region = Rect2(200, 0, 100, 249)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f3"]
+atlas = ExtResource("3_texture")
+region = Rect2(300, 0, 100, 249)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f0"]
+atlas = ExtResource("3_texture")
+region = Rect2(0, 0, 100, 249)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_fireball"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f9")
+}],
+"loop": 0,
+"name": &"fade",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f6")
+}],
+"loop": 0,
+"name": &"impact",
+"speed": 15.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f3")
+}],
+"loop": 1,
+"name": &"move",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f0")
+}],
+"loop": 0,
+"name": &"spawn",
+"speed": 10.0
+}]
+
+[node name="PlayerFireball" unique_id=153688589 instance=ExtResource("1_proj")]
+script = ExtResource("2_script")
 max_range = 250.0
+
+[node name="Hitbox" parent="." index="2" unique_id=983099697]
+collision_mask = 13
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." index="3" unique_id=1904856716]
+texture_filter = 1
+scale = Vector2(0.35, 0.35)
+sprite_frames = SubResource("SpriteFrames_fireball")
+animation = &"move"
+autoplay = "move"

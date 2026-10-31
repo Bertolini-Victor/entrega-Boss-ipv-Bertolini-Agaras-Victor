@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cokri4j5h5d8n"
-path="res://.godot/imported/hits-1-1.png-6ac27dcd393b0e32e3406911bfcc6ed9.ctex"
+uid="uid://bigc6dk85t0tr"
+path="res://.godot/imported/turret_attack_animation.png-be47d0a831b9dca0f02d3edf5310a50f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/fx/hits/hits-1/hits-1-1.png"
-dest_files=["res://.godot/imported/hits-1-1.png-6ac27dcd393b0e32e3406911bfcc6ed9.ctex"]
+source_file="res://assets/textures/enemies/turret_attack_animation.png"
+dest_files=["res://.godot/imported/turret_attack_animation.png-be47d0a831b9dca0f02d3edf5310a50f.ctex"]
 
 [params]
 

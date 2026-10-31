@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://byb8a46xw8hvo"
-path="res://.godot/imported/bolt2.png-a937a25813ce6ea3b65953248b871457.ctex"
+uid="uid://24u4u8xmlp2"
+path="res://.godot/imported/fireball_attack_animations.png-a2d5633f432b04f983973663da9af030.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/fx/bolt/bolt2.png"
-dest_files=["res://.godot/imported/bolt2.png-a937a25813ce6ea3b65953248b871457.ctex"]
+source_file="res://assets/textures/player/fireball_attack_animations.png"
+dest_files=["res://.godot/imported/fireball_attack_animations.png-a2d5633f432b04f983973663da9af030.ctex"]
 
 [params]
 
