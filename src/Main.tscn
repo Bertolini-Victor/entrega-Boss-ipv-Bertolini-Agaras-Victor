@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://d2ghjxnb0k441" path="res://src/environment/BreakableWall.tscn" id="7_cj10r"]
 [ext_resource type="PackedScene" uid="uid://dt5o1uaulndt8" path="res://src/environment/Wall.tscn" id="8"]
 [ext_resource type="PackedScene" uid="uid://c017ns48ueaea" path="res://src/environment/Elevator.tscn" id="8_e7jk0"]
-[ext_resource type="PackedScene" uid="uid://2s81rbvgeowa" path="res://src/environment/Goal.tscn" id="9"]
+[ext_resource type="PackedScene" uid="uid://g0uko0000001" path="res://src/environment/GoalZuko.tscn" id="9_zuko"]
 [ext_resource type="PackedScene" uid="uid://c6golem7scn01" path="res://src/entities/enemies/golem/Golem.tscn" id="10_0ri8u"]
 [ext_resource type="PackedScene" uid="uid://e3w1dxk37h4j" path="res://src/environment/Platform.tscn" id="11"]
 [ext_resource type="PackedScene" uid="uid://cfl84b6ma6emi" path="res://src/ui/hud/HUD.tscn" id="12_hud"]
@@ -42,7 +42,7 @@ modulate = Color(0.7, 0.75, 0.85, 0.8)
 texture_filter = 1
 offset_left = 4240.0
 offset_top = -120.0
-offset_right = 4420.0
+offset_right = 7700.0
 offset_bottom = 600.0
 texture = ExtResource("18_bg_pipes")
 patch_margin_left = 16
@@ -72,7 +72,7 @@ modulate = Color(0.65, 0.7, 0.8, 0.75)
 texture_filter = 1
 offset_left = 453.0
 offset_top = -1050.0
-offset_right = 4420.0
+offset_right = 7700.0
 offset_bottom = -800.0
 texture = ExtResource("17_bg_deck")
 patch_margin_left = 16
@@ -274,6 +274,21 @@ position = Vector2(3400, -800)
 [node name="Floor_A3" parent="Environment/Ground" unique_id=1863430373 instance=ExtResource("4")]
 position = Vector2(4050, -800)
 
+[node name="Floor_A4" parent="Environment/Ground" unique_id=1863430474 instance=ExtResource("4")]
+position = Vector2(4700, -800)
+
+[node name="Floor_A5" parent="Environment/Ground" unique_id=1863430475 instance=ExtResource("4")]
+position = Vector2(5350, -800)
+
+[node name="Floor_A6" parent="Environment/Ground" unique_id=1863430476 instance=ExtResource("4")]
+position = Vector2(6000, -800)
+
+[node name="Floor_A7" parent="Environment/Ground" unique_id=1863430477 instance=ExtResource("4")]
+position = Vector2(6650, -800)
+
+[node name="Floor_A8" parent="Environment/Ground" unique_id=1863430478 instance=ExtResource("4")]
+position = Vector2(7300, -800)
+
 [node name="Ceiling_A1" parent="Environment/Ground" unique_id=1863430374 instance=ExtResource("4")]
 position = Vector2(2750, -1050)
 
@@ -283,11 +298,23 @@ position = Vector2(3400, -1050)
 [node name="Ceiling_A3" parent="Environment/Ground" unique_id=1863430376 instance=ExtResource("4")]
 position = Vector2(4050, -1050)
 
-[node name="Platform_Pedestal" parent="Environment/Ground" unique_id=1863430379 instance=ExtResource("11")]
-position = Vector2(4300, -832)
+[node name="Ceiling_A4" parent="Environment/Ground" unique_id=1863430479 instance=ExtResource("4")]
+position = Vector2(4700, -1050)
+
+[node name="Ceiling_A5" parent="Environment/Ground" unique_id=1863430480 instance=ExtResource("4")]
+position = Vector2(5350, -1050)
+
+[node name="Ceiling_A6" parent="Environment/Ground" unique_id=1863430481 instance=ExtResource("4")]
+position = Vector2(6000, -1050)
+
+[node name="Ceiling_A7" parent="Environment/Ground" unique_id=1863430482 instance=ExtResource("4")]
+position = Vector2(6650, -1050)
+
+[node name="Ceiling_A8" parent="Environment/Ground" unique_id=1863430483 instance=ExtResource("4")]
+position = Vector2(7300, -1050)
 
 [node name="Wall_T_Right" parent="Environment/Ground" unique_id=1863430380 instance=ExtResource("8")]
-position = Vector2(4460, -950)
+position = Vector2(7700, -950)
 
 [node name="Entities" type="Node2D" parent="Environment" unique_id=729562450]
 
@@ -297,7 +324,7 @@ position = Vector2(150, 520)
 [node name="Camera2D" type="Camera2D" parent="Environment/Entities/Player" unique_id=1143206512]
 limit_left = -200
 limit_top = -1200
-limit_right = 4800
+limit_right = 7900
 limit_bottom = 900
 
 [node name="Turret_B1" parent="Environment/Entities" unique_id=1654059648 instance=ExtResource("5")]
@@ -343,44 +370,44 @@ projectile_speed = 290.0
 telegraph_duration = 0.4
 
 [node name="Golem_T1" parent="Environment/Entities" unique_id=1863430386 instance=ExtResource("10_0ri8u")]
-position = Vector2(1500, -835)
+position = Vector2(1200, -835)
 telegraph_duration = 0.5
 attack_cooldown = 1.8
 
 [node name="Turret_T1" parent="Environment/Entities" unique_id=1863430387 instance=ExtResource("5")]
-position = Vector2(2100, -835)
+position = Vector2(1600, -835)
 fire_cooldown = 1.1
 projectile_speed = 310.0
 telegraph_duration = 0.35
 
 [node name="Golem_Boss1" parent="Environment/Entities" unique_id=1863430388 instance=ExtResource("10_0ri8u")]
-position = Vector2(2900, -835)
-move_speed = 75.0
-telegraph_duration = 0.45
-attack_cooldown = 1.5
-
-[node name="Golem_Boss2" parent="Environment/Entities" unique_id=1863430389 instance=ExtResource("10_0ri8u")]
-position = Vector2(3500, -835)
+position = Vector2(2000, -835)
 move_speed = 75.0
 telegraph_duration = 0.45
 attack_cooldown = 1.5
 
 [node name="Turret_Boss1" parent="Environment/Entities" unique_id=1863430390 instance=ExtResource("5")]
-position = Vector2(3200, -835)
+position = Vector2(2400, -835)
 fire_cooldown = 1.0
 projectile_speed = 330.0
 telegraph_duration = 0.3
 
+[node name="Golem_Boss2" parent="Environment/Entities" unique_id=1863430389 instance=ExtResource("10_0ri8u")]
+position = Vector2(2800, -835)
+move_speed = 75.0
+telegraph_duration = 0.45
+attack_cooldown = 1.5
+
 [node name="Turret_Boss2" parent="Environment/Entities" unique_id=1863430391 instance=ExtResource("5")]
-position = Vector2(3750, -835)
+position = Vector2(3100, -835)
 fire_cooldown = 1.0
 projectile_speed = 330.0
 telegraph_duration = 0.3
 
 [node name="Objects" type="Node2D" parent="Environment" unique_id=278969547]
 
-[node name="Goal" parent="Environment/Objects" unique_id=786003239 instance=ExtResource("9")]
-position = Vector2(4300, -865)
+[node name="GoalZuko" parent="Environment/Objects" unique_id=786003239 instance=ExtResource("9_zuko")]
+position = Vector2(7200, -800)
 
 [node name="ChiOrbs" type="Node2D" parent="Environment" unique_id=897801088]
 
@@ -504,4 +531,4 @@ autoplay = true
 
 [connection signal="body_entered" from="Environment/FallKillzone" to="." method="_on_fall_killzone_body_entered"]
 [connection signal="player_died" from="Environment/Entities/Player" to="." method="_on_player_player_died"]
-[connection signal="level_completed" from="Environment/Objects/Goal" to="." method="_on_goal_level_completed"]
+[connection signal="level_completed" from="Environment/Objects/GoalZuko" to="." method="_on_goal_level_completed"]

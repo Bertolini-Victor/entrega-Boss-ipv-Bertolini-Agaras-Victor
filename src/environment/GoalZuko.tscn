@@ -1,0 +1,153 @@
+[gd_scene format=3 uid="uid://g0uko0000001"]
+
+[ext_resource type="Script" uid="uid://csk4wgu8ini83" path="res://src/environment/GoalZuko.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://cq7xl6pb6qhu4" path="res://assets/textures/zuko_animations.png" id="2_zuko_tex"]
+[ext_resource type="Texture2D" uid="uid://xh5ky3a01jrt" path="res://assets/textures/teleportation_animation.png" id="3_beam_tex"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_goal"]
+size = Vector2(48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_z5"]
+atlas = ExtResource("2_zuko_tex")
+region = Rect2(724, 0, 145, 287)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_z0"]
+atlas = ExtResource("2_zuko_tex")
+region = Rect2(0, 0, 145, 287)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_z1"]
+atlas = ExtResource("2_zuko_tex")
+region = Rect2(145, 0, 145, 287)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_z2"]
+atlas = ExtResource("2_zuko_tex")
+region = Rect2(290, 0, 144, 287)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_z3"]
+atlas = ExtResource("2_zuko_tex")
+region = Rect2(434, 0, 145, 287)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_z4"]
+atlas = ExtResource("2_zuko_tex")
+region = Rect2(579, 0, 145, 287)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_zuko"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_z5")
+}],
+"loop": 0,
+"name": &"grabbed",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_z0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_z1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_z2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_z3")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_z4")
+}],
+"loop": 0,
+"name": &"shocked",
+"speed": 12.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tb0"]
+atlas = ExtResource("3_beam_tex")
+region = Rect2(0, 0, 174, 287)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tb1"]
+atlas = ExtResource("3_beam_tex")
+region = Rect2(174, 0, 174, 287)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tb2"]
+atlas = ExtResource("3_beam_tex")
+region = Rect2(348, 0, 173, 287)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tb3"]
+atlas = ExtResource("3_beam_tex")
+region = Rect2(521, 0, 174, 287)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tb4"]
+atlas = ExtResource("3_beam_tex")
+region = Rect2(695, 0, 174, 287)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_beam"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tb0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tb1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tb2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tb3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tb4")
+}],
+"loop": 0,
+"name": &"beam",
+"speed": 10.0
+}]
+
+[node name="GoalZuko" type="Area2D" unique_id=277119863]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1533192994]
+position = Vector2(0, -24)
+shape = SubResource("RectangleShape2D_goal")
+
+[node name="ZukoSprite" type="AnimatedSprite2D" parent="." unique_id=325460729]
+texture_filter = 1
+scale = Vector2(0.12, 0.12)
+sprite_frames = SubResource("SpriteFrames_zuko")
+animation = &"idle"
+autoplay = "idle"
+offset = Vector2(0, -143.5)
+
+[node name="TeleportBeam" type="AnimatedSprite2D" parent="." unique_id=335646487]
+visible = false
+texture_filter = 1
+position = Vector2(0, -125)
+scale = Vector2(0.65, 0.88)
+sprite_frames = SubResource("SpriteFrames_beam")
+animation = &"beam"
+
+[node name="TeleportParticles" type="CPUParticles2D" parent="." unique_id=937572489]
+emitting = false
+amount = 36
+lifetime = 0.8
+one_shot = true
+explosiveness = 0.15
+emission_shape = 3
+emission_rect_extents = Vector2(30, 4)
+direction = Vector2(0, -1)
+spread = 15.0
+gravity = Vector2(0, -200)
+initial_velocity_min = 60.0
+initial_velocity_max = 140.0
+scale_amount_min = 2.0
+scale_amount_max = 3.5
+color = Color(0.25, 0.85, 1, 0.9)

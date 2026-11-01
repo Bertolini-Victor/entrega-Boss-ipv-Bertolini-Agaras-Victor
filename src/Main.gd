@@ -2,7 +2,7 @@ class_name Main
 extends Node
 
 @onready var player: Player = get_node_or_null("%Player")
-@onready var goal: Goal = get_node_or_null("%Goal")
+@onready var goal: Node = get_node_or_null("%GoalZuko") if get_node_or_null("%GoalZuko") != null else get_node_or_null("%Goal")
 @onready var hud: HUD = get_node_or_null("%HUD")
 @onready var background_music: AudioStreamPlayer = get_node_or_null("BackgroundMusic")
 
@@ -15,8 +15,10 @@ func _ready() -> void:
 	# Fallback si no usan unique names
 	if player == null and has_node("Environment/Entities/Player"):
 		player = get_node("Environment/Entities/Player") as Player
-	if goal == null and has_node("Environment/Objects/Goal"):
-		goal = get_node("Environment/Objects/Goal") as Goal
+	if goal == null and has_node("Environment/Objects/GoalZuko"):
+		goal = get_node("Environment/Objects/GoalZuko")
+	elif goal == null and has_node("Environment/Objects/Goal"):
+		goal = get_node("Environment/Objects/Goal")
 	if hud == null and has_node("HUD"):
 		hud = get_node("HUD") as HUD
 
@@ -37,7 +39,7 @@ func _ready() -> void:
 			hud.update_health(player.health, player.max_health)
 			hud.update_chi(player.chi, player.max_chi)
 
-	if goal:
+	if goal and goal.has_signal("level_completed"):
 		if not goal.level_completed.is_connected(_on_goal_level_completed):
 			goal.level_completed.connect(_on_goal_level_completed)
 

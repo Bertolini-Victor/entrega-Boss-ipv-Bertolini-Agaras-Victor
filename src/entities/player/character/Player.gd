@@ -86,6 +86,7 @@ var _invulnerability_timer: float = 0.0
 var projectile_container: Node
 var h_movement_direction: int = 0
 var jump: bool = false
+var is_cinematic: bool = false
 var dead: bool = false
 var _is_dead: bool = false
 
@@ -147,6 +148,15 @@ func initialize(p_projectile_container: Node = get_parent()) -> void:
 
 # Procesa el movimiento y las colisiones del jugador.
 func _physics_process(delta: float) -> void:
+	if is_cinematic:
+		velocity = Vector2.ZERO
+		h_movement_direction = 0
+		jump = false
+		if body_animations and body_animations.has_animation("idle"):
+			body_animations.play("idle")
+		move_and_slide()
+		return
+
 	# ── Verificación de caída al abismo (Penalización por daño y respawn) ───
 	if not _is_dead and not dead and global_position.y > fall_death_y:
 		handle_fall_penalty()
