@@ -56,16 +56,23 @@ func _on_fall_killzone_body_entered(body: Node2D) -> void:
 		p.take_damage(1)
 
 		if p.health > 0 and not p.dead:
-			# Detenemos toda inercia
+			# Detenemos inercias e inputs residuales
 			p.velocity = Vector2.ZERO
+			p.h_movement_direction = 0
 
 			# Punto de inicio del nivel
 			var respawn_pos: Vector2 = p.spawn_position if p.spawn_position != Vector2.ZERO else Vector2(150.0, 520.0)
 			p.global_position = respawn_pos
 			p.last_safe_position = p.global_position
 
-			# Forzar orientacion usando su metodo nativo
+			# Forzar orientacion visual y logica
 			p.face_right()
+			if p.has_node("BodyPivot"):
+				p.get_node("BodyPivot").scale.x = 1.0
+
+			# Reiniciar animacion para destrabar frames de caida
+			if p.has_node("BodyAnimations"):
+				p.get_node("BodyAnimations").play("idle")
 
 # Callback cuando el jugador llega a la meta.
 func _on_goal_level_completed() -> void:
@@ -80,20 +87,20 @@ func _on_mid_floor_fall_zone_body_entered(body: Node2D) -> void:
 		p.take_damage(1)
 
 		if p.health > 0 and not p.dead:
-			# Detenemos toda inercia
+			# Detenemos inercias e inputs residuales
 			p.velocity = Vector2.ZERO
+			p.h_movement_direction = 0
 
-			# Coordenadas exactas de la salida superior del Primer Ascensor (Elevator_1) en el piso medio
-			var respawn_pos: Vector2 = Vector2(4220.0, -135.0)
-			var elevator_1: Node = get_node_or_null("Environment/Ground/Elevator_1")
-			if elevator_1 != null and elevator_1 is Node2D:
-				var elevator_2d: Node2D = elevator_1 as Node2D
-				var travel_h: float = float(elevator_1.get("travel_height")) if elevator_1.get("travel_height") != null else 700.0
-				var base_y: float = elevator_2d.position.y if elevator_2d.position.y > 0.0 else 576.0
-				respawn_pos = Vector2(elevator_2d.position.x - 100.0, base_y - travel_h - 11.0)
-
+			# Teletransporte a la salida del ascensor
+			var respawn_pos = Vector2(4220, -135)
 			p.global_position = respawn_pos
 			p.last_safe_position = p.global_position
 
-			# Forzar orientacion usando su metodo nativo
+			# Forzar orientacion visual y logica
 			p.face_right()
+			if p.has_node("BodyPivot"):
+				p.get_node("BodyPivot").scale.x = 1.0
+
+			# Reiniciar animacion para destrabar frames de caida
+			if p.has_node("BodyAnimations"):
+				p.get_node("BodyAnimations").play("idle")
