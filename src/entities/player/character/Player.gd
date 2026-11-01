@@ -148,6 +148,33 @@ func initialize(p_projectile_container: Node = get_parent()) -> void:
 	can_fire_breath = true
 	body_animations.play("idle")
 
+# Deshabilita completamente el control del jugador (estado cinemático, idle, bloqueo de físicas e input).
+func disable_controls() -> void:
+	is_cinematic = true
+	velocity = Vector2.ZERO
+	h_movement_direction = 0
+	jump = false
+	if footstep_player and footstep_player.playing:
+		footstep_player.stop()
+	_dust_particles.clear()
+	queue_redraw()
+	if body_sprite:
+		body_sprite.scale = _sprite_base_scale
+		body_sprite.rotation = 0.0
+		body_sprite.position = _sprite_base_pos
+	if body_animations and body_animations.has_animation("idle"):
+		body_animations.play("idle")
+	set_physics_process(false)
+	set_process_input(false)
+	set_process_unhandled_input(false)
+
+# Habilita nuevamente el control del jugador si fuera necesario.
+func enable_controls() -> void:
+	is_cinematic = false
+	set_physics_process(true)
+	set_process_input(true)
+	set_process_unhandled_input(true)
+
 # Procesa el movimiento y las colisiones del jugador.
 func _physics_process(delta: float) -> void:
 	if is_cinematic:

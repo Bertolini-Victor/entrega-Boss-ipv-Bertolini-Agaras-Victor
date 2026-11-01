@@ -32,86 +32,94 @@ func _on_body_entered(body: Node2D) -> void:
 		_start_cutscene(body)
 
 func _start_cutscene(player: Node2D) -> void:
-	# 1. Desactivar colision del Goal para no repetir la ejecucion
+	# Desactivar colisión del Goal para no repetir la ejecución
 	if collision_shape != null:
 		collision_shape.set_deferred("disabled", true)
 
-	# Desactivar movimiento del jugador (estado "Cinematic")
-	if "is_cinematic" in player:
-		player.is_cinematic = true
-	if "velocity" in player:
-		player.velocity = Vector2.ZERO
-	if player.has_method("set_physics_process"):
-		player.set_physics_process(false)
+	# 1. Inicio: Al detectar al body (Iroh), llama inmediatamente a body.disable_controls()
+	if player.has_method("disable_controls"):
+		player.disable_controls()
+	else:
+		if "is_cinematic" in player:
+			player.is_cinematic = true
+		if "velocity" in player:
+			player.velocity = Vector2.ZERO
+		if player.has_method("set_physics_process"):
+			player.set_physics_process(false)
 
-	# 2. Secuencia cinematica
-	# Paso 1: Cambia la animacion de Zuko a "shocked"
+	# 2. Sorpresa: Cambia la animación de Zuko a "shocked"
 	if zuko_sprite != null:
 		zuko_sprite.play("shocked")
 
-	# Espera 0.5 segundos
-	await get_tree().create_timer(0.5).timeout
+	# 3. Pausa 1: Ritmo dramático de inicio
+	await get_tree().create_timer(1.2).timeout
+	if not is_inside_tree():
+		return
 
-	# Instancia por codigo dos Golems apareciendo a cada lado de Zuko
-	_spawn_kidnapper_golems()
+	# 4. Aparición de Golems: Instancia los dos Golems falsos (solo visuales)
+	# Base de Zuko coincide con y=0. offset_y = 0.0 alinea exactamente la base de los Golems con el piso de Zuko.
+	var offset_y: float = 0.0
+	_spawn_kidnapper_golems(offset_y)
 
-	# Paso 2: Cambia la animacion de Zuko a "grabbed"
+	# 5. Captura: Cambia la animación de Zuko a "grabbed"
 	if zuko_sprite != null:
 		zuko_sprite.play("grabbed")
 
-	# Espera 0.5 segundos
-	await get_tree().create_timer(0.5).timeout
+	# 6. Pausa 2: Tensión dramática antes del teletransporte
+	await get_tree().create_timer(0.8).timeout
+	if not is_inside_tree():
+		return
 
-	# Paso 3: Haz visible el TeleportBeam, reproduce su animacion y activa TeleportParticles.restart()
+	# 7. Teletransportación:
+	# - Haz visible el TeleportBeam y reproduce "beam"
+	# - Activa las partículas: $TeleportParticles.emitting = true
+	# - Usa un Tween de 1.0 segundo para hacer fade out a Zuko y los dos Golems y estirarlos verticalmente
 	if teleport_beam != null:
 		teleport_beam.visible = true
 		teleport_beam.play("beam")
 	if teleport_particles != null:
+		teleport_particles.emitting = true
 		teleport_particles.restart()
 
-	# Inmediatamente anima con Tween: modulate.a -> 0.0 y estirar ligeramente hacia arriba (scale.y = 2.0x)
 	var tween: Tween = create_tween()
 	tween.set_parallel(true)
 
 	if zuko_sprite != null:
 		var target_zuko_scale_y: float = zuko_sprite.scale.y * 2.0
-		tween.tween_property(zuko_sprite, "modulate:a", 0.0, 0.6)
-		tween.tween_property(zuko_sprite, "scale:y", target_zuko_scale_y, 0.6)
+		tween.tween_property(zuko_sprite, "modulate:a", 0.0, 1.0)
+		tween.tween_property(zuko_sprite, "scale:y", target_zuko_scale_y, 1.0)
 
 	if _golem_left != null:
 		var target_golem_l_scale_y: float = _golem_left.scale.y * 2.0
-		tween.tween_property(_golem_left, "modulate:a", 0.0, 0.6)
-		tween.tween_property(_golem_left, "scale:y", target_golem_l_scale_y, 0.6)
+		tween.tween_property(_golem_left, "modulate:a", 0.0, 1.0)
+		tween.tween_property(_golem_left, "scale:y", target_golem_l_scale_y, 1.0)
 
 	if _golem_right != null:
 		var target_golem_r_scale_y: float = _golem_right.scale.y * 2.0
-		tween.tween_property(_golem_right, "modulate:a", 0.0, 0.6)
-		tween.tween_property(_golem_right, "scale:y", target_golem_r_scale_y, 0.6)
+		tween.tween_property(_golem_right, "modulate:a", 0.0, 1.0)
+		tween.tween_property(_golem_right, "scale:y", target_golem_r_scale_y, 1.0)
 
-	await tween.finished
+	# 8. Pausa 3: Espera a que el rayo concluya
+	await get_tree().create_timer(1.0).timeout
+	if not is_inside_tree():
+		return
 
-	# Esperar a que concluya el haz del rayo
-	if teleport_beam != null and teleport_beam.is_playing():
-		await teleport_beam.animation_finished
-	else:
-		await get_tree().create_timer(0.3).timeout
-
-	# Llamar a la funcion de victoria del juego
+	# 9. Final: Dispara la señal level_completed o llama a la victoria
 	level_completed.emit()
 	_trigger_win()
 
-func _spawn_kidnapper_golems() -> void:
+func _spawn_kidnapper_golems(offset_y: float = 0.0) -> void:
 	if golem_scene == null:
 		return
 
-	# Golem Izquierdo
+	# Golem Izquierdo (Vector2(-40, offset_y))
 	_golem_left = golem_scene.instantiate() as Node2D
-	_configure_cinematic_golem(_golem_left, Vector2(-26, 0), false)
+	_configure_cinematic_golem(_golem_left, Vector2(-40.0, offset_y), false)
 	add_child(_golem_left)
 
-	# Golem Derecho
+	# Golem Derecho (Vector2(40, offset_y))
 	_golem_right = golem_scene.instantiate() as Node2D
-	_configure_cinematic_golem(_golem_right, Vector2(26, 0), true)
+	_configure_cinematic_golem(_golem_right, Vector2(40.0, offset_y), true)
 	add_child(_golem_right)
 
 func _configure_cinematic_golem(golem: Node2D, local_pos: Vector2, facing_left: bool) -> void:
@@ -129,6 +137,8 @@ func _configure_cinematic_golem(golem: Node2D, local_pos: Vector2, facing_left: 
 		elif child is Area2D:
 			child.set_deferred("monitoring", false)
 			child.set_deferred("monitorable", false)
+		elif child is AudioStreamPlayer2D or child is AudioStreamPlayer:
+			child.stop()
 
 	var visuals: AnimatedSprite2D = golem.get_node_or_null("Visuals") as AnimatedSprite2D
 	if visuals != null:
