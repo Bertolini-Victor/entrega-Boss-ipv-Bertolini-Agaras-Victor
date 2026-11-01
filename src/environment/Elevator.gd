@@ -62,9 +62,6 @@ func _physics_process(delta: float) -> void:
 func _on_trigger_area_body_entered(body: Node2D) -> void:
 	if body is Player:
 		_player_on_platform = true
-		if _state == State.IDLE_BOTTOM:
-			_state = State.ACTIVATING
-			_state_timer = 0.0
 
 func _on_trigger_area_body_exited(body: Node2D) -> void:
 	if body is Player:

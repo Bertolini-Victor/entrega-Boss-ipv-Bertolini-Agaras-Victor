@@ -4,7 +4,6 @@ extends CharacterBody2D
 signal player_died
 signal health_changed(current_hp: int, max_hp: int)
 signal chi_changed(current_chi: int, max_chi: int)
-signal fireball_unlocked
 signal ability_unlocked(title: String, hint: String)
 
 @onready var weapon: FireballController = $"%Weapon"
@@ -12,7 +11,6 @@ signal ability_unlocked(title: String, hint: String)
 @onready var body_pivot: Node2D = $BodyPivot
 @onready var body_sprite: Sprite2D = $BodyPivot/Body
 @onready var melee_attack: MeleeAttack = $WeaponContainer/MeleeAttack
-@onready var fire_breath_controller: FireBreathController = get_node_or_null("WeaponContainer/FireBreathAttack")
 @onready var lightning_controller: LightningController = $WeaponContainer/LightningAttack
 @onready var parry_controller: ParryController = $ParryController
 @onready var _hitbox_shape: CollisionShape2D = $CollisionShape2D
@@ -76,9 +74,6 @@ var direction: Vector2 = Vector2.RIGHT
 @export_group("Combat")
 @export var attack_lock_time: float = 0.18
 
-@export_group("Abyss / Fall Death")
-@export var fall_death_y: float = 1050.0
-
 var health: int = 2
 var chi: int = 0
 var _is_invulnerable: bool = false
@@ -89,7 +84,6 @@ var h_movement_direction: int = 0
 var jump: bool = false
 var is_cinematic: bool = false
 var dead: bool = false
-var _is_dead: bool = false
 
 var _gravity_rise: float = 0.0
 var _active_dragon_breath: DragonBreath = null
@@ -118,7 +112,6 @@ func _ready() -> void:
 	health = max_health
 	chi = 0
 	dead = false
-	_is_dead = false
 	health_changed.emit(health, max_health)
 	chi_changed.emit(chi, max_chi)
 	spawn_position = global_position
@@ -186,10 +179,6 @@ func _physics_process(delta: float) -> void:
 			body_animations.play("idle")
 		move_and_slide()
 		return
-
-	# ── Verificación de caída al abismo (Penalización por daño y respawn) ───
-	# if not _is_dead and not dead and global_position.y > fall_death_y:
-	# 	handle_fall_penalty()
 
 	if _cast_lock_timer > 0.0:
 		_cast_lock_timer -= delta
@@ -340,7 +329,7 @@ func _process_input() -> void:
 
 	# ── Exclusión mutua entre ataques ───────────────────────────────────────
 	var melee_busy: bool = can_melee and melee_attack != null and melee_attack.is_attacking()
-	var fire_breath_busy: bool = (_active_dragon_breath != null and is_instance_valid(_active_dragon_breath)) or (can_fire_breath and fire_breath_controller != null and fire_breath_controller.is_attacking())
+	var fire_breath_busy: bool = (_active_dragon_breath != null and is_instance_valid(_active_dragon_breath))
 	var lightning_busy: bool = can_lightning and lightning_controller != null and lightning_controller.is_charging()
 	var cast_locked: bool = _cast_lock_timer > 0.0
 
@@ -397,7 +386,7 @@ func _process_input() -> void:
 
 # Ejecuta el ataque vertical de Aliento de Dragón consumiendo Chi.
 func cast_dragon_breath() -> bool:
-	if dead or _is_dead or not can_fire_breath:
+	if dead or not can_fire_breath:
 		return false
 	if not consume_chi(dragon_breath_chi_cost):
 		return false
@@ -423,10 +412,6 @@ func cast_dragon_breath() -> bool:
 	)
 	return true
 
-# Metodo alias publico para disparar el Aliento de Dragón.
-func fire_dragon_breath() -> bool:
-	return cast_dragon_breath()
-
 # Establece la orientacion horizontal del jugador (Vector2.RIGHT o Vector2.LEFT).
 func set_facing_direction(dir: Vector2) -> void:
 	direction = dir
@@ -447,7 +432,7 @@ func get_facing_sign() -> float:
 
 # Aplica penalizacion por caida al vacio: resta 1 HP y reubica al jugador en un punto seguro.
 func handle_fall_penalty() -> void:
-	if dead or _is_dead:
+	if dead:
 		return
 
 	# Asegurar que el danio por caida se aplique incluso si habia i-frames temporales
@@ -455,7 +440,7 @@ func handle_fall_penalty() -> void:
 	take_damage(1)
 
 	# Si el jugador sobrevive, teletransportar a la ultima posicion segura en el piso o al spawn
-	if not dead and not _is_dead and health > 0:
+	if not dead and health > 0:
 		velocity = Vector2.ZERO
 		var target_pos: Vector2 = last_safe_position if last_safe_position != Vector2.ZERO else spawn_position
 		global_position = target_pos
@@ -505,7 +490,6 @@ func collect_chi(amount: int) -> void:
 		if not can_fireball:
 			can_fireball = true
 			can_lightning = true
-			fireball_unlocked.emit()
 			ability_unlocked.emit("¡BOLA DE FUEGO Y RAYO CONTROL!", "Bola de fuego: Q | Ataque cargado: E")
 
 # Maneja la muerte del jugador.
@@ -514,7 +498,6 @@ func die() -> void:
 		return 
 	
 	dead = true
-	_is_dead = true
 	_is_invulnerable = false
 	if footstep_player and footstep_player.playing:
 		footstep_player.stop()
@@ -539,9 +522,6 @@ func die() -> void:
 	if _active_dragon_breath != null and is_instance_valid(_active_dragon_breath):
 		_active_dragon_breath.queue_free()
 		_active_dragon_breath = null
-	if fire_breath_controller:
-		fire_breath_controller.die()
-		fire_breath_controller = null
 	if lightning_controller:
 		lightning_controller.die()
 		lightning_controller = null
@@ -562,8 +542,8 @@ func die() -> void:
 
 # Actualiza la animacion segun el estado del personaje.
 func _update_animation() -> void:
-	body_animations.speed_scale = 1.0
-	_play_animation("idle")
+	if body_animations and (body_animations.current_animation != "idle" or not body_animations.is_playing()):
+		_play_animation("idle")
 
 # Reproduce una animacion del cuerpo.
 func _play_animation(animation: String) -> void:

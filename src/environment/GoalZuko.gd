@@ -3,8 +3,6 @@ extends Area2D
 
 signal level_completed
 
-@export var golem_scene: PackedScene = preload("res://src/entities/enemies/golem/Golem.tscn")
-
 @onready var zuko_sprite: AnimatedSprite2D = $ZukoSprite
 @onready var cinematic_golem_1: AnimatedSprite2D = $CinematicGolem1
 @onready var cinematic_golem_2: AnimatedSprite2D = $CinematicGolem2
@@ -101,20 +99,11 @@ func _start_cutscene(player: Node2D) -> void:
 	var tween: Tween = create_tween()
 	tween.set_parallel(true)
 
-	if zuko_sprite != null:
-		var target_zuko_scale_y: float = zuko_sprite.scale.y * 2.0
-		tween.tween_property(zuko_sprite, "modulate:a", 0.0, 1.0)
-		tween.tween_property(zuko_sprite, "scale:y", target_zuko_scale_y, 1.0)
-
-	if cinematic_golem_1 != null:
-		var target_golem_1_scale_y: float = cinematic_golem_1.scale.y * 2.0
-		tween.tween_property(cinematic_golem_1, "modulate:a", 0.0, 1.0)
-		tween.tween_property(cinematic_golem_1, "scale:y", target_golem_1_scale_y, 1.0)
-
-	if cinematic_golem_2 != null:
-		var target_golem_2_scale_y: float = cinematic_golem_2.scale.y * 2.0
-		tween.tween_property(cinematic_golem_2, "modulate:a", 0.0, 1.0)
-		tween.tween_property(cinematic_golem_2, "scale:y", target_golem_2_scale_y, 1.0)
+	for spr: AnimatedSprite2D in [zuko_sprite, cinematic_golem_1, cinematic_golem_2]:
+		if spr != null:
+			var target_scale_y: float = spr.scale.y * 2.0
+			tween.tween_property(spr, "modulate:a", 0.0, 1.0)
+			tween.tween_property(spr, "scale:y", target_scale_y, 1.0)
 
 	# 12. Espera a que el rayo y la desintegración concluyan
 	await get_tree().create_timer(1.2).timeout
@@ -123,7 +112,6 @@ func _start_cutscene(player: Node2D) -> void:
 
 	# 13. Llama a la pantalla de victoria/nivel completado
 	level_completed.emit()
-	_trigger_win()
 
 func _show_dialogue(text: String) -> void:
 	var hud: HUD = _get_hud()
@@ -139,12 +127,3 @@ func _get_hud() -> HUD:
 	if not is_inside_tree() or get_tree().current_scene == null:
 		return null
 	return get_tree().current_scene.get_node_or_null("HUD") as HUD
-
-func _trigger_win() -> void:
-	var hud: CanvasLayer = get_tree().current_scene.get_node_or_null("HUD") as CanvasLayer
-	if hud != null and hud.has_method("show_win_screen"):
-		hud.show_win_screen()
-	elif get_tree().current_scene.has_method("_on_goal_level_completed"):
-		get_tree().current_scene._on_goal_level_completed()
-	else:
-		get_tree().change_scene_to_file("res://src/ui/win/WinCredits.tscn")

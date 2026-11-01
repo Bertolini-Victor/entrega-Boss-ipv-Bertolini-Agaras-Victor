@@ -16,8 +16,6 @@ var _is_removing: bool = false
 
 # Inicializa y reproduce la animación spawn encadenada a move.
 func _ready() -> void:
-	if animated_sprite == null:
-		animated_sprite = get_node_or_null("AnimatedSprite2D")
 	if animated_sprite != null and animated_sprite.sprite_frames != null:
 		if animated_sprite.sprite_frames.has_animation("spawn"):
 			animated_sprite.play("spawn")
@@ -58,8 +56,8 @@ func _disable_collisions() -> void:
 		hitbox.set_deferred("monitoring", false)
 		hitbox.set_deferred("monitorable", false)
 
-# Al impactar (colisión): detiene movimiento, desactiva colisiones y reproduce impact.
-func on_impact() -> void:
+# Finaliza el ciclo de vida del proyectil deteniendo movimiento, desactivando colisiones y reproduciendo animación.
+func _finish_projectile(anim_name: String) -> void:
 	if _is_removing:
 		return
 	_is_removing = true
@@ -69,28 +67,19 @@ func on_impact() -> void:
 		lifetime_timer.stop()
 	_disable_collisions()
 	
-	if animated_sprite != null and animated_sprite.sprite_frames != null and animated_sprite.sprite_frames.has_animation("impact"):
+	if animated_sprite != null and animated_sprite.sprite_frames != null and animated_sprite.sprite_frames.has_animation(anim_name):
 		animated_sprite.animation_finished.connect(queue_free, CONNECT_ONE_SHOT)
-		animated_sprite.play("impact")
+		animated_sprite.play(anim_name)
 	else:
 		queue_free()
 
+# Al impactar (colisión): detiene movimiento, desactiva colisiones y reproduce impact.
+func on_impact() -> void:
+	_finish_projectile("impact")
+
 # Al vencer su tiempo de vida (sin chocar): detiene movimiento, desactiva colisiones y reproduce fade.
 func on_fade() -> void:
-	if _is_removing:
-		return
-	_is_removing = true
-	velocity = Vector2.ZERO
-	set_physics_process(false)
-	if lifetime_timer:
-		lifetime_timer.stop()
-	_disable_collisions()
-	
-	if animated_sprite != null and animated_sprite.sprite_frames != null and animated_sprite.sprite_frames.has_animation("fade"):
-		animated_sprite.animation_finished.connect(queue_free, CONNECT_ONE_SHOT)
-		animated_sprite.play("fade")
-	else:
-		queue_free()
+	_finish_projectile("fade")
 
 # Compatibilidad con llamadas heredadas a remove().
 func remove() -> void:

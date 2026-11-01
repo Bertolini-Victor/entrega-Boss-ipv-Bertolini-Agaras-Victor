@@ -5,7 +5,6 @@ signal parry_success
 signal parry_failed
 
 @export var parry_window: float = 0.25
-@export var redirect_window: float = 0.10
 @export var chi_reward: int = 15
 @export var melee_parry_range: float = 65.0
 
@@ -91,22 +90,25 @@ func _do_melee_parry(enemy: Node2D) -> void:
 	_grant_chi_reward()
 	parry_success.emit()
 
-func _find_parryable_melee_enemy() -> Node2D:
+func _find_nearest_valid_enemy(max_dist: float = INF, must_be_parryable_melee: bool = false) -> Node2D:
 	var enemies = get_tree().get_nodes_in_group("enemies")
 	var nearest: Node2D = null
-	var min_dist: float = melee_parry_range
+	var min_dist: float = max_dist
 	for enemy in enemies:
 		if not is_instance_valid(enemy):
 			continue
 		if not enemy.is_inside_tree() or ("dead" in enemy and enemy.dead):
 			continue
-		if not enemy.has_method("is_parryable_attack_active") or not enemy.is_parryable_attack_active():
+		if must_be_parryable_melee and (not enemy.has_method("is_parryable_attack_active") or not enemy.is_parryable_attack_active()):
 			continue
 		var d: float = global_position.distance_to(enemy.global_position)
 		if d <= min_dist:
 			min_dist = d
 			nearest = enemy
 	return nearest
+
+func _find_parryable_melee_enemy() -> Node2D:
+	return _find_nearest_valid_enemy(melee_parry_range, true)
 
 func _do_redirect() -> void:
 	_can_parry = false
@@ -134,19 +136,7 @@ func _do_redirect() -> void:
 		_do_parry()
 
 func _find_nearest_enemy() -> Node2D:
-	var enemies = get_tree().get_nodes_in_group("enemies")
-	var nearest: Node2D = null
-	var min_dist: float = INF
-	for enemy in enemies:
-		if not is_instance_valid(enemy):
-			continue
-		if not enemy.is_inside_tree() or ("dead" in enemy and enemy.dead):
-			continue
-		var d = global_position.distance_to(enemy.global_position)
-		if d < min_dist:
-			min_dist = d
-			nearest = enemy
-	return nearest
+	return _find_nearest_valid_enemy(INF, false)
 
 func _on_parry_zone_area_entered(area: Area2D) -> void:
 	var proj = area.get_parent()

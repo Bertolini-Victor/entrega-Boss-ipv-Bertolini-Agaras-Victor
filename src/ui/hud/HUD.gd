@@ -93,9 +93,6 @@ func show_ability_unlocked_overlay(title: String, hint: String) -> void:
 		if fireball_timer:
 			fireball_timer.start(5.0)
 
-func show_fireball_unlocked_overlay() -> void:
-	show_ability_unlocked_overlay("¡BOLA DE FUEGO Y RAYO CONTROL!", "Bola de fuego: Q | Ataque cargado: E")
-
 func _on_tutorial_timer_timeout() -> void:
 	_dismiss_controls_hint()
 

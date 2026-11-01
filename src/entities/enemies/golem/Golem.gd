@@ -26,7 +26,6 @@ const ACTION_SCALE: Vector2 = Vector2(0.117, 0.117)
 @export var telegraph_duration: float = 0.6
 @export var attack_active_duration: float = 0.24
 @export var attack_cooldown: float = 2.2
-@export var attack_anim_speed: float = 0.75
 @export var stun_duration: float = 1.20
 @export var gravity_acceleration: float = 980.0
 @export var max_fall_speed: float = 650.0
@@ -78,20 +77,14 @@ func _physics_process(delta: float) -> void:
 			velocity.x = move_toward(velocity.x, 0.0, 220.0 * delta)
 			_state_timer -= delta
 			if _state_timer <= 0.0:
-				if sprite != null:
-					sprite.self_modulate = Color.WHITE
-					sprite.rotation = 0.0
-					sprite.speed_scale = 1.0
+				_reset_sprite_visuals()
 				_cooldown_timer = maxf(_cooldown_timer, attack_cooldown * 0.4)
 				_state = State.CHASE if _has_valid_target() else State.IDLE
 		State.HURT:
 			velocity.x = move_toward(velocity.x, 0.0, 300.0 * delta)
 			_state_timer -= delta
 			if _state_timer <= 0.0:
-				if sprite != null:
-					sprite.self_modulate = Color.WHITE
-					sprite.rotation = 0.0
-					sprite.speed_scale = 1.0
+				_reset_sprite_visuals()
 				_state = State.CHASE if _has_valid_target() else State.IDLE
 		State.TELEGRAPH, State.ATTACK:
 			velocity.x = 0.0
@@ -188,14 +181,17 @@ func _play_animation(anim_name: String) -> void:
 	if sprite.animation != anim_name or not sprite.is_playing():
 		sprite.play(anim_name)
 
-func _cancel_telegraph() -> void:
-	if _telegraph_tween != null and _telegraph_tween.is_valid():
-		_telegraph_tween.kill()
-	_telegraph_tween = null
+func _reset_sprite_visuals() -> void:
 	if sprite != null:
 		sprite.self_modulate = Color.WHITE
 		sprite.rotation = 0.0
 		sprite.speed_scale = 1.0
+
+func _cancel_telegraph() -> void:
+	if _telegraph_tween != null and _telegraph_tween.is_valid():
+		_telegraph_tween.kill()
+	_telegraph_tween = null
+	_reset_sprite_visuals()
 
 func play_hit_anim() -> void:
 	if sprite == null:
@@ -258,9 +254,7 @@ func _start_attack_sequence() -> void:
 		return
 
 	_parryable_window = false
-	if sprite != null:
-		sprite.speed_scale = 1.0
-		sprite.self_modulate = Color.WHITE
+	_reset_sprite_visuals()
 	_cooldown_timer = attack_cooldown
 	_state = State.CHASE if _has_valid_target() else State.IDLE
 	_play_animation("idle")

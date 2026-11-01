@@ -42,6 +42,3 @@ func _on_hitbox_area_entered(area: Area2D) -> void:
 			elif parent.has_method("remove"):
 				parent.remove()
 			on_impact()
-
-func remove() -> void:
-	on_impact()

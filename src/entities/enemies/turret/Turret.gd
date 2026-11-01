@@ -17,13 +17,6 @@ const ACTION_SCALE: Vector2 = Vector2(0.095, 0.095)
 @export var max_health: int = 2
 @export var fire_cooldown: float = 2.0
 @export var projectile_speed: float = 240.0
-@export var telegraph_duration: float = 0.55
-
-var attack_cooldown: float:
-	get:
-		return fire_cooldown
-	set(val):
-		fire_cooldown = val
 
 var health: int = 2
 var target: Node2D
@@ -39,7 +32,7 @@ func _ready() -> void:
 	if sprite != null:
 		sprite.flip_h = _facing < 0.0
 		sprite.animation_finished.connect(_on_animation_finished)
-	fire_timer.wait_time = maxf(attack_cooldown, 0.1)
+	fire_timer.wait_time = maxf(fire_cooldown, 0.1)
 	fire_timer.timeout.connect(fire)
 	_play_animation("idle")
 
@@ -91,9 +84,9 @@ func take_damage(amount: int = 1) -> void:
 		_is_firing = false
 		_play_animation("hurt")
 
-# Mantiene compatibilidad con llamadas directas de animacion de impacto.
-func play_hit_anim() -> void:
-	take_damage(1)
+func _start_fire_timer() -> void:
+	fire_timer.wait_time = maxf(fire_cooldown, 0.1)
+	fire_timer.start()
 
 # Maneja la finalizacion de animaciones no ciclicas.
 func _on_animation_finished() -> void:
@@ -104,14 +97,12 @@ func _on_animation_finished() -> void:
 		"hurt":
 			_play_animation("idle")
 			if target != null and fire_timer.is_stopped():
-				fire_timer.wait_time = maxf(attack_cooldown, 0.1)
-				fire_timer.start()
+				_start_fire_timer()
 		"fire":
 			_is_firing = false
 			_play_animation("idle")
 			if target != null:
-				fire_timer.wait_time = maxf(attack_cooldown, 0.1)
-				fire_timer.start()
+				_start_fire_timer()
 
 # Dispara la animacion de fuego e instancia el proyectil.
 func fire() -> void:
@@ -150,8 +141,7 @@ func _physics_process(_delta: float) -> void:
 	raycast.force_raycast_update()
 	if raycast.is_colliding() and raycast.get_collider() == target:
 		if fire_timer.is_stopped() and not _is_firing and sprite != null and sprite.animation != "hurt":
-			fire_timer.wait_time = maxf(attack_cooldown, 0.1)
-			fire_timer.start()
+			_start_fire_timer()
 	else:
 		if not fire_timer.is_stopped():
 			fire_timer.stop()
