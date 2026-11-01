@@ -303,7 +303,6 @@ limit_bottom = 900
 [node name="Turret_B1" parent="Environment/Entities" unique_id=1654059648 instance=ExtResource("5")]
 position = Vector2(2250, 290)
 fire_cooldown = 2.5
-attack_cooldown = 2.5
 projectile_speed = 200.0
 telegraph_duration = 0.6
 
@@ -316,7 +315,6 @@ attack_cooldown = 2.4
 [node name="Turret_M1" parent="Environment/Entities" unique_id=1863430381 instance=ExtResource("5")]
 position = Vector2(3850, -135)
 fire_cooldown = 1.4
-attack_cooldown = 1.4
 projectile_speed = 270.0
 telegraph_duration = 0.45
 
@@ -329,7 +327,6 @@ attack_cooldown = 2.0
 [node name="Turret_M2" parent="Environment/Entities" unique_id=1863430383 instance=ExtResource("5")]
 position = Vector2(2567, -247)
 fire_cooldown = 1.2
-attack_cooldown = 1.2
 projectile_speed = 290.0
 telegraph_duration = 0.4
 
@@ -342,7 +339,6 @@ attack_cooldown = 2.0
 [node name="Turret_M3" parent="Environment/Entities" unique_id=1863430385 instance=ExtResource("5")]
 position = Vector2(1452, -206)
 fire_cooldown = 1.2
-attack_cooldown = 1.2
 projectile_speed = 290.0
 telegraph_duration = 0.4
 
@@ -354,7 +350,6 @@ attack_cooldown = 1.8
 [node name="Turret_T1" parent="Environment/Entities" unique_id=1863430387 instance=ExtResource("5")]
 position = Vector2(2100, -835)
 fire_cooldown = 1.1
-attack_cooldown = 1.1
 projectile_speed = 310.0
 telegraph_duration = 0.35
 
@@ -373,14 +368,12 @@ attack_cooldown = 1.5
 [node name="Turret_Boss1" parent="Environment/Entities" unique_id=1863430390 instance=ExtResource("5")]
 position = Vector2(3200, -835)
 fire_cooldown = 1.0
-attack_cooldown = 1.0
 projectile_speed = 330.0
 telegraph_duration = 0.3
 
 [node name="Turret_Boss2" parent="Environment/Entities" unique_id=1863430391 instance=ExtResource("5")]
 position = Vector2(3750, -835)
 fire_cooldown = 1.0
-attack_cooldown = 1.0
 projectile_speed = 330.0
 telegraph_duration = 0.3
 

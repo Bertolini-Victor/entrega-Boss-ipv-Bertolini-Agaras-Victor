@@ -50,9 +50,7 @@ func _on_fall_killzone_body_entered(body: Node2D) -> void:
 	if body is Player:
 		var p := body as Player
 		if not p.dead:
-			p.health = 0
-			p.health_changed.emit(0, p.max_health)
-			p.die()
+			p.handle_fall_penalty()
 
 # Callback cuando el jugador llega a la meta.
 func _on_goal_level_completed() -> void:

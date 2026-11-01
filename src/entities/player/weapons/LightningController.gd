@@ -37,6 +37,12 @@ func _get_player() -> Player:
 		return p as Player
 	return null
 
+func _get_facing_direction() -> Vector2:
+	var player: Player = _get_player()
+	if player != null:
+		return player.get_facing_direction()
+	return Vector2.RIGHT
+
 func _can_pay_chi() -> bool:
 	var player: Player = _get_player()
 	if player != null:
@@ -75,9 +81,10 @@ func _apply_charge_feedback(charging: bool) -> void:
 			target.self_modulate = _original_modulate
 		modulate = Color.WHITE
 
-# Procesa la entrada y maneja la carga y orientación del ataque de rayo.
+# Procesa la entrada y orienta el ataque de rayo estrictamente en horizontal.
 func process_input() -> void:
-	look_at(get_global_mouse_position())
+	var horizontal_dir: Vector2 = _get_facing_direction()
+	rotation = 0.0 if horizontal_dir.x >= 0.0 else PI
 	if (Input.is_action_just_pressed("attack_lightning") or Input.is_action_pressed("attack_lightning")) and not _on_cooldown:
 		if not _is_charging:
 			if _can_pay_chi():
@@ -106,15 +113,18 @@ func _on_charge_timer_timeout() -> void:
 func _on_cooldown_timer_timeout() -> void:
 	_on_cooldown = false
 
+# Instancia y dispara el rayo estrictamente en linea recta horizontal.
 func _fire() -> void:
 	if projectile_scene == null:
 		return
+	var horizontal_dir: Vector2 = _get_facing_direction()
+	rotation = 0.0 if horizontal_dir.x >= 0.0 else PI
 	var container: Node = projectile_container if projectile_container != null else get_parent()
 	var projectile_instance: Node = projectile_scene.instantiate()
 	container.add_child(projectile_instance)
 	projectile_instance.initialize(
 		weapon_tip.global_position,
-		global_position.direction_to(weapon_tip.global_position)
+		horizontal_dir
 	)
 
 func is_charging() -> bool:

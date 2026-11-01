@@ -7,18 +7,27 @@ extends Node2D
 
 var projectile_container: Node
 
-# Orienta el arma estrictamente en direccion horizontal segun la posicion del puntero.
-func process_input() -> void:
-	var dir_x: float = 1.0 if get_global_mouse_position().x >= global_position.x else -1.0
-	rotation = 0.0 if dir_x > 0.0 else PI
+func _get_facing_direction() -> Vector2:
+	if owner is Player:
+		return (owner as Player).get_facing_direction()
+	var current: Node = get_parent()
+	while current != null:
+		if current is Player:
+			return (current as Player).get_facing_direction()
+		current = current.get_parent()
+	return Vector2.RIGHT
 
-# Instancia un proyectil y lo dispara estrictamente en linea recta horizontal.
+# Orienta el arma estrictamente en direccion horizontal segun hacia donde mira el jugador.
+func process_input() -> void:
+	var facing_dir: Vector2 = _get_facing_direction()
+	rotation = 0.0 if facing_dir.x >= 0.0 else PI
+
+# Instancia un proyectil y lo dispara estrictamente en linea recta horizontal segun el frente del jugador.
 func fire() -> void:
 	if not fire_timer.is_stopped():
 		return
-	var dir_x: float = 1.0 if get_global_mouse_position().x >= global_position.x else -1.0
-	var horizontal_dir: Vector2 = Vector2.RIGHT if dir_x > 0.0 else Vector2.LEFT
-	rotation = 0.0 if dir_x > 0.0 else PI
+	var horizontal_dir: Vector2 = _get_facing_direction()
+	rotation = 0.0 if horizontal_dir.x >= 0.0 else PI
 	var projectile_instance: Node = projectile_scene.instantiate()
 	projectile_container.add_child(projectile_instance)
 	projectile_instance.initialize(

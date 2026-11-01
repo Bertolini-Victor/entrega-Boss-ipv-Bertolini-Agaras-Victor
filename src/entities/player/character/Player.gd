@@ -21,6 +21,8 @@ signal ability_unlocked(title: String, hint: String)
 var _sprite_base_pos: Vector2 = Vector2.ZERO
 var _sprite_base_scale: Vector2 = Vector2.ONE
 var _sprite_half_height: float = 0.0
+var spawn_position: Vector2 = Vector2.ZERO
+var last_safe_position: Vector2 = Vector2.ZERO
 
 @export_group("Stats")
 @export var max_health: int = 2
@@ -113,6 +115,8 @@ func _ready() -> void:
 	_is_dead = false
 	health_changed.emit(health, max_health)
 	chi_changed.emit(chi, max_chi)
+	spawn_position = global_position
+	last_safe_position = global_position
 
 # Lee la posicion del sprite desde la escena. Convencion: el borde inferior
 # del sprite queda sobre el origen del Player (los pies), por lo que la mitad
@@ -140,12 +144,9 @@ func initialize(p_projectile_container: Node = get_parent()) -> void:
 
 # Procesa el movimiento y las colisiones del jugador.
 func _physics_process(delta: float) -> void:
-	# ── Verificación de caída al abismo ─────────────────────────────────────
+	# ── Verificación de caída al abismo (Penalización por daño y respawn) ───
 	if not _is_dead and not dead and global_position.y > fall_death_y:
-		_is_dead = true
-		health = 0
-		health_changed.emit(health, max_health)
-		die()
+		handle_fall_penalty()
 
 	if _cast_lock_timer > 0.0:
 		_cast_lock_timer -= delta
@@ -246,6 +247,9 @@ func _physics_process(delta: float) -> void:
 	_was_on_floor = on_floor
 	move_and_slide()
 
+	if not dead and is_on_floor() and not is_on_wall():
+		last_safe_position = global_position
+
 	# ── Pasos del jugador (Audio) ──────────────────────────────────────────
 	var is_running: bool = not dead and is_on_floor() and absf(velocity.x) > 10.0
 	if is_running:
@@ -295,17 +299,13 @@ func _process_input() -> void:
 	var lightning_busy: bool = can_lightning and lightning_controller != null and lightning_controller.is_charging()
 	var cast_locked: bool = _cast_lock_timer > 0.0
 
-	# Melee (Click Izquierdo) — blocked while charging lightning, using fire breath, or during the cast lock
+	# Melee (Click Izquierdo) — orientacion horizontal estricta segun hacia donde mira el personaje
 	if Input.is_action_just_pressed("attack_melee") and can_melee and not lightning_busy and not fire_breath_busy and not cast_locked:
-		var mouse_offset_x: float = get_global_mouse_position().x - global_position.x
-		var facing_dir: float = sign(mouse_offset_x) if mouse_offset_x != 0.0 else body_pivot.scale.x
-		if facing_dir == 0.0:
-			facing_dir = 1.0
-		body_pivot.scale.x = facing_dir
+		var facing_dir: float = get_facing_sign()
 		melee_attack.attack(facing_dir)
 		melee_busy = melee_attack.is_attacking()
 
-	# Fire Breath / Ataque hacia arriba (W)
+	# Aliento de Fuego (W) — NOTA (Excepcion): El Aliento de Fuego es estrictamente vertical hacia arriba (Vector2.UP), a diferencia de los ataques horizontales.
 	if Input.is_action_just_pressed("attack_up") and can_fire_breath and fire_breath_controller != null and not lightning_busy and not melee_busy and not fire_breath_busy and not cast_locked:
 		if fire_breath_controller.is_ready():
 			fire_breath_controller.attack()
@@ -313,23 +313,20 @@ func _process_input() -> void:
 			cast_locked = true
 			fire_breath_busy = true
 
-	# Fireball / Bola de fuego (Q) — blocked while melee or fire breath is active, while charging lightning, or during the cast lock
+	# Fireball / Bola de fuego (Q) — orientacion horizontal estricta segun hacia donde mira el personaje
 	if Input.is_action_just_pressed("attack_1") and can_fireball and not lightning_busy and not melee_busy and not fire_breath_busy and not cast_locked:
 		if weapon.is_ready():
-			body_pivot.scale.x = 1.0 if get_global_mouse_position().x >= global_position.x else -1.0
 			weapon.fire()
 			_cast_lock_timer = attack_lock_time
 			cast_locked = true
 
 	weapon.process_input()
 
-	# Lightning attack — blocked while melee or fire breath is active or during the cast lock.
+	# Lightning attack (E) — orientacion horizontal estricta segun hacia donde mira el personaje
 	if can_lightning and lightning_controller:
 		if not melee_busy and not fire_breath_busy and not cast_locked:
 			var required_chi: int = lightning_controller.chi_cost if "chi_cost" in lightning_controller else lightning_chi_cost
 			if has_enough_chi(required_chi) or lightning_controller.is_charging():
-				if Input.is_action_pressed("attack_lightning") or lightning_controller.is_charging():
-					body_pivot.scale.x = 1.0 if get_global_mouse_position().x >= global_position.x else -1.0
 				lightning_controller.process_input()
 
 	# Jump buffer: queue on press
@@ -352,6 +349,29 @@ func _process_input() -> void:
 		elif Input.is_action_just_pressed("parry_redirect"):
 			if can_redirect:
 				parry_controller.try_parry(true)
+
+# Devuelve la direccion horizontal en la que mira el jugador (Vector2.RIGHT o Vector2.LEFT).
+func get_facing_direction() -> Vector2:
+	return Vector2.RIGHT if body_pivot.scale.x >= 0.0 else Vector2.LEFT
+
+# Devuelve el signo de orientacion horizontal (+1.0 o -1.0).
+func get_facing_sign() -> float:
+	return 1.0 if body_pivot.scale.x >= 0.0 else -1.0
+
+# Aplica penalizacion por caida al vacio: resta 1 HP y reubica al jugador en un punto seguro.
+func handle_fall_penalty() -> void:
+	if dead or _is_dead:
+		return
+
+	# Asegurar que el danio por caida se aplique incluso si habia i-frames temporales
+	_is_invulnerable = false
+	take_damage(1)
+
+	# Si el jugador sobrevive, teletransportar a la ultima posicion segura en el piso o al spawn
+	if not dead and not _is_dead and health > 0:
+		velocity = Vector2.ZERO
+		var target_pos: Vector2 = last_safe_position if last_safe_position != Vector2.ZERO else spawn_position
+		global_position = target_pos
 
 # Devuelve el centro del hitbox del jugador (punto de mira para enemigos).
 func get_aim_point() -> Vector2:
