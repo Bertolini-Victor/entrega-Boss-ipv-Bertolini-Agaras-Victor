@@ -24,19 +24,19 @@ region = Rect2(288, 0, 96, 325)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_db_4"]
 atlas = ExtResource("2_texture")
-region = Rect2(384, 0, 95, 325)
+region = Rect2(384, 0, 96, 325)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_db_5"]
 atlas = ExtResource("2_texture")
-region = Rect2(479, 0, 96, 325)
+region = Rect2(480, 0, 96, 325)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_db_6"]
 atlas = ExtResource("2_texture")
-region = Rect2(575, 0, 96, 325)
+region = Rect2(576, 0, 96, 325)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_db_7"]
 atlas = ExtResource("2_texture")
-region = Rect2(671, 0, 96, 325)
+region = Rect2(672, 0, 96, 325)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_dragon_breath"]
 animations = [{

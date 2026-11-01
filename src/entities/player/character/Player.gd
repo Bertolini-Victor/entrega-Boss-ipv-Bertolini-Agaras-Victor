@@ -113,6 +113,7 @@ func _ready() -> void:
 	_cache_sprite_metrics()
 	_compute_jump_physics()
 	initialize()
+	can_fire_breath = true
 	health = max_health
 	chi = 0
 	dead = false
@@ -144,6 +145,7 @@ func initialize(p_projectile_container: Node = get_parent()) -> void:
 	weapon.projectile_container = p_projectile_container
 	if lightning_controller:
 		lightning_controller.projectile_container = p_projectile_container
+	can_fire_breath = true
 	body_animations.play("idle")
 
 # Procesa el movimiento y las colisiones del jugador.
@@ -459,12 +461,7 @@ func collect_chi(amount: int) -> void:
 	chi_changed.emit(chi, max_chi)
 	
 	if chi >= max_chi:
-		if not can_fire_breath:
-			can_fire_breath = true
-			chi = 0
-			chi_changed.emit(chi, max_chi)
-			ability_unlocked.emit("¡ALIENTO DE DRAGÓN DESBLOQUEADO!", "Ataque hacia arriba: W")
-		elif not can_fireball:
+		if not can_fireball:
 			can_fireball = true
 			can_lightning = true
 			fireball_unlocked.emit()

@@ -51,8 +51,8 @@ text = "Chi: 0 / 100"
 modulate = Color(1, 1, 1, 0.45)
 offset_left = 6.0
 offset_top = 44.0
-offset_right = 114.0
-offset_bottom = 104.0
+offset_right = 150.0
+offset_bottom = 114.0
 
 [node name="Background" type="ColorRect" parent="TutorialOverlay" unique_id=1993371349]
 layout_mode = 2
@@ -83,7 +83,8 @@ theme_override_font_sizes/font_size = 7
 text = "Moverse: A / D
 Saltar: Espacio
 Cuerpo a Cuerpo: Clic Izquierdo
-Parry: Clic Derecho"
+Parry: Clic Derecho
+Aliento de Dragón: W (Consume Chi)"
 horizontal_alignment = 1
 
 [node name="TutorialTimer" type="Timer" parent="TutorialOverlay" unique_id=673496061]
