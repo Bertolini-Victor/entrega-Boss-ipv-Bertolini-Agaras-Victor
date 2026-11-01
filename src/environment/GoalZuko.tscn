@@ -3,9 +3,10 @@
 [ext_resource type="Script" uid="uid://csk4wgu8ini83" path="res://src/environment/GoalZuko.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://cq7xl6pb6qhu4" path="res://assets/textures/zuko_animations.png" id="2_zuko_tex"]
 [ext_resource type="Texture2D" uid="uid://xh5ky3a01jrt" path="res://assets/textures/teleportation_animation.png" id="3_beam_tex"]
+[ext_resource type="Texture2D" uid="uid://ej6hhf4ayyrn" path="res://assets/textures/enemies/idle_animation.png" id="4_golem_idle_tex"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_goal"]
-size = Vector2(48, 48)
+size = Vector2(400, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_z5"]
 atlas = ExtResource("2_zuko_tex")
@@ -67,6 +68,46 @@ animations = [{
 "speed": 12.0
 }]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_golem_idle_0"]
+atlas = ExtResource("4_golem_idle_tex")
+region = Rect2(25, 0, 120, 351)
+margin = Rect2(125, 0, 240, 0)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_golem_idle_1"]
+atlas = ExtResource("4_golem_idle_tex")
+region = Rect2(210, 0, 124, 351)
+margin = Rect2(123, 0, 236, 0)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_golem_idle_2"]
+atlas = ExtResource("4_golem_idle_tex")
+region = Rect2(384, 0, 120, 351)
+margin = Rect2(124, 0, 240, 0)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_golem_idle_3"]
+atlas = ExtResource("4_golem_idle_tex")
+region = Rect2(570, 0, 120, 351)
+margin = Rect2(125, 0, 240, 0)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_golem"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_golem_idle_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_golem_idle_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_golem_idle_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_golem_idle_3")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 6.0
+}]
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_tb0"]
 atlas = ExtResource("3_beam_tex")
 region = Rect2(0, 0, 174, 287)
@@ -116,7 +157,7 @@ collision_mask = 2
 script = ExtResource("1_script")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1533192994]
-position = Vector2(0, -24)
+position = Vector2(-200, -24)
 shape = SubResource("RectangleShape2D_goal")
 
 [node name="ZukoSprite" type="AnimatedSprite2D" parent="." unique_id=325460729]
@@ -126,6 +167,28 @@ sprite_frames = SubResource("SpriteFrames_zuko")
 animation = &"idle"
 autoplay = "idle"
 offset = Vector2(0, -143.5)
+flip_h = true
+
+[node name="CinematicGolem1" type="AnimatedSprite2D" parent="." unique_id=184029101]
+visible = false
+texture_filter = 1
+position = Vector2(-40, 0)
+scale = Vector2(0.095, 0.095)
+sprite_frames = SubResource("SpriteFrames_golem")
+animation = &"idle"
+autoplay = "idle"
+offset = Vector2(0, -161.5)
+
+[node name="CinematicGolem2" type="AnimatedSprite2D" parent="." unique_id=184029102]
+visible = false
+texture_filter = 1
+position = Vector2(40, 0)
+scale = Vector2(0.095, 0.095)
+sprite_frames = SubResource("SpriteFrames_golem")
+animation = &"idle"
+autoplay = "idle"
+offset = Vector2(0, -161.5)
+flip_h = true
 
 [node name="TeleportBeam" type="AnimatedSprite2D" parent="." unique_id=335646487]
 visible = false

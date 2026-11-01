@@ -2,6 +2,22 @@
 
 [ext_resource type="Script" uid="uid://bj17bqkhbh4m1" path="res://src/ui/hud/HUD.gd" id="1_hud"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dialogue"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(0.06, 0.07, 0.11, 0.88)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.88, 0.48, 0.17, 0.8)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
 [node name="HUD" type="CanvasLayer" unique_id=258819340]
 layer = 10
 script = ExtResource("1_hud")
@@ -135,6 +151,31 @@ horizontal_alignment = 1
 [node name="FireballTimer" type="Timer" parent="FireballOverlay" unique_id=1624729025]
 wait_time = 5.0
 one_shot = true
+
+[node name="DialogueBox" type="PanelContainer" parent="." unique_id=987654321]
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -120.0
+offset_top = -36.0
+offset_right = 120.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_dialogue")
+
+[node name="DialogueLabel" type="Label" parent="DialogueBox" unique_id=987654322]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.95, 0.85, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 8
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
 
 [connection signal="timeout" from="TutorialOverlay/TutorialTimer" to="." method="_on_tutorial_timer_timeout"]
 [connection signal="timeout" from="FireballOverlay/FireballTimer" to="." method="_on_fireball_timer_timeout"]

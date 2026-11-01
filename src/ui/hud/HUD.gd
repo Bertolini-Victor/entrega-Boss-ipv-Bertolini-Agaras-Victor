@@ -13,6 +13,8 @@ extends CanvasLayer
 @onready var fireball_timer: Timer = $FireballOverlay/FireballTimer
 @onready var fireball_title_label: Label = get_node_or_null("FireballOverlay/Margin/Content/Title")
 @onready var fireball_hint_label: Label = get_node_or_null("FireballOverlay/Margin/Content/Hint")
+@onready var dialogue_box: Control = get_node_or_null("DialogueBox")
+@onready var dialogue_label: Label = get_node_or_null("DialogueBox/DialogueLabel")
 
 var _is_dismissing_hint: bool = false
 var _required_actions: Dictionary = {
@@ -30,6 +32,8 @@ func _ready() -> void:
 		tutorial_panel.modulate.a = 0.45
 	if fireball_panel:
 		fireball_panel.visible = false
+	if dialogue_box:
+		dialogue_box.visible = false
 
 func _input(event: InputEvent) -> void:
 	if _is_dismissing_hint or tutorial_panel == null or not tutorial_panel.visible:
@@ -98,3 +102,22 @@ func _on_tutorial_timer_timeout() -> void:
 func _on_fireball_timer_timeout() -> void:
 	if fireball_panel:
 		fireball_panel.visible = false
+
+# Muestra un texto en la caja de diálogo inferior y la hace visible.
+func show_dialogue(text: String) -> void:
+	if dialogue_label == null:
+		dialogue_label = get_node_or_null("DialogueBox/DialogueLabel") as Label
+	if dialogue_box == null:
+		dialogue_box = get_node_or_null("DialogueBox") as Control
+
+	if dialogue_label != null:
+		dialogue_label.text = text
+	if dialogue_box != null:
+		dialogue_box.visible = true
+
+# Oculta la caja de diálogo inferior.
+func hide_dialogue() -> void:
+	if dialogue_box == null:
+		dialogue_box = get_node_or_null("DialogueBox") as Control
+	if dialogue_box != null:
+		dialogue_box.visible = false
