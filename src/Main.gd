@@ -49,51 +49,23 @@ func _on_player_player_died() -> void:
 
 # Callback cuando el jugador cae al vacio en FallKillzone (Zona 1 - Bottom Floor).
 func _on_fall_killzone_body_entered(body: Node2D) -> void:
-	if body is Player or body.is_in_group("player") or body.name == "Player":
-		if body.has_method("take_damage"):
-			if "_is_invulnerable" in body:
-				body.set("_is_invulnerable", false)
-			body.take_damage(1)
+	if body is Player:
+		var p: Player = body as Player
+		# Restamos vida (esto ya otorga i-frames internamente)
+		p._is_invulnerable = false
+		p.take_damage(1)
 
-		var is_alive: bool = true
-		if "dead" in body and body.get("dead") == true:
-			is_alive = false
-		elif "_is_dead" in body and body.get("_is_dead") == true:
-			is_alive = false
-		elif "health" in body and int(body.get("health")) <= 0:
-			is_alive = false
+		if p.health > 0 and not p.dead:
+			# Detenemos toda inercia
+			p.velocity = Vector2.ZERO
 
-		if is_alive:
-			if "velocity" in body:
-				body.set("velocity", Vector2.ZERO)
-			# Teletransporta al punto de inicio del nivel (spawn original)
-			var spawn_pos: Vector2 = Vector2(150.0, 520.0)
-			if "spawn_position" in body and body.get("spawn_position") != Vector2.ZERO:
-				spawn_pos = body.get("spawn_position")
-			body.global_position = spawn_pos
-			if "last_safe_position" in body:
-				body.set("last_safe_position", spawn_pos)
+			# Punto de inicio del nivel
+			var respawn_pos: Vector2 = p.spawn_position if p.spawn_position != Vector2.ZERO else Vector2(150.0, 520.0)
+			p.global_position = respawn_pos
+			p.last_safe_position = p.global_position
 
-			# Fuerza al personaje a mirar hacia la derecha
-			if body.has_method("face_right"):
-				body.face_right()
-			elif body.has_method("set_facing_direction"):
-				body.set_facing_direction(Vector2.RIGHT)
-			elif "direction" in body:
-				body.set("direction", Vector2.RIGHT)
-
-			if body.has_node("BodyPivot"):
-				var pivot: Node2D = body.get_node("BodyPivot") as Node2D
-				if pivot != null:
-					pivot.scale.x = 1.0
-			if body.has_node("AnimatedSprite2D"):
-				var anim_spr: Node = body.get_node("AnimatedSprite2D")
-				if "flip_h" in anim_spr:
-					anim_spr.set("flip_h", false)
-			if body.has_node("BodyPivot/Body"):
-				var body_spr: Node = body.get_node("BodyPivot/Body")
-				if "flip_h" in body_spr:
-					body_spr.set("flip_h", false)
+			# Forzar orientacion usando su metodo nativo
+			p.face_right()
 
 # Callback cuando el jugador llega a la meta.
 func _on_goal_level_completed() -> void:
@@ -101,23 +73,16 @@ func _on_goal_level_completed() -> void:
 
 # Callback cuando el jugador cae en el abismo de las plataformas del piso medio (Zona 2).
 func _on_mid_floor_fall_zone_body_entered(body: Node2D) -> void:
-	if body is Player or body.is_in_group("player") or body.name == "Player":
-		if body.has_method("take_damage"):
-			if "_is_invulnerable" in body:
-				body.set("_is_invulnerable", false)
-			body.take_damage(1)
+	if body is Player:
+		var p: Player = body as Player
+		# Restamos vida (esto ya otorga i-frames internamente)
+		p._is_invulnerable = false
+		p.take_damage(1)
 
-		var is_alive: bool = true
-		if "dead" in body and body.get("dead") == true:
-			is_alive = false
-		elif "_is_dead" in body and body.get("_is_dead") == true:
-			is_alive = false
-		elif "health" in body and int(body.get("health")) <= 0:
-			is_alive = false
+		if p.health > 0 and not p.dead:
+			# Detenemos toda inercia
+			p.velocity = Vector2.ZERO
 
-		if is_alive:
-			if "velocity" in body:
-				body.set("velocity", Vector2.ZERO)
 			# Coordenadas exactas de la salida superior del Primer Ascensor (Elevator_1) en el piso medio
 			var respawn_pos: Vector2 = Vector2(4220.0, -135.0)
 			var elevator_1: Node = get_node_or_null("Environment/Ground/Elevator_1")
@@ -127,27 +92,8 @@ func _on_mid_floor_fall_zone_body_entered(body: Node2D) -> void:
 				var base_y: float = elevator_2d.position.y if elevator_2d.position.y > 0.0 else 576.0
 				respawn_pos = Vector2(elevator_2d.position.x - 100.0, base_y - travel_h - 11.0)
 
-			body.global_position = respawn_pos
-			if "last_safe_position" in body:
-				body.set("last_safe_position", respawn_pos)
+			p.global_position = respawn_pos
+			p.last_safe_position = p.global_position
 
-			# Fuerza al personaje a mirar hacia la derecha
-			if body.has_method("face_right"):
-				body.face_right()
-			elif body.has_method("set_facing_direction"):
-				body.set_facing_direction(Vector2.RIGHT)
-			elif "direction" in body:
-				body.set("direction", Vector2.RIGHT)
-
-			if body.has_node("BodyPivot"):
-				var pivot: Node2D = body.get_node("BodyPivot") as Node2D
-				if pivot != null:
-					pivot.scale.x = 1.0
-			if body.has_node("AnimatedSprite2D"):
-				var anim_spr: Node = body.get_node("AnimatedSprite2D")
-				if "flip_h" in anim_spr:
-					anim_spr.set("flip_h", false)
-			if body.has_node("BodyPivot/Body"):
-				var body_spr: Node = body.get_node("BodyPivot/Body")
-				if "flip_h" in body_spr:
-					body_spr.set("flip_h", false)
+			# Forzar orientacion usando su metodo nativo
+			p.face_right()

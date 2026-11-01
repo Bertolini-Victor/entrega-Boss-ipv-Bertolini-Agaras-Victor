@@ -188,8 +188,8 @@ func _physics_process(delta: float) -> void:
 		return
 
 	# ── Verificación de caída al abismo (Penalización por daño y respawn) ───
-	if not _is_dead and not dead and global_position.y > fall_death_y:
-		handle_fall_penalty()
+	# if not _is_dead and not dead and global_position.y > fall_death_y:
+	# 	handle_fall_penalty()
 
 	if _cast_lock_timer > 0.0:
 		_cast_lock_timer -= delta
