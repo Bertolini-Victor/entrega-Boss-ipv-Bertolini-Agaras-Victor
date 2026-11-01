@@ -1,6 +1,19 @@
 class_name LightningProjectile
 extends Projectile
 
+@export var speed: float = 950.0:
+	set(val):
+		speed = val
+		velocity_speed = val
+@export var damage: int = 100
+@export var lifetime: float = 1.3
+
+func _ready() -> void:
+	velocity_speed = speed
+	if lifetime_timer:
+		lifetime_timer.wait_time = lifetime
+	super._ready()
+
 # Sobrescribe el manejo de colisiones con cuerpos físicos.
 func _on_hitbox_body_entered(body: Node2D) -> void:
 	if _is_removing:
@@ -9,7 +22,7 @@ func _on_hitbox_body_entered(body: Node2D) -> void:
 		body.hit_by_lightning()
 		on_impact()
 	elif body.has_method("take_damage"):
-		body.take_damage(1)
+		body.take_damage(damage)
 		on_impact()
 	elif body.has_method("die"):
 		body.die()
@@ -21,7 +34,7 @@ func _on_hitbox_body_entered(body: Node2D) -> void:
 func _on_hitbox_area_entered(area: Area2D) -> void:
 	if _is_removing:
 		return
-	var parent = area.get_parent()
+	var parent: Node = area.get_parent()
 	if parent is Projectile and parent != self and not parent is LightningProjectile and not parent is FireballProjectile:
 		if area.collision_layer & 16 != 0 or parent.is_in_group("enemy_projectiles"):
 			if parent.has_method("on_impact"):

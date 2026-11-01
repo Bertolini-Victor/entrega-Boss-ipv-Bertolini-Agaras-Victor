@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://22mlxu8p1pyp"]
 
 [ext_resource type="PackedScene" uid="uid://cgadr55reetnl" path="res://src/entities/projectiles/Projectile.tscn" id="1_proj"]
-[ext_resource type="Script" path="res://src/entities/enemies/turret/TurretProjectile.gd" id="2_script"]
+[ext_resource type="Script" uid="uid://d02bxembg5keh" path="res://src/entities/enemies/turret/TurretProjectile.gd" id="2_script"]
 [ext_resource type="Texture2D" uid="uid://bigc6dk85t0tr" path="res://assets/textures/enemies/turret_attack_animation.png" id="3_texture"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_t7"]
@@ -99,7 +99,7 @@ animations = [{
 
 [node name="TurretProjectile" unique_id=2000675581 instance=ExtResource("1_proj")]
 script = ExtResource("2_script")
-velocity_speed = 165.0
+velocity_speed = 240.0
 
 [node name="LifetimeTimer" parent="." index="0" unique_id=1300439819]
 wait_time = 5.0

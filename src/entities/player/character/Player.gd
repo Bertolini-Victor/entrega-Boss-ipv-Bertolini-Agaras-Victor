@@ -25,6 +25,7 @@ var _sprite_half_height: float = 0.0
 @export_group("Stats")
 @export var max_health: int = 2
 @export var max_chi: int = 100
+@export var lightning_chi_cost: int = 20
 
 @export_group("Movement")
 @export var acceleration: float = 950.0
@@ -325,9 +326,11 @@ func _process_input() -> void:
 	# Lightning attack — blocked while melee or fire breath is active or during the cast lock.
 	if can_lightning and lightning_controller:
 		if not melee_busy and not fire_breath_busy and not cast_locked:
-			if Input.is_action_pressed("attack_lightning"):
-				body_pivot.scale.x = 1.0 if get_global_mouse_position().x >= global_position.x else -1.0
-			lightning_controller.process_input()
+			var required_chi: int = lightning_controller.chi_cost if "chi_cost" in lightning_controller else lightning_chi_cost
+			if has_enough_chi(required_chi) or lightning_controller.is_charging():
+				if Input.is_action_pressed("attack_lightning") or lightning_controller.is_charging():
+					body_pivot.scale.x = 1.0 if get_global_mouse_position().x >= global_position.x else -1.0
+				lightning_controller.process_input()
 
 	# Jump buffer: queue on press
 	if Input.is_action_just_pressed("jump"):
@@ -369,6 +372,18 @@ func take_damage(amount: int = 1) -> void:
 	else:
 		_is_invulnerable = true
 		_invulnerability_timer = 1.0
+
+# Verifica si el jugador posee suficiente energia Chi.
+func has_enough_chi(amount: int) -> bool:
+	return chi >= amount
+
+# Consume energia Chi y emite la senal para actualizar el HUD.
+func consume_chi(amount: int) -> bool:
+	if chi < amount:
+		return false
+	chi = max(0, chi - amount)
+	chi_changed.emit(chi, max_chi)
+	return true
 
 # Recolecta energia Chi y desbloquea progresivamente Aliento de Fuego (1er umbral) y Bola de Fuego + Rayo Control (2do umbral).
 func collect_chi(amount: int) -> void:

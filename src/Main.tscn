@@ -216,10 +216,10 @@ position = Vector2(1253, -421)
 position = Vector2(250, -100)
 
 [node name="Ceiling_M8" parent="Environment/Ground" unique_id=2057826861 instance=ExtResource("4")]
-position = Vector2(520, -325)
+position = Vector2(531, -323)
 
 [node name="Ceiling_M7" parent="Environment/Ground" unique_id=1430627927 instance=ExtResource("4")]
-position = Vector2(549, -363)
+position = Vector2(531, -363)
 
 [node name="Ceiling_M6" parent="Environment/Ground" unique_id=1863430358 instance=ExtResource("4")]
 position = Vector2(611, -421)
@@ -232,11 +232,11 @@ position = Vector2(350, -124)
 travel_height = 700.0
 travel_duration = 3.5
 
+[node name="Wall_M_Left2" parent="Environment/Ground" unique_id=1423229734 instance=ExtResource("8")]
+position = Vector2(465, -536)
+
 [node name="Wall_M_Left" parent="Environment/Ground" unique_id=1863430361 instance=ExtResource("8")]
 position = Vector2(235, -300)
-
-[node name="Wall_M_Left" parent="Environment/Ground/Wall_M_Left" unique_id=1423229734 instance=ExtResource("8")]
-position = Vector2(230, -236)
 
 [node name="Floor_T_Landing" parent="Environment/Ground" unique_id=1863430362 instance=ExtResource("4")]
 position = Vector2(480, -800)
@@ -302,6 +302,9 @@ limit_bottom = 900
 
 [node name="Turret_B1" parent="Environment/Entities" unique_id=1654059648 instance=ExtResource("5")]
 position = Vector2(2250, 290)
+fire_cooldown = 2.5
+attack_cooldown = 2.5
+projectile_speed = 200.0
 telegraph_duration = 0.6
 
 [node name="Golem_B1" parent="Environment/Entities" unique_id=1447038166 instance=ExtResource("10_0ri8u")]
@@ -312,8 +315,10 @@ attack_cooldown = 2.4
 
 [node name="Turret_M1" parent="Environment/Entities" unique_id=1863430381 instance=ExtResource("5")]
 position = Vector2(3850, -135)
-attack_cooldown = 2.2
-telegraph_duration = 0.5
+fire_cooldown = 1.4
+attack_cooldown = 1.4
+projectile_speed = 270.0
+telegraph_duration = 0.45
 
 [node name="Golem_M1" parent="Environment/Entities" unique_id=1863430382 instance=ExtResource("10_0ri8u")]
 position = Vector2(3200, -135)
@@ -323,8 +328,10 @@ attack_cooldown = 2.0
 
 [node name="Turret_M2" parent="Environment/Entities" unique_id=1863430383 instance=ExtResource("5")]
 position = Vector2(2567, -247)
-attack_cooldown = 1.5
-telegraph_duration = 0.45
+fire_cooldown = 1.2
+attack_cooldown = 1.2
+projectile_speed = 290.0
+telegraph_duration = 0.4
 
 [node name="Golem_M2" parent="Environment/Entities" unique_id=1863430384 instance=ExtResource("10_0ri8u")]
 position = Vector2(1452, -46)
@@ -334,7 +341,9 @@ attack_cooldown = 2.0
 
 [node name="Turret_M3" parent="Environment/Entities" unique_id=1863430385 instance=ExtResource("5")]
 position = Vector2(1452, -206)
-attack_cooldown = 1.8
+fire_cooldown = 1.2
+attack_cooldown = 1.2
+projectile_speed = 290.0
 telegraph_duration = 0.4
 
 [node name="Golem_T1" parent="Environment/Entities" unique_id=1863430386 instance=ExtResource("10_0ri8u")]
@@ -344,8 +353,10 @@ attack_cooldown = 1.8
 
 [node name="Turret_T1" parent="Environment/Entities" unique_id=1863430387 instance=ExtResource("5")]
 position = Vector2(2100, -835)
-attack_cooldown = 1.6
-telegraph_duration = 0.4
+fire_cooldown = 1.1
+attack_cooldown = 1.1
+projectile_speed = 310.0
+telegraph_duration = 0.35
 
 [node name="Golem_Boss1" parent="Environment/Entities" unique_id=1863430388 instance=ExtResource("10_0ri8u")]
 position = Vector2(2900, -835)
@@ -361,13 +372,17 @@ attack_cooldown = 1.5
 
 [node name="Turret_Boss1" parent="Environment/Entities" unique_id=1863430390 instance=ExtResource("5")]
 position = Vector2(3200, -835)
-attack_cooldown = 1.4
-telegraph_duration = 0.35
+fire_cooldown = 1.0
+attack_cooldown = 1.0
+projectile_speed = 330.0
+telegraph_duration = 0.3
 
 [node name="Turret_Boss2" parent="Environment/Entities" unique_id=1863430391 instance=ExtResource("5")]
 position = Vector2(3750, -835)
-attack_cooldown = 1.4
-telegraph_duration = 0.35
+fire_cooldown = 1.0
+attack_cooldown = 1.0
+projectile_speed = 330.0
+telegraph_duration = 0.3
 
 [node name="Objects" type="Node2D" parent="Environment" unique_id=278969547]
 

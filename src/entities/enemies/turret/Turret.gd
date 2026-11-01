@@ -15,7 +15,15 @@ const ACTION_SCALE: Vector2 = Vector2(0.095, 0.095)
 
 @export var projectile_scene: PackedScene
 @export var max_health: int = 2
-@export var attack_cooldown: float = 2.8
+@export var fire_cooldown: float = 2.0:
+	set(val):
+		fire_cooldown = val
+		attack_cooldown = val
+@export var attack_cooldown: float = 2.0:
+	set(val):
+		attack_cooldown = val
+		fire_cooldown = val
+@export var projectile_speed: float = 240.0
 @export var telegraph_duration: float = 0.55
 
 var health: int = 2
@@ -122,6 +130,10 @@ func fire() -> void:
 		return
 
 	var proj_instance: Node = projectile_scene.instantiate()
+	if "velocity_speed" in proj_instance:
+		proj_instance.velocity_speed = projectile_speed
+	elif "speed" in proj_instance:
+		proj_instance.speed = projectile_speed
 	if projectile_container == null:
 		projectile_container = get_parent()
 	projectile_container.add_child(proj_instance)

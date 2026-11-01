@@ -2,8 +2,9 @@ class_name LightningController
 extends Node2D
 
 @export var projectile_scene: PackedScene
-@export var charge_time: float = 0.6
+@export var charge_time: float = 0.55
 @export var fire_cooldown: float = 1.2
+@export var chi_cost: int = 20
 
 var projectile_container: Node = null
 var _is_charging: bool = false
@@ -25,6 +26,28 @@ func _init_visual_feedback() -> void:
 		_original_modulate = target.self_modulate
 	else:
 		_original_modulate = Color.WHITE
+
+func _get_player() -> Player:
+	if owner is Player:
+		return owner as Player
+	if get_parent() and get_parent().get_parent() is Player:
+		return get_parent().get_parent() as Player
+	var p: Node = get_tree().get_first_node_in_group("player")
+	if p is Player:
+		return p as Player
+	return null
+
+func _can_pay_chi() -> bool:
+	var player: Player = _get_player()
+	if player != null:
+		return player.has_enough_chi(chi_cost)
+	return true
+
+func _consume_chi() -> bool:
+	var player: Player = _get_player()
+	if player != null:
+		return player.consume_chi(chi_cost)
+	return true
 
 func _get_sprite() -> CanvasItem:
 	if _sprite != null and is_instance_valid(_sprite):
@@ -55,11 +78,10 @@ func _apply_charge_feedback(charging: bool) -> void:
 # Procesa la entrada y maneja la carga y orientación del ataque de rayo.
 func process_input() -> void:
 	look_at(get_global_mouse_position())
-	if Input.is_action_pressed("attack_lightning") and not _on_cooldown:
+	if (Input.is_action_just_pressed("attack_lightning") or Input.is_action_pressed("attack_lightning")) and not _on_cooldown:
 		if not _is_charging:
-			_start_charge()
-	elif _is_charging:
-		_cancel_charge()
+			if _can_pay_chi():
+				_start_charge()
 
 func _start_charge() -> void:
 	_is_charging = true
@@ -72,6 +94,9 @@ func _cancel_charge() -> void:
 	charge_timer.stop()
 
 func _on_charge_timer_timeout() -> void:
+	if not _consume_chi():
+		_cancel_charge()
+		return
 	_fire()
 	_is_charging = false
 	_apply_charge_feedback(false)

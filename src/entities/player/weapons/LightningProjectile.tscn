@@ -102,10 +102,10 @@ animations = [{
 
 [node name="LightningProjectile" unique_id=687898964 instance=ExtResource("1_proj")]
 script = ExtResource("2_script")
-velocity_speed = 160.0
+velocity_speed = 950.0
 
 [node name="LifetimeTimer" parent="." index="0" unique_id=1300439819]
-wait_time = 5.0
+wait_time = 1.3
 
 [node name="Hitbox" parent="." index="2" unique_id=983099697]
 collision_mask = 29
