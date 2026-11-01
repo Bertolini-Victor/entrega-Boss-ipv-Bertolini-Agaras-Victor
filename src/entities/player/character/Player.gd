@@ -319,7 +319,7 @@ func _process_input() -> void:
 		melee_busy = melee_attack.is_attacking()
 
 	# Aliento de Dragón (W) — NOTA (Excepcion): El Aliento de Dragón es estrictamente vertical hacia arriba (Vector2.UP), a diferencia de los ataques horizontales.
-	if (Input.is_action_just_pressed("attack_up") or Input.is_action_just_pressed("attack_dragon_breath")) and can_fire_breath and not lightning_busy and not melee_busy and not fire_breath_busy and not cast_locked:
+	if Input.is_action_just_pressed("attack_up") and can_fire_breath and not lightning_busy and not melee_busy and not fire_breath_busy and not cast_locked:
 		if has_enough_chi(dragon_breath_chi_cost):
 			if cast_dragon_breath():
 				_cast_lock_timer = attack_lock_time

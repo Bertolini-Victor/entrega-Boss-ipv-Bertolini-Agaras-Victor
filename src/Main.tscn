@@ -319,7 +319,7 @@ position = Vector2(7700, -950)
 [node name="Entities" type="Node2D" parent="Environment" unique_id=729562450]
 
 [node name="Player" parent="Environment/Entities" unique_id=1440153547 instance=ExtResource("7")]
-position = Vector2(150, 520)
+position = Vector2(4362, -887)
 
 [node name="Camera2D" type="Camera2D" parent="Environment/Entities/Player" unique_id=1143206512]
 limit_left = -200
