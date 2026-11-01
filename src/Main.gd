@@ -47,12 +47,53 @@ func _ready() -> void:
 func _on_player_player_died() -> void:
 	get_tree().call_deferred("change_scene_to_file", "res://src/ui/game_over/GameOver.tscn")
 
-# Callback cuando el jugador cae al vacio en FallKillzone (respaldo fisico).
+# Callback cuando el jugador cae al vacio en FallKillzone (Zona 1 - Bottom Floor).
 func _on_fall_killzone_body_entered(body: Node2D) -> void:
-	if body is Player:
-		var p := body as Player
-		if not p.dead:
-			p.handle_fall_penalty()
+	if body is Player or body.is_in_group("player") or body.name == "Player":
+		if body.has_method("take_damage"):
+			if "_is_invulnerable" in body:
+				body.set("_is_invulnerable", false)
+			body.take_damage(1)
+
+		var is_alive: bool = true
+		if "dead" in body and body.get("dead") == true:
+			is_alive = false
+		elif "_is_dead" in body and body.get("_is_dead") == true:
+			is_alive = false
+		elif "health" in body and int(body.get("health")) <= 0:
+			is_alive = false
+
+		if is_alive:
+			if "velocity" in body:
+				body.set("velocity", Vector2.ZERO)
+			# Teletransporta al punto de inicio del nivel (spawn original)
+			var spawn_pos: Vector2 = Vector2(150.0, 520.0)
+			if "spawn_position" in body and body.get("spawn_position") != Vector2.ZERO:
+				spawn_pos = body.get("spawn_position")
+			body.global_position = spawn_pos
+			if "last_safe_position" in body:
+				body.set("last_safe_position", spawn_pos)
+
+			# Fuerza al personaje a mirar hacia la derecha
+			if body.has_method("face_right"):
+				body.face_right()
+			elif body.has_method("set_facing_direction"):
+				body.set_facing_direction(Vector2.RIGHT)
+			elif "direction" in body:
+				body.set("direction", Vector2.RIGHT)
+
+			if body.has_node("BodyPivot"):
+				var pivot: Node2D = body.get_node("BodyPivot") as Node2D
+				if pivot != null:
+					pivot.scale.x = 1.0
+			if body.has_node("AnimatedSprite2D"):
+				var anim_spr: Node = body.get_node("AnimatedSprite2D")
+				if "flip_h" in anim_spr:
+					anim_spr.set("flip_h", false)
+			if body.has_node("BodyPivot/Body"):
+				var body_spr: Node = body.get_node("BodyPivot/Body")
+				if "flip_h" in body_spr:
+					body_spr.set("flip_h", false)
 
 # Callback cuando el jugador llega a la meta.
 func _on_goal_level_completed() -> void:
@@ -89,3 +130,24 @@ func _on_mid_floor_fall_zone_body_entered(body: Node2D) -> void:
 			body.global_position = respawn_pos
 			if "last_safe_position" in body:
 				body.set("last_safe_position", respawn_pos)
+
+			# Fuerza al personaje a mirar hacia la derecha
+			if body.has_method("face_right"):
+				body.face_right()
+			elif body.has_method("set_facing_direction"):
+				body.set_facing_direction(Vector2.RIGHT)
+			elif "direction" in body:
+				body.set("direction", Vector2.RIGHT)
+
+			if body.has_node("BodyPivot"):
+				var pivot: Node2D = body.get_node("BodyPivot") as Node2D
+				if pivot != null:
+					pivot.scale.x = 1.0
+			if body.has_node("AnimatedSprite2D"):
+				var anim_spr: Node = body.get_node("AnimatedSprite2D")
+				if "flip_h" in anim_spr:
+					anim_spr.set("flip_h", false)
+			if body.has_node("BodyPivot/Body"):
+				var body_spr: Node = body.get_node("BodyPivot/Body")
+				if "flip_h" in body_spr:
+					body_spr.set("flip_h", false)

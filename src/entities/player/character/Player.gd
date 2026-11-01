@@ -23,6 +23,7 @@ var _sprite_base_scale: Vector2 = Vector2.ONE
 var _sprite_half_height: float = 0.0
 var spawn_position: Vector2 = Vector2.ZERO
 var last_safe_position: Vector2 = Vector2.ZERO
+var direction: Vector2 = Vector2.RIGHT
 
 @export_group("Stats")
 @export var max_health: int = 2
@@ -240,8 +241,10 @@ func _physics_process(delta: float) -> void:
 		)
 		if h_movement_direction > 0:
 			body_pivot.scale.x = 1
+			direction = Vector2.RIGHT
 		elif h_movement_direction < 0:
 			body_pivot.scale.x = -1
+			direction = Vector2.LEFT
 	else:
 		_is_skidding_active = false
 		var friction := friction_weight if on_floor else friction_weight * 0.35
@@ -424,6 +427,16 @@ func cast_dragon_breath() -> bool:
 func fire_dragon_breath() -> bool:
 	return cast_dragon_breath()
 
+# Establece la orientacion horizontal del jugador (Vector2.RIGHT o Vector2.LEFT).
+func set_facing_direction(dir: Vector2) -> void:
+	direction = dir
+	if body_pivot != null:
+		body_pivot.scale.x = 1.0 if dir.x >= 0.0 else -1.0
+
+# Fuerza al jugador a mirar hacia la derecha.
+func face_right() -> void:
+	set_facing_direction(Vector2.RIGHT)
+
 # Devuelve la direccion horizontal en la que mira el jugador (Vector2.RIGHT o Vector2.LEFT).
 func get_facing_direction() -> Vector2:
 	return Vector2.RIGHT if body_pivot.scale.x >= 0.0 else Vector2.LEFT
@@ -446,6 +459,7 @@ func handle_fall_penalty() -> void:
 		velocity = Vector2.ZERO
 		var target_pos: Vector2 = last_safe_position if last_safe_position != Vector2.ZERO else spawn_position
 		global_position = target_pos
+		face_right()
 
 # Devuelve el centro del hitbox del jugador (punto de mira para enemigos).
 func get_aim_point() -> Vector2:
