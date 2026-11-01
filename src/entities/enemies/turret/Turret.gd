@@ -15,16 +15,15 @@ const ACTION_SCALE: Vector2 = Vector2(0.095, 0.095)
 
 @export var projectile_scene: PackedScene
 @export var max_health: int = 2
-@export var fire_cooldown: float = 2.0:
-	set(val):
-		fire_cooldown = val
-		attack_cooldown = val
-@export var attack_cooldown: float = 2.0:
-	set(val):
-		attack_cooldown = val
-		fire_cooldown = val
+@export var fire_cooldown: float = 2.0
 @export var projectile_speed: float = 240.0
 @export var telegraph_duration: float = 0.55
+
+var attack_cooldown: float:
+	get:
+		return fire_cooldown
+	set(val):
+		fire_cooldown = val
 
 var health: int = 2
 var target: Node2D
