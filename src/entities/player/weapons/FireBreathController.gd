@@ -45,6 +45,11 @@ func attack() -> void:
 	if _player == null:
 		_player = _get_player()
 
+	if _player != null and _player.has_method("cast_dragon_breath"):
+		_cooldown_timer = fire_cooldown
+		_player.cast_dragon_breath()
+		return
+
 	_is_attacking = true
 	_visual_timer = attack_duration
 	_cooldown_timer = fire_cooldown

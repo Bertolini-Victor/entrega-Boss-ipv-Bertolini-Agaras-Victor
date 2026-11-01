@@ -28,6 +28,7 @@ var last_safe_position: Vector2 = Vector2.ZERO
 @export var max_health: int = 2
 @export var max_chi: int = 100
 @export var lightning_chi_cost: int = 20
+@export var dragon_breath_chi_cost: int = 3
 
 @export_group("Movement")
 @export var acceleration: float = 950.0
@@ -64,7 +65,8 @@ var last_safe_position: Vector2 = Vector2.ZERO
 
 @export_group("Abilities")
 @export var can_melee: bool = true
-@export var can_fire_breath: bool = false
+@export var can_fire_breath: bool = true
+@export var dragon_breath_scene: PackedScene = preload("res://src/entities/player/weapons/DragonBreath.tscn")
 @export var can_fireball: bool = false
 @export var can_lightning: bool = false
 @export var can_parry: bool = true
@@ -88,6 +90,7 @@ var dead: bool = false
 var _is_dead: bool = false
 
 var _gravity_rise: float = 0.0
+var _active_dragon_breath: DragonBreath = null
 var _gravity_fall: float = 0.0
 var _jump_velocity: float = 0.0
 
@@ -295,7 +298,7 @@ func _process_input() -> void:
 
 	# ── Exclusión mutua entre ataques ───────────────────────────────────────
 	var melee_busy: bool = can_melee and melee_attack != null and melee_attack.is_attacking()
-	var fire_breath_busy: bool = can_fire_breath and fire_breath_controller != null and fire_breath_controller.is_attacking()
+	var fire_breath_busy: bool = (_active_dragon_breath != null and is_instance_valid(_active_dragon_breath)) or (can_fire_breath and fire_breath_controller != null and fire_breath_controller.is_attacking())
 	var lightning_busy: bool = can_lightning and lightning_controller != null and lightning_controller.is_charging()
 	var cast_locked: bool = _cast_lock_timer > 0.0
 
@@ -305,13 +308,13 @@ func _process_input() -> void:
 		melee_attack.attack(facing_dir)
 		melee_busy = melee_attack.is_attacking()
 
-	# Aliento de Fuego (W) — NOTA (Excepcion): El Aliento de Fuego es estrictamente vertical hacia arriba (Vector2.UP), a diferencia de los ataques horizontales.
-	if Input.is_action_just_pressed("attack_up") and can_fire_breath and fire_breath_controller != null and not lightning_busy and not melee_busy and not fire_breath_busy and not cast_locked:
-		if fire_breath_controller.is_ready():
-			fire_breath_controller.attack()
-			_cast_lock_timer = attack_lock_time
-			cast_locked = true
-			fire_breath_busy = true
+	# Aliento de Dragón (W) — NOTA (Excepcion): El Aliento de Dragón es estrictamente vertical hacia arriba (Vector2.UP), a diferencia de los ataques horizontales.
+	if (Input.is_action_just_pressed("attack_up") or Input.is_action_just_pressed("attack_dragon_breath")) and can_fire_breath and not lightning_busy and not melee_busy and not fire_breath_busy and not cast_locked:
+		if has_enough_chi(dragon_breath_chi_cost):
+			if cast_dragon_breath():
+				_cast_lock_timer = attack_lock_time
+				cast_locked = true
+				fire_breath_busy = true
 
 	# Fireball / Bola de fuego (Q) — orientacion horizontal estricta segun hacia donde mira el personaje
 	if Input.is_action_just_pressed("attack_1") and can_fireball and not lightning_busy and not melee_busy and not fire_breath_busy and not cast_locked:
@@ -349,6 +352,38 @@ func _process_input() -> void:
 		elif Input.is_action_just_pressed("parry_redirect"):
 			if can_redirect:
 				parry_controller.try_parry(true)
+
+# Ejecuta el ataque vertical de Aliento de Dragón consumiendo Chi.
+func cast_dragon_breath() -> bool:
+	if dead or _is_dead or not can_fire_breath:
+		return false
+	if not consume_chi(dragon_breath_chi_cost):
+		return false
+
+	var breath_scene: PackedScene = dragon_breath_scene
+	if breath_scene == null:
+		breath_scene = load("res://src/entities/player/weapons/DragonBreath.tscn")
+	if breath_scene == null:
+		return false
+
+	var breath: DragonBreath = breath_scene.instantiate() as DragonBreath
+	var container: Node = projectile_container if projectile_container != null else get_parent()
+	container.add_child(breath)
+	breath.global_position = global_position
+	if breath.has_node("AnimatedSprite2D"):
+		var spr: AnimatedSprite2D = breath.get_node("AnimatedSprite2D") as AnimatedSprite2D
+		spr.flip_h = (body_pivot.scale.x < 0.0)
+
+	_active_dragon_breath = breath
+	breath.tree_exited.connect(func() -> void:
+		if _active_dragon_breath == breath:
+			_active_dragon_breath = null
+	)
+	return true
+
+# Metodo alias publico para disparar el Aliento de Dragón.
+func fire_dragon_breath() -> bool:
+	return cast_dragon_breath()
 
 # Devuelve la direccion horizontal en la que mira el jugador (Vector2.RIGHT o Vector2.LEFT).
 func get_facing_direction() -> Vector2:
@@ -418,7 +453,7 @@ func collect_chi(amount: int) -> void:
 			can_fire_breath = true
 			chi = 0
 			chi_changed.emit(chi, max_chi)
-			ability_unlocked.emit("¡ALIENTO DE FUEGO DESBLOQUEADO!", "Ataque hacia arriba: W")
+			ability_unlocked.emit("¡ALIENTO DE DRAGÓN DESBLOQUEADO!", "Ataque hacia arriba: W")
 		elif not can_fireball:
 			can_fireball = true
 			can_lightning = true
@@ -453,6 +488,9 @@ func die() -> void:
 	if melee_attack:
 		melee_attack.die()
 		melee_attack = null
+	if _active_dragon_breath != null and is_instance_valid(_active_dragon_breath):
+		_active_dragon_breath.queue_free()
+		_active_dragon_breath = null
 	if fire_breath_controller:
 		fire_breath_controller.die()
 		fire_breath_controller = null

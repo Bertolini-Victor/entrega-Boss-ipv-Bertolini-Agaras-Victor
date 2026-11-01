@@ -1,0 +1,88 @@
+[gd_scene format=3 uid="uid://dbrth00000001"]
+
+[ext_resource type="Script" uid="uid://cnsq4cqlplwhj" path="res://src/entities/player/weapons/DragonBreath.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://rphfbd0ymp5i" path="res://assets/textures/player/dragon_breath.png" id="2_texture"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox"]
+size = Vector2(36, 146)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_db_0"]
+atlas = ExtResource("2_texture")
+region = Rect2(0, 0, 96, 325)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_db_1"]
+atlas = ExtResource("2_texture")
+region = Rect2(96, 0, 96, 325)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_db_2"]
+atlas = ExtResource("2_texture")
+region = Rect2(192, 0, 96, 325)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_db_3"]
+atlas = ExtResource("2_texture")
+region = Rect2(288, 0, 96, 325)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_db_4"]
+atlas = ExtResource("2_texture")
+region = Rect2(384, 0, 95, 325)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_db_5"]
+atlas = ExtResource("2_texture")
+region = Rect2(479, 0, 96, 325)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_db_6"]
+atlas = ExtResource("2_texture")
+region = Rect2(575, 0, 96, 325)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_db_7"]
+atlas = ExtResource("2_texture")
+region = Rect2(671, 0, 96, 325)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_dragon_breath"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_db_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_db_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_db_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_db_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_db_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_db_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_db_6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_db_7")
+}],
+"loop": 0,
+"name": &"fire",
+"speed": 12.0
+}]
+
+[node name="DragonBreath" type="Area2D" unique_id=533762324]
+collision_layer = 0
+collision_mask = 20
+script = ExtResource("1_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1243447732]
+position = Vector2(0, -88)
+shape = SubResource("RectangleShape2D_hitbox")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=838684884]
+texture_filter = 1
+position = Vector2(0, -88)
+scale = Vector2(0.45, 0.45)
+sprite_frames = SubResource("SpriteFrames_dragon_breath")
+animation = &"fire"
+autoplay = "fire"
