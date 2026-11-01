@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cfl84b6ma6emi"]
 
 [ext_resource type="Script" uid="uid://bj17bqkhbh4m1" path="res://src/ui/hud/HUD.gd" id="1_hud"]
+[ext_resource type="Texture2D" uid="uid://drpmh8cd8p8sy" path="res://assets/textures/ui/heart.png" id="2_heart"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dialogue"]
 content_margin_left = 8.0
@@ -34,19 +35,33 @@ theme_override_constants/separation = 3
 
 [node name="HeartContainer" type="HBoxContainer" parent="MarginContainer/StatsBox" unique_id=1930960010]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 3
 
-[node name="Heart1" type="Label" parent="MarginContainer/StatsBox/HeartContainer" unique_id=1676536129]
+[node name="HPLabel" type="Label" parent="MarginContainer/StatsBox/HeartContainer" unique_id=1676536128]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.2, 0.2, 1)
-theme_override_font_sizes/font_size = 11
-text = "♥"
+theme_override_colors/font_color = Color(1, 0.95, 0.85, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 8
+text = "HP: "
 
-[node name="Heart2" type="Label" parent="MarginContainer/StatsBox/HeartContainer" unique_id=55736827]
+[node name="Heart1" type="TextureRect" parent="MarginContainer/StatsBox/HeartContainer" unique_id=1676536129]
+texture_filter = 1
+custom_minimum_size = Vector2(10, 10)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.2, 0.2, 1)
-theme_override_font_sizes/font_size = 11
-text = "♥"
+size_flags_vertical = 4
+texture = ExtResource("2_heart")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Heart2" type="TextureRect" parent="MarginContainer/StatsBox/HeartContainer" unique_id=55736827]
+texture_filter = 1
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("2_heart")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="ChiBox" type="VBoxContainer" parent="MarginContainer/StatsBox" unique_id=1359318400]
 layout_mode = 2

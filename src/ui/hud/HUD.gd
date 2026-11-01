@@ -1,8 +1,8 @@
 class_name HUD
 extends CanvasLayer
 
-@onready var heart_1: Label = $MarginContainer/StatsBox/HeartContainer/Heart1
-@onready var heart_2: Label = $MarginContainer/StatsBox/HeartContainer/Heart2
+@onready var heart_1: TextureRect = $MarginContainer/StatsBox/HeartContainer/Heart1
+@onready var heart_2: TextureRect = $MarginContainer/StatsBox/HeartContainer/Heart2
 @onready var chi_bar: ProgressBar = $MarginContainer/StatsBox/ChiBox/ChiBar
 @onready var chi_label: Label = $MarginContainer/StatsBox/ChiBox/ChiLabel
 

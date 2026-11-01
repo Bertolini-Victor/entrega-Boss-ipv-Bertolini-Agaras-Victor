@@ -4,10 +4,10 @@
 [ext_resource type="Texture2D" uid="uid://qh1p03vntfxu" path="res://assets/textures/ui/main_image.jpg" id="2_mainbg"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-content_margin_left = 20.0
-content_margin_top = 16.0
-content_margin_right = 20.0
-content_margin_bottom = 16.0
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
 bg_color = Color(0.06, 0.07, 0.11, 0.78)
 border_width_left = 2
 border_width_top = 2
@@ -106,27 +106,32 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer" unique_id=435444417]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 6
 
 [node name="Title" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer" unique_id=1761200770]
 layout_mode = 2
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
-theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 14
-text = "CRÉDITOS"
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 12
+text = "Dragon In Space - Créditos"
 horizontal_alignment = 1
 
 [node name="CreditsText" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer" unique_id=982952567]
+custom_minimum_size = Vector2(244, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.9, 0.92, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 9
-text = "Game Design  - Victor Bertolini Agaras
-Arte del juego - Sebastian Torres
-Animacion de inicio - Victoria Struba
-Motor: Godot Engine 4"
+theme_override_font_sizes/font_size = 7
+text = "Desarrollador / Diseñador Original: Victor Bertolini Agaras
+
+Diseño de modelo base (Golem) y animación pre-juego de historia: Victoria Struba
+
+Diseño y Sprites de Iroh: Sebastian Torres (sebastianetorres@hotmail.com)
+
+El arte del entorno, la música y los efectos de sonido provienen de recursos gratuitos (Free to use)"
 horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="BackButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer" unique_id=2113398579]
 layout_mode = 2

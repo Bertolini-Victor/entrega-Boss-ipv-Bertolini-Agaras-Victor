@@ -19,6 +19,9 @@
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_kill"]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cj10r"]
+size = Vector2(2500, 60)
+
 [node name="Main" type="Node" unique_id=1295602444]
 script = ExtResource("1")
 
@@ -510,6 +513,14 @@ position = Vector2(820, -870)
 [node name="ChiOrb_T2" parent="Environment/ChiOrbs" unique_id=1863430416 instance=ExtResource("13_orb")]
 position = Vector2(920, -870)
 
+[node name="MidFloorFallZone" type="Area2D" parent="Environment" unique_id=1053703762]
+position = Vector2(1850, 70)
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Environment/MidFloorFallZone" unique_id=1431400284]
+shape = SubResource("RectangleShape2D_cj10r")
+
 [node name="BackgroundLayer" type="CanvasLayer" parent="." unique_id=1521015961]
 layer = -10
 
@@ -532,3 +543,4 @@ autoplay = true
 [connection signal="body_entered" from="Environment/FallKillzone" to="." method="_on_fall_killzone_body_entered"]
 [connection signal="player_died" from="Environment/Entities/Player" to="." method="_on_player_player_died"]
 [connection signal="level_completed" from="Environment/Objects/GoalZuko" to="." method="_on_goal_level_completed"]
+[connection signal="body_entered" from="Environment/MidFloorFallZone" to="." method="_on_mid_floor_fall_zone_body_entered"]

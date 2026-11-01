@@ -57,3 +57,35 @@ func _on_fall_killzone_body_entered(body: Node2D) -> void:
 # Callback cuando el jugador llega a la meta.
 func _on_goal_level_completed() -> void:
 	get_tree().call_deferred("change_scene_to_file", "res://src/ui/win/WinCredits.tscn")
+
+# Callback cuando el jugador cae en el abismo de las plataformas del piso medio (Zona 2).
+func _on_mid_floor_fall_zone_body_entered(body: Node2D) -> void:
+	if body is Player or body.is_in_group("player") or body.name == "Player":
+		if body.has_method("take_damage"):
+			if "_is_invulnerable" in body:
+				body.set("_is_invulnerable", false)
+			body.take_damage(1)
+
+		var is_alive: bool = true
+		if "dead" in body and body.get("dead") == true:
+			is_alive = false
+		elif "_is_dead" in body and body.get("_is_dead") == true:
+			is_alive = false
+		elif "health" in body and int(body.get("health")) <= 0:
+			is_alive = false
+
+		if is_alive:
+			if "velocity" in body:
+				body.set("velocity", Vector2.ZERO)
+			# Coordenadas exactas de la salida superior del Primer Ascensor (Elevator_1) en el piso medio
+			var respawn_pos: Vector2 = Vector2(4220.0, -135.0)
+			var elevator_1: Node = get_node_or_null("Environment/Ground/Elevator_1")
+			if elevator_1 != null and elevator_1 is Node2D:
+				var elevator_2d: Node2D = elevator_1 as Node2D
+				var travel_h: float = float(elevator_1.get("travel_height")) if elevator_1.get("travel_height") != null else 700.0
+				var base_y: float = elevator_2d.position.y if elevator_2d.position.y > 0.0 else 576.0
+				respawn_pos = Vector2(elevator_2d.position.x - 100.0, base_y - travel_h - 11.0)
+
+			body.global_position = respawn_pos
+			if "last_safe_position" in body:
+				body.set("last_safe_position", respawn_pos)
