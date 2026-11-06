@@ -93,6 +93,7 @@ var _jump_velocity: float = 0.0
 var _coyote_timer: float = 0.0
 var _jump_buffer_timer: float = 0.0
 var _cast_lock_timer: float = 0.0
+var _is_blocking: bool = false
 var _was_on_floor: bool = false
 var _pre_land_velocity_y: float = 0.0
 var _is_skidding_active: bool = false
@@ -107,6 +108,11 @@ func _ready() -> void:
 		(footstep_player.stream as AudioStreamWAV).loop_mode = AudioStreamWAV.LOOP_FORWARD
 	_cache_sprite_metrics()
 	_compute_jump_physics()
+	if body_animations and not body_animations.animation_finished.is_connected(_on_body_animations_animation_finished):
+		body_animations.animation_finished.connect(_on_body_animations_animation_finished)
+	if parry_controller != null and parry_controller.has_signal("parry_attempted"):
+		if not parry_controller.parry_attempted.is_connected(start_block):
+			parry_controller.parry_attempted.connect(start_block)
 	initialize()
 	can_fire_breath = true
 	health = max_health
@@ -140,11 +146,13 @@ func initialize(p_projectile_container: Node = get_parent()) -> void:
 	if lightning_controller:
 		lightning_controller.projectile_container = p_projectile_container
 	can_fire_breath = true
+	_is_blocking = false
 	body_animations.play("idle")
 
 # Deshabilita completamente el control del jugador (estado cinemático, idle, bloqueo de físicas e input).
 func disable_controls() -> void:
 	is_cinematic = true
+	_is_blocking = false
 	velocity = Vector2.ZERO
 	h_movement_direction = 0
 	jump = false
@@ -380,9 +388,11 @@ func _process_input() -> void:
 	if can_parry and parry_controller != null:
 		if Input.is_action_just_pressed("parry"):
 			parry_controller.try_parry(false)
+			start_block()
 		elif Input.is_action_just_pressed("parry_redirect"):
 			if can_redirect:
 				parry_controller.try_parry(true)
+				start_block()
 
 # Ejecuta el ataque vertical de Aliento de Dragón consumiendo Chi.
 func cast_dragon_breath() -> bool:
@@ -498,6 +508,7 @@ func die() -> void:
 		return 
 	
 	dead = true
+	_is_blocking = false
 	_is_invulnerable = false
 	if footstep_player and footstep_player.playing:
 		footstep_player.stop()
@@ -540,10 +551,42 @@ func die() -> void:
 		return
 	player_died.emit()
 
-# Actualiza la animacion segun el estado del personaje.
+# Activa el estado de bloqueo/parry y reproduce la animación block.
+func start_block() -> void:
+	if dead:
+		return
+	_is_blocking = true
+	if body_animations and body_animations.has_animation("block"):
+		body_animations.play("block")
+
+func _on_body_animations_animation_finished(anim_name: StringName) -> void:
+	if anim_name == &"block":
+		_is_blocking = false
+
+# Actualiza la animacion segun el estado del personaje con máquina de estados por prioridad.
 func _update_animation() -> void:
-	if body_animations and (body_animations.current_animation != "idle" or not body_animations.is_playing()):
-		_play_animation("idle")
+	if not body_animations:
+		return
+
+	# 1. Si está bloqueando: no interrumpir la animación block.
+	if _is_blocking:
+		return
+
+	# 2. Si no está en el piso (not is_on_floor()): mantener frame de salto/caída si existe, o idle.
+	if not is_on_floor():
+		if body_animations.has_animation("jump"):
+			_play_animation("jump")
+		elif body_animations.has_animation("idle"):
+			_play_animation("idle")
+		return
+
+	# 3. Si está en el piso y abs(velocity.x) > 10.0: reproducir body_animations.play("run").
+	if absf(velocity.x) > 10.0:
+		_play_animation("run")
+		return
+
+	# 4. En reposo: reproducir body_animations.play("idle").
+	_play_animation("idle")
 
 # Reproduce una animacion del cuerpo.
 func _play_animation(animation: String) -> void:

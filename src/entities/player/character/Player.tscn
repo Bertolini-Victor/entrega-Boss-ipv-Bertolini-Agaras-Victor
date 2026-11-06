@@ -12,6 +12,14 @@
 [ext_resource type="Script" uid="uid://261vhccsbf7r" path="res://src/entities/player/abilities/ParryController.gd" id="10_parry"]
 [ext_resource type="PackedScene" uid="uid://ckj4yq1m2a3b4" path="res://src/entities/player/abilities/ParryZone.tscn" id="11_parry"]
 [ext_resource type="AudioStream" uid="uid://bqk88pi0gx1n3" path="res://assets/music/Footstep_2.wav" id="12_knsmn"]
+[ext_resource type="Texture2D" uid="uid://d34581pek7pkq" path="res://assets/textures/player/iroh_run_animation.png" id="13_run"]
+[ext_resource type="Texture2D" uid="uid://b84j861q4viom" path="res://assets/textures/player/Iroh_Block_00.png" id="14_blk0"]
+[ext_resource type="Texture2D" uid="uid://0faujw6mcjit" path="res://assets/textures/player/Iroh_Block_01.png" id="15_blk1"]
+[ext_resource type="Texture2D" uid="uid://c0ibqayq1gj12" path="res://assets/textures/player/Iroh_Block_02.png" id="16_blk2"]
+[ext_resource type="Texture2D" uid="uid://b0yyvwu2oupr6" path="res://assets/textures/player/Iroh_Block_03.png" id="17_blk3"]
+[ext_resource type="Texture2D" uid="uid://dcn4t4ivop21h" path="res://assets/textures/player/Iroh_Block_04.png" id="18_blk4"]
+[ext_resource type="Texture2D" uid="uid://coh8qgeeuq8rr" path="res://assets/textures/player/Iroh_Block_05.png" id="19_blk5"]
+[ext_resource type="Texture2D" uid="uid://26jg323qky5i" path="res://assets/textures/player/Iroh_Block_06.png" id="20_blk6"]
 
 [sub_resource type="RectangleShape2D" id="1"]
 size = Vector2(24, 30)
@@ -29,6 +37,23 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [ExtResource("2_iroh0")]
+}
+
+[sub_resource type="Animation" id="Animation_block"]
+resource_name = "block"
+length = 0.35
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BodyPivot/Body:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [ExtResource("14_blk0"), ExtResource("15_blk1"), ExtResource("16_blk2"), ExtResource("17_blk3"), ExtResource("18_blk4"), ExtResource("19_blk5"), ExtResource("20_blk6")]
 }
 
 [sub_resource type="Animation" id="Animation_gc66i"]
@@ -49,10 +74,60 @@ tracks/0/keys = {
 "values": [ExtResource("2_iroh0"), ExtResource("3_iroh1")]
 }
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_run_00"]
+resource_name = "run_00"
+atlas = ExtResource("13_run")
+region = Rect2(0, 0, 127.833, 325)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_run_01"]
+resource_name = "run_01"
+atlas = ExtResource("13_run")
+region = Rect2(127.833, 0, 127.833, 325)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_run_02"]
+resource_name = "run_02"
+atlas = ExtResource("13_run")
+region = Rect2(255.667, 0, 127.833, 325)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_run_03"]
+resource_name = "run_03"
+atlas = ExtResource("13_run")
+region = Rect2(383.5, 0, 127.833, 325)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_run_04"]
+resource_name = "run_04"
+atlas = ExtResource("13_run")
+region = Rect2(511.333, 0, 127.833, 325)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_run_05"]
+resource_name = "run_05"
+atlas = ExtResource("13_run")
+region = Rect2(639.167, 0, 127.833, 325)
+
+[sub_resource type="Animation" id="Animation_run"]
+resource_name = "run"
+length = 0.6
+loop_mode = 1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BodyPivot/Body:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [SubResource("AtlasTexture_run_00"), SubResource("AtlasTexture_run_01"), SubResource("AtlasTexture_run_02"), SubResource("AtlasTexture_run_03"), SubResource("AtlasTexture_run_04"), SubResource("AtlasTexture_run_05")]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_3g2ip"]
 _data = {
 &"RESET": SubResource("Animation_j0f6w"),
-&"idle": SubResource("Animation_gc66i")
+&"block": SubResource("Animation_block"),
+&"idle": SubResource("Animation_gc66i"),
+&"run": SubResource("Animation_run")
 }
 
 [node name="Player" type="CharacterBody2D" unique_id=80550071]

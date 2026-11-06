@@ -3,6 +3,7 @@ extends Node2D
 
 signal parry_success
 signal parry_failed
+signal parry_attempted
 
 @export var parry_window: float = 0.25
 @export var chi_reward: int = 15
@@ -48,6 +49,7 @@ func _process(delta: float) -> void:
 			_do_melee_parry(melee_enemy)
 
 func try_parry(allow_redirect: bool = false) -> void:
+	parry_attempted.emit()
 	_draw_shield = true
 	_visual_timer = _visual_duration
 	_is_success = false
