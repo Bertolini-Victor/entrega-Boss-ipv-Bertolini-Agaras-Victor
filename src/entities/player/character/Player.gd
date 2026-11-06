@@ -588,14 +588,29 @@ func _update_animation() -> void:
 	# 4. En reposo: reproducir body_animations.play("idle").
 	_play_animation("idle")
 
+# Obtiene la escala base segun la animacion actual.
+func _get_current_base_scale() -> Vector2:
+	if body_animations and body_animations.current_animation == "run":
+		return Vector2(0.08, 0.08)
+	return Vector2(0.5, 0.5)
+
+# Sincroniza _sprite_base_scale de forma diferida tras aplicar la animación.
+func _sync_base_scale_from_animation() -> void:
+	if is_instance_valid(body_sprite):
+		_sprite_base_scale = body_sprite.scale
+
 # Reproduce una animacion del cuerpo.
 func _play_animation(animation: String) -> void:
 	if body_animations.has_animation(animation):
 		if body_animations.current_animation != animation or not body_animations.is_playing():
 			body_animations.play(animation)
+			_sprite_base_scale = _get_current_base_scale()
+			call_deferred(&"_sync_base_scale_from_animation")
 	elif body_animations.has_animation("idle"):
 		if body_animations.current_animation != "idle" or not body_animations.is_playing():
 			body_animations.play("idle")
+			_sprite_base_scale = _get_current_base_scale()
+			call_deferred(&"_sync_base_scale_from_animation")
 
 # Evalua colisiones superiores y redondea esquinas si el hueco esta a pocos pixeles.
 func _check_corner_correction(delta: float) -> void:
@@ -619,7 +634,9 @@ func _check_corner_correction(delta: float) -> void:
 # Aplica estiramiento visual y polvo al despegar.
 func _apply_jump_juice(was_on_ground: bool) -> void:
 	if body_sprite:
-		body_sprite.scale = _sprite_base_scale * jump_stretch_scale
+		var current_base: Vector2 = _get_current_base_scale()
+		_sprite_base_scale = current_base
+		body_sprite.scale = current_base * jump_stretch_scale
 		body_sprite.position.y = -_sprite_half_height * jump_stretch_scale.y
 	if was_on_ground:
 		_spawn_jump_dust()
@@ -628,8 +645,10 @@ func _apply_jump_juice(was_on_ground: bool) -> void:
 func _apply_landing_juice() -> void:
 	var impact_ratio: float = clampf(_pre_land_velocity_y / max_fall_speed, 0.15, 1.0)
 	if body_sprite:
+		var current_base: Vector2 = _get_current_base_scale()
+		_sprite_base_scale = current_base
 		var squash_factor: Vector2 = Vector2.ONE.lerp(land_squash_max_scale, impact_ratio)
-		body_sprite.scale = _sprite_base_scale * squash_factor
+		body_sprite.scale = current_base * squash_factor
 		body_sprite.position.y = -_sprite_half_height * squash_factor.y
 	if _pre_land_velocity_y >= max_fall_speed * 0.40:
 		_spawn_hard_landing_dust()
@@ -639,8 +658,10 @@ func _update_visual_juice(delta: float, on_floor_now: bool) -> void:
 	if not body_sprite or dead:
 		return
 	
-	body_sprite.scale = body_sprite.scale.lerp(_sprite_base_scale, clampf(squash_recovery_speed * delta, 0.0, 1.0))
-	var scale_ratio_y: float = body_sprite.scale.y / maxf(_sprite_base_scale.y, 0.001)
+	var current_base: Vector2 = _get_current_base_scale()
+	_sprite_base_scale = current_base
+	body_sprite.scale = body_sprite.scale.lerp(current_base, clampf(squash_recovery_speed * delta, 0.0, 1.0))
+	var scale_ratio_y: float = body_sprite.scale.y / maxf(current_base.y, 0.001)
 	body_sprite.position.y = -_sprite_half_height * scale_ratio_y
 	body_sprite.position.x = _sprite_base_pos.x
 	
