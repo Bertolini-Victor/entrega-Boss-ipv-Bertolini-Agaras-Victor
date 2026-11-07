@@ -591,7 +591,7 @@ func _update_animation() -> void:
 # Obtiene la escala base segun la animacion actual.
 func _get_current_base_scale() -> Vector2:
 	if body_animations and body_animations.current_animation == "run":
-		return Vector2(0.16, 0.16)
+		return Vector2(0.0262712, 0.0262712)
 	return Vector2(0.5, 0.5)
 
 # Sincroniza _sprite_base_scale de forma diferida tras aplicar la animación.
