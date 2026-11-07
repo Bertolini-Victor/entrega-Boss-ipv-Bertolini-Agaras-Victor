@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://e3w1dxk37h4j" path="res://src/environment/Platform.tscn" id="11"]
 [ext_resource type="PackedScene" uid="uid://cfl84b6ma6emi" path="res://src/ui/hud/HUD.tscn" id="12_hud"]
 [ext_resource type="PackedScene" uid="uid://cchiorb000001" path="res://src/environment/chi_orb/ChiOrb.tscn" id="13_orb"]
+[ext_resource type="PackedScene" uid="uid://bossarena0001" path="res://src/environment/boss_arena/BossArena.tscn" id="15_e7jk0"]
 [ext_resource type="Texture2D" uid="uid://cwmo5c2nu20wc" path="res://assets/textures/tilesets/2_Industrial_Tileset_1_Background.png" id="17_bg_deck"]
 [ext_resource type="Texture2D" uid="uid://dgpvqwbwfm0v" path="res://assets/textures/background/background.jpg" id="17_r7o8t"]
 [ext_resource type="AudioStream" uid="uid://b7bjel32qk382" path="res://assets/music/Riot_theme.wav" id="18_7lugs"]
@@ -513,6 +514,8 @@ collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Environment/MidFloorFallZone" unique_id=1431400284]
 shape = SubResource("RectangleShape2D_cj10r")
+
+[node name="BossArena" parent="Environment" unique_id=2135545868 instance=ExtResource("15_e7jk0")]
 
 [node name="BackgroundLayer" type="CanvasLayer" parent="." unique_id=1521015961]
 layer = -10

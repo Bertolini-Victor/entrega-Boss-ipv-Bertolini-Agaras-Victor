@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://ej6hhf4ayyrn" path="res://assets/textures/enemies/idle_animation.png" id="4_golem_idle_tex"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_goal"]
-size = Vector2(400, 48)
+size = Vector2(62, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_z5"]
 atlas = ExtResource("2_zuko_tex")
@@ -157,7 +157,7 @@ collision_mask = 2
 script = ExtResource("1_script")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1533192994]
-position = Vector2(-200, -24)
+position = Vector2(-31, -24)
 shape = SubResource("RectangleShape2D_goal")
 
 [node name="ZukoSprite" type="AnimatedSprite2D" parent="." unique_id=325460729]
