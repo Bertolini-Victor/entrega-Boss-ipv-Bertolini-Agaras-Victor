@@ -19,12 +19,6 @@
 [ext_resource type="Texture2D" uid="uid://dcn4t4ivop21h" path="res://assets/textures/player/Iroh_Block_04.png" id="18_blk4"]
 [ext_resource type="Texture2D" uid="uid://coh8qgeeuq8rr" path="res://assets/textures/player/Iroh_Block_05.png" id="19_blk5"]
 [ext_resource type="Texture2D" uid="uid://26jg323qky5i" path="res://assets/textures/player/Iroh_Block_06.png" id="20_blk6"]
-[ext_resource type="Texture2D" uid="uid://hodbyfu8bbau" path="res://assets/textures/player/Iroh_Run_00.png" id="21_run0"]
-[ext_resource type="Texture2D" uid="uid://sbsrwhl1rbje" path="res://assets/textures/player/Iroh_Run_01.png" id="22_run1"]
-[ext_resource type="Texture2D" uid="uid://c5gul6pqn16iq" path="res://assets/textures/player/Iroh_Run_02.png" id="23_run2"]
-[ext_resource type="Texture2D" uid="uid://bd0hgv06bm402" path="res://assets/textures/player/Iroh_Run_03.png" id="24_run3"]
-[ext_resource type="Texture2D" uid="uid://cjo7il543ifb8" path="res://assets/textures/player/Iroh_Run_04.png" id="25_run4"]
-[ext_resource type="Texture2D" uid="uid://7el6st7k3nm5" path="res://assets/textures/player/Iroh_Run_05.png" id="26_run5"]
 
 [sub_resource type="RectangleShape2D" id="1"]
 size = Vector2(24, 30)
@@ -223,78 +217,11 @@ tracks/4/keys = {
 "values": [Vector2(0, -15.5)]
 }
 
-[sub_resource type="Animation" id="Animation_run"]
-resource_name = "run"
-length = 0.6
-loop_mode = 1
-step = 0.05
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("BodyPivot/Body:texture")
-tracks/0/interp = 0
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [ExtResource("21_run0"), ExtResource("22_run1"), ExtResource("23_run2"), ExtResource("24_run3"), ExtResource("25_run4"), ExtResource("26_run5")]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("BodyPivot/Body:hframes")
-tracks/1/interp = 0
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [1]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("BodyPivot/Body:frame")
-tracks/2/interp = 0
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [0]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("BodyPivot/Body:scale")
-tracks/3/interp = 0
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [Vector2(0.0262712, 0.0262712)]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("BodyPivot/Body:position")
-tracks/4/interp = 0
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [Vector2(0, -15.5)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_3g2ip"]
 _data = {
 &"RESET": SubResource("Animation_j0f6w"),
 &"block": SubResource("Animation_block"),
-&"idle": SubResource("Animation_gc66i"),
-&"run": SubResource("Animation_run")
+&"idle": SubResource("Animation_gc66i")
 }
 
 [node name="Player" type="CharacterBody2D" unique_id=80550071]
