@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://cj6ny8erspln5"]
+
+[ext_resource type="Script" uid="uid://dsxtvi15giy15" path="res://src/ui/intro/IntroCutscene.gd" id="1_script"]
+[ext_resource type="AudioStream" uid="uid://b7bjel32qk382" path="res://assets/music/Riot_theme.wav" id="2_audio"]
+
+[node name="IntroCutscene" type="Control" unique_id=1496341361]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1946932166]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="SlideDisplay" type="TextureRect" parent="." unique_id=1059162221]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SkipLabel" type="Label" parent="." unique_id=329775022]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -284.0
+offset_top = -14.0
+offset_right = -6.0
+offset_bottom = -2.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 0.7)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 6
+text = "ESPACIO / CLICK: Siguiente  |  ESC / ENTER: Saltar"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="FadeOverlay" type="ColorRect" parent="." unique_id=972454743]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="AmbientMusic" type="AudioStreamPlayer" parent="." unique_id=1458021960]
+stream = ExtResource("2_audio")
+volume_db = -27.0
+pitch_scale = 0.85
+autoplay = true
+
+[node name="FrameTimer" type="Timer" parent="." unique_id=915222873]
+wait_time = 2.2
+one_shot = true
+
+[connection signal="timeout" from="FrameTimer" to="." method="_on_frame_timer_timeout"]

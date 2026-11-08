@@ -1,25 +1,23 @@
-[gd_scene load_steps=8 format=3 uid="uid://cmainmenu001"]
+[gd_scene format=3 uid="uid://cmainmenu001"]
 
 [ext_resource type="Script" uid="uid://1q4joajbcx6o" path="res://src/ui/main_menu/MainMenu.gd" id="1_menu"]
 [ext_resource type="Texture2D" uid="uid://qh1p03vntfxu" path="res://assets/textures/ui/main_image.jpg" id="2_bg"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_focus"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_hover"]
-content_margin_left = 10.0
-content_margin_top = 3.0
-content_margin_right = 10.0
-content_margin_bottom = 3.0
-bg_color = Color(0.18, 0.22, 0.32, 0.95)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.95, 0.6, 0.15, 1)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 20.0
+content_margin_top = 16.0
+content_margin_right = 20.0
+content_margin_bottom = 16.0
+bg_color = Color(0.06, 0.07, 0.11, 0.78)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.878431, 0.478431, 0.168627, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_normal"]
 content_margin_left = 10.0
@@ -53,23 +51,25 @@ corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-content_margin_left = 20.0
-content_margin_top = 16.0
-content_margin_right = 20.0
-content_margin_bottom = 16.0
-bg_color = Color(0.06, 0.07, 0.11, 0.78)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.878431, 0.478431, 0.168627, 1)
-corner_radius_top_left = 6
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 6
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_hover"]
+content_margin_left = 10.0
+content_margin_top = 3.0
+content_margin_right = 10.0
+content_margin_bottom = 3.0
+bg_color = Color(0.18, 0.22, 0.32, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.95, 0.6, 0.15, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
 
-[node name="MainMenu" type="Control"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_focus"]
+
+[node name="MainMenu" type="Control" unique_id=1743980774]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -78,7 +78,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_menu")
 
-[node name="BackgroundTexture" type="TextureRect" parent="."]
+[node name="BackgroundTexture" type="TextureRect" parent="." unique_id=381646883]
 texture_filter = 1
 layout_mode = 1
 anchors_preset = 15
@@ -91,7 +91,7 @@ texture = ExtResource("2_bg")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=794172781]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -99,15 +99,15 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=1150547628]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer" unique_id=1674405051]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Title" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer"]
+[node name="Title" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer" unique_id=321880553]
 layout_mode = 2
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
 theme_override_constants/outline_size = 6
@@ -115,47 +115,47 @@ theme_override_font_sizes/font_size = 16
 text = "Dragon In Space"
 horizontal_alignment = 1
 
-[node name="Buttons" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
+[node name="Buttons" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer" unique_id=2008202958]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="PlayButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/Buttons"]
+[node name="PlayButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/Buttons" unique_id=722984249]
 layout_mode = 2
-theme_override_colors/font_hover_color = Color(1, 0.95, 0.8, 1)
 theme_override_colors/font_color = Color(0.92, 0.92, 0.95, 1)
+theme_override_colors/font_hover_color = Color(1, 0.95, 0.8, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
 theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 9
-theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
 text = "Jugar"
 
-[node name="CreditsButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/Buttons"]
+[node name="CreditsButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/Buttons" unique_id=1978813650]
 layout_mode = 2
-theme_override_colors/font_hover_color = Color(1, 0.95, 0.8, 1)
 theme_override_colors/font_color = Color(0.92, 0.92, 0.95, 1)
+theme_override_colors/font_hover_color = Color(1, 0.95, 0.8, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
 theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 9
-theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
 text = "Créditos"
 
-[node name="QuitButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/Buttons"]
+[node name="QuitButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/Buttons" unique_id=1358732085]
 layout_mode = 2
-theme_override_colors/font_hover_color = Color(1, 0.95, 0.8, 1)
 theme_override_colors/font_color = Color(0.92, 0.92, 0.95, 1)
+theme_override_colors/font_hover_color = Color(1, 0.95, 0.8, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
 theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 9
-theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
 text = "Salir"
 
 [connection signal="pressed" from="CenterContainer/PanelContainer/VBoxContainer/Buttons/PlayButton" to="." method="_on_play_button_pressed"]
