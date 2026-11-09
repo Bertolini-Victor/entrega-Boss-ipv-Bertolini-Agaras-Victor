@@ -18,6 +18,7 @@
 [ext_resource type="Texture2D" uid="uid://dgpvqwbwfm0v" path="res://assets/textures/background/background.jpg" id="17_r7o8t"]
 [ext_resource type="AudioStream" uid="uid://b7bjel32qk382" path="res://assets/music/Riot_theme.wav" id="18_7lugs"]
 [ext_resource type="Texture2D" uid="uid://dgvar5rnlhna6" path="res://assets/textures/tilesets/2_Industrial_Tileset_1B_Background.png" id="18_bg_pipes"]
+[ext_resource type="PackedScene" uid="uid://cpausemenu001" path="res://src/ui/hud/PauseMenu.tscn" id="19_7lugs"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_kill"]
 
@@ -437,6 +438,8 @@ stretch_mode = 6
 stream = ExtResource("18_7lugs")
 volume_db = -31.821
 autoplay = true
+
+[node name="PauseMenu" parent="." unique_id=926379072 instance=ExtResource("19_7lugs")]
 
 [connection signal="body_entered" from="Environment/FallKillzone" to="." method="_on_fall_killzone_body_entered"]
 [connection signal="player_died" from="Environment/Entities/Player" to="." method="_on_player_player_died"]
