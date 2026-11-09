@@ -29,6 +29,10 @@ func toggle_pause() -> void:
 
 # Obtiene la referencia al reproductor de musica de fondo de la escena principal.
 func _get_music_player() -> AudioStreamPlayer:
+	if has_node("/root/Main/BackgroundMusic"):
+		var node = get_node("/root/Main/BackgroundMusic")
+		if node is AudioStreamPlayer:
+			return node as AudioStreamPlayer
 	if owner and owner.has_node("BackgroundMusic"):
 		return owner.get_node("BackgroundMusic") as AudioStreamPlayer
 	if get_tree().current_scene and get_tree().current_scene.has_node("BackgroundMusic"):
@@ -49,9 +53,9 @@ func _on_btn_resume_pressed() -> void:
 
 # Callback al alternar la reproduccion de la musica de fondo.
 func _on_btn_music_pressed() -> void:
-	var music_player = _get_music_player()
-	if music_player:
-		music_player.stream_paused = !music_player.stream_paused
+	var music_node: AudioStreamPlayer = _get_music_player()
+	if is_instance_valid(music_node):
+		music_node.stream_paused = !music_node.stream_paused
 
 # Callback al volver al menu principal despausando primero el arbol de juego.
 func _on_btn_main_menu_pressed() -> void:

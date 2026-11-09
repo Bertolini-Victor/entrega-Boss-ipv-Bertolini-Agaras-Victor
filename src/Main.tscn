@@ -435,6 +435,7 @@ expand_mode = 1
 stretch_mode = 6
 
 [node name="BackgroundMusic" type="AudioStreamPlayer" parent="." unique_id=479686148]
+process_mode = 3
 stream = ExtResource("18_7lugs")
 volume_db = -31.821
 autoplay = true
