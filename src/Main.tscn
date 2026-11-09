@@ -331,7 +331,7 @@ telegraph_duration = 0.5
 attack_cooldown = 2.0
 
 [node name="Turret_M3" parent="Environment/Entities" unique_id=1863430385 instance=ExtResource("5")]
-position = Vector2(1452, -206)
+position = Vector2(1453, -237)
 fire_cooldown = 1.2
 projectile_speed = 290.0
 
