@@ -1,69 +1,60 @@
 <div align="center">
 
-# Dragon in Space
+# Dragon In Space
 
-**Plataformero 2D de acción y scroll lateral sobre calma, timing y redirección de energía**
+**Action-platformer 2D desarrollado en Godot Engine 4.x, optimizado para WebGL / HTML5**
 
 [![Godot Engine](https://img.shields.io/badge/Godot_Engine-4.x-478CBF?style=for-the-badge&logo=godot-engine&logoColor=white)](https://godotengine.org/)
 [![Language](https://img.shields.io/badge/Language-GDScript-355570?style=for-the-badge&logo=godot-engine&logoColor=white)](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/index.html)
-[![Genre](https://img.shields.io/badge/Genre-2D_Action_Platformer-E65100?style=for-the-badge)](#)
+[![Platform](https://img.shields.io/badge/Platform-HTML5_/_WebGL-E65100?style=for-the-badge&logo=html5&logoColor=white)](#)
+[![Genre](https://img.shields.io/badge/Genre-2D_Action_Platformer-D84315?style=for-the-badge)](#)
 [![UNQ](https://img.shields.io/badge/UNQ-Introducci%C3%B3n_al_Desarrollo_de_Videojuegos-8E24AA?style=for-the-badge)](#contexto-académico)
 
 </div>
 
 ---
 
-## Demo Jugable (Web / HTML5)
+## Descripción
 
-> **Estado**: *En desarrollo* — Próximamente disponible para jugar directamente desde el navegador (exportación Web / HTML5).
+**Dragon In Space** es un videojuego de acción y plataformas en 2D que combina mecánicas clásicas de precisión con combate elemental táctico. 
 
-<!--
-Descomentar y reemplazar URL cuando esté publicada la build HTML5 (itch.io / GitHub Pages):
+Encarnás al **Tío Iroh** (*Avatar: La Leyenda de Aang*), quien despierta herido a bordo de una misteriosa estación espacial industrial alienígena. Sin entender la tecnología del lugar pero guiado por su filosofía de calma y equilibrio, Iroh debe atravesar sectores fortificados —el **Piso Inferior**, la **Zona Media** de plataformas y el **Puente Superior**— para derrotar al temible **Mecha-Tank** y rescatar al príncipe **Zuko**.
 
-[![Play in Browser](https://img.shields.io/badge/Jugar_en_el_Navegador-HTML5_Build-2E7D32?style=for-the-badge&logo=html5&logoColor=white)](https://TU-LINK-AQUI)
-
-- **Link directo a la demo**: [Jugar Dragon in Space en el navegador](https://TU-LINK-AQUI)
--->
-
----
-
-## Sinopsis
-
-En **Dragon in Space**, encarnás al **Tío Iroh** (*Avatar: La Leyenda de Aang*), quien se encuentra herido y varado en el interior de una estación espacial alienígena. Debilitado por sus heridas y rodeado de tecnología desconocida, Iroh debe abrirse paso a través de tres sectores de la nave —el **Hangar**, la **Zona Media** y el **Puente de Mando**— para rescatar a **Zuko**, recuperando su conexión con el Chi pieza por pieza y descubriendo nuevas aplicaciones de su técnica de redirección de energía.
-
----
-
-## Pilares de Diseño
-
-1. **Calma y control por sobre fuerza bruta**  
-   El poder se gana replicando la filosofía de Iroh: spamear ataques resulta ineficiente y riesgoso. El posicionamiento, la lectura del entorno y el timing preciso del bloqueo/parry son las herramientas centrales para sobrevivir.
-2. **Progresión con identidad táctica**  
-   Cada técnica desbloqueada aporta una utilidad cualitativamente distinta en el combate y la navegación (impacto cercano, fuego a distancia, rayo cargado capaz de anular plasma enemigo y redirección total), en lugar de limitarse a un simple aumento numérico de daño.
-3. **Daño legible**  
-   Iroh comienza vulnerable (**2 corazones de vida**), por lo que toda amenaza y ataque enemigo cuenta con un telegrafiado claro que permite reaccionar con precisión.
+El juego está diseñado con una resolución nativa de 288×216 píxeles escalada en modo `canvas_items`, garantizando un rendimiento fluido tanto en plataformas de escritorio como en compilaciones web WebGL/HTML5.
 
 ---
 
 ## Controles
 
-| Acción | Entrada | Descripción |
+| Acción | Tecla / Entrada | Descripción |
 | :--- | :---: | :--- |
-| **Moverse a la izquierda / derecha** | `A` / `D` | Movimiento horizontal con aceleración, fricción y *skid* de cambio de dirección |
-| **Saltar** | `Espacio` | Salto de altura variable (*jump cut*), *coyote time* y *jump buffer* |
-| **Golpe Cuerpo a Cuerpo** | `Clic Izquierdo` | Ataque básico de corto alcance orientado hacia el cursor |
-| **Fuego Control (Bola de Fuego)** | `Q` | Disparo de fuego a media distancia *(se desbloquea al reunir 100 de Chi)* |
-| **Bloqueo / Parry** | `Clic Derecho` | Detiene proyectiles enemigos dentro de la ventana de timing sin recibir daño |
-
-Rayo Control (`E`, mantener) y Redirección de Energía (`R`) están desactivados en esta versión.
+| **Moverse a la izquierda / derecha** | `A` / `D` | Desplazamiento horizontal con aceleración progresiva, fricción y frenado (*skid stop*). |
+| **Saltar** | `Espacio` | Salto de altura variable (*jump cut*), con tolerancia de borde (*coyote time*) y precarga (*jump buffer*). |
+| **Ataque Melee (Fire Slash)** | `Clic Izquierdo` | Golpe ígneo cuerpo a cuerpo orientado hacia el cursor del ratón. |
+| **Aliento de Fuego (Fire Breath)** | `Q` | Ráfaga continua de fuego que daña enemigos y destruye muros debilitados (consume Chi). |
+| **Ataque de Rayo (Lightning)** | `E` | Disparo perforante de alta potencia para atravesar defensas enemigas (consume Chi). |
+| **Bloqueo / Parry** | `Clic Derecho` | Bloqueo activo. Al parar proyectiles con timing preciso, anula el daño y recarga la reserva de Chi. |
+| **Redirección de Energía** | `R` | Técnica avanzada de desvío y contraataque tras absorber proyectiles cargados. |
+| **Menú de Pausa** | `Escape` / Botón `\|\|` (HUD) | Congela el juego y despliega el menú con opciones de reanudar, música y retorno al inicio. |
 
 ---
 
-## Mecánicas y Sistemas Principales
+## Características Principales
 
-- **Movimiento Plataformero Clásico**: Física de salto asimétrica (gravedad diferenciada de subida y caída), *coyote time*, *jump buffering* e interacción física con obstáculos dinámicos.
-- **Economía de Chi**: Recolección de orbes de energía (`ChiOrb`) en el escenario y recompensas al derrotar amenazas para llenar el medidor de Chi (`0–100`) y despertar habilidades de control elemental.
-- **Exclusión Mutua de Combate**: Las técnicas ofensivas respetan ventanas de ejecución y enfriamiento sin solaparse, exigiendo compromiso en cada decisión de ataque o defensa.
-- **Flujo Completo de Partida**: Ciclo integrado de escenas (`IntroCredits` → `MainMenu` → `Main` → `GameOver` / `WinCredits` → `MainMenu`) con HUD reactivo de salud, barra de Chi y notificaciones en pantalla.
+- **Economía de Chi Basada en Combate:**  
+  El Chi no se regenera de forma pasiva; se obtiene recolectando orbes esparcidos en el escenario o ejecutando parries exitosos frente a proyectiles enemigos. Esto premia la defensa activa y el timing sobre el juego impulsivo.
+- **Sistema de Parry y Redirección:**  
+  Mecánica central inspirada en las enseñanzas de Iroh: absorber la fuerza del adversario y usarla a favor, convirtiendo ataques letales en recursos para abrirse paso.
+- **Encuentro con Boss Final (Mecha-Tank):**  
+  Batalla climática en la arena superior con fases de combate, escudos de protección, invocación de esbirros de asalto y telegrafiado claro de ataques.
+- **Sistema de Terminales de Pistas (Hint Signs):**  
+  Terminales industriales interactivos con detección de proximidad y textos optimizados para WebGL que orientan al jugador sobre el uso del Chi y los muros rompibles.
+- **Shaders Personalizados 2D:**  
+  Efectos visuales dedicados de resplandor (*glow*) para los orbes de energía, teletransportación y proyectiles elementales.
+- **Cinemática de Introducción Narrativa:**  
+  Secuencia introductoria animada con opción de salto (*Skip*) para sumergir rápidamente al jugador en la historia.
+- **Menú de Pausa Funcional en CanvasLayer:**  
+  Menú independiente con procesamiento en pausa (`PROCESS_MODE_ALWAYS`) que permite pausar/reanudar la música de fondo en tiempo real y regresar de forma segura al menú principal.
 
 ---
 
@@ -71,39 +62,41 @@ Rayo Control (`E`, mantener) y Redirección de Energía (`R`) están desactivado
 
 ```text
 ├── assets/
-│   ├── fonts/               # Tipografías de interfaz
-│   └── textures/            # Spritesheets, efectos visuales y texturas de entorno
+│   ├── music/               # Pistas de audio y efectos de sonido
+│   └── textures/            # Spritesheets, cinemáticas, tilesets y elementos del entorno
+│       ├── background/      # Fondos espaciales e industriales
+│       ├── enemies/         # Sprites de torretas, golems y boss frames
+│       ├── environment/     # Textura procesada del terminal de pistas (hint_terminal.png)
+│       ├── intro_animation/ # Frames de la cinemática de introducción
+│       ├── player/          # Sprites y animaciones de Iroh (idle, ataque, parry, aliento)
+│       └── ui/              # Pantallas de victoria, derrota, menú y HUD
 ├── src/
-│   ├── Main.gd / Main.tscn  # Escena principal y orquestación del nivel
+│   ├── Main.gd / Main.tscn  # Escena principal y orquestación del nivel 1 y arena del boss
 │   ├── entities/
-│   │   ├── player/
-│   │   │   ├── character/   # Controlador principal del jugador (Player.gd / Player.tscn)
-│   │   │   ├── abilities/   # Golpe cuerpo a cuerpo y sistema de bloqueo/redirección (MeleeAttack, ParryController)
-│   │   │   └── weapons/     # Controladores y proyectiles de Fuego Control y Rayo Control
-│   │   ├── enemies/
-│   │   │   └── turret/      # Torretas alienígenas, proyectiles y spawners
-│   │   └── projectiles/     # Clase y escena base de proyectiles (Projectile.gd / Projectile.tscn)
-│   ├── environment/         # Plataformas, rampas, muros, obstáculos físicos, meta y ChiOrbs
-│   └── ui/                  # HUD, introducción, menú principal, victoria, derrota y créditos
-└── project.godot            # Configuración general del motor e InputMap
+│   │   ├── enemies/         # Lógica y escenas de Golem, Turret y Boss
+│   │   ├── player/          # Controlador de Iroh, habilidades de combate y proyectiles
+│   │   └── projectiles/     # Sistema base de proyectiles
+│   ├── environment/         # Plataformas, ascensores, muros destructibles y orbes de Chi
+│   │   └── interactables/   # Sistema de carteles interactivos (HintSign.tscn / HintSign.gd)
+│   ├── shaders/             # Shaders de resplandor (chi_glow)
+│   └── ui/                  # HUD, PauseMenu, MainMenu, GameOver, WinCredits e Intro
+└── project.godot            # Configuración general de Godot Engine 4 (InputMap, resolución, capas)
 ```
 
 ---
 
-## Ejecución del Proyecto
+## Créditos
 
-1. Clonar el repositorio:
-   ```bash
-   git clone https://github.com/Bertolini-Victor/entrega-Boss-ipv-Bertolini-Agaras-Victor.git
-   ```
-2. Abrir **Godot Engine 4.4+** e importar el archivo `project.godot` ubicado en la raíz del repositorio.
-3. Presionar **`F5`** (o el botón *Run Project*) para iniciar el juego desde la secuencia de introducción.
+- **Desarrollador / Diseñador Original:** Víctor Bertolini Agaras
+- **Arte base de enemigos y Animación de Intro:** Victoria Struba ([@vick_st.art](https://www.instagram.com/vick_st.art) en Instagram)
+- **Diseño y Sprites de Iroh:** Sebastián Torres
+- **Música y Efectos de Sonido:** Recursos de uso libre (*Free to use*)
 
 ---
 
 ## Contexto Académico
 
-- **Materia**: Introducción al Desarrollo de Videojuegos
-- **Institución**: Universidad Nacional de Quilmes (UNQ)
-- **Equipo**: El mate del Oeste — Mesa 2
-- **Autor**: Victor H. Bertolini Agaras
+- **Materia:** Introducción al Desarrollo de Videojuegos
+- **Institución:** Universidad Nacional de Quilmes (UNQ)
+- **Equipo:** El mate del Oeste — Mesa 2
+- **Autor:** Víctor H. Bertolini Agaras
