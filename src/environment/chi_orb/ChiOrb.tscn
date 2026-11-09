@@ -1,16 +1,33 @@
-[gd_scene load_steps=3 format=3 uid="uid://cchiorb000001"]
+[gd_scene format=3 uid="uid://cchiorb000001"]
 
-[ext_resource type="Script" path="res://src/environment/chi_orb/ChiOrb.gd" id="1_orb"]
+[ext_resource type="Script" uid="uid://c5kmsgqw3et5w" path="res://src/environment/chi_orb/ChiOrb.gd" id="1_orb"]
+[ext_resource type="Material" uid="uid://cdyhopr1dbbse" path="res://src/shaders/chi_glow_material.tres" id="2_glow"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_orb"]
 radius = 7.0
 
-[node name="ChiOrb" type="Area2D"]
+[sub_resource type="Gradient" id="Gradient_orb"]
+offsets = PackedFloat32Array(0, 0.35, 0.7, 1)
+colors = PackedColorArray(1, 1, 0.95, 1, 1, 0.88, 0.3, 0.95, 1, 0.65, 0.1, 0.5, 1, 0.6, 0.1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_orb"]
+gradient = SubResource("Gradient_orb")
+width = 20
+height = 20
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[node name="ChiOrb" type="Area2D" unique_id=593979620]
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("1_orb")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1024011024]
 shape = SubResource("CircleShape2D_orb")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1283871315]
+material = ExtResource("2_glow")
+texture = SubResource("GradientTexture2D_orb")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
