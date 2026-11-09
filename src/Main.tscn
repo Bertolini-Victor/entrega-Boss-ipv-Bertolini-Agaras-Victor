@@ -384,7 +384,7 @@ projectile_speed = 330.0
 position = Vector2(5039, -832)
 
 [node name="HintSign_Chi" parent="Environment/Objects" unique_id=1016425735 instance=ExtResource("14_r7o8t")]
-position = Vector2(240, 568)
+position = Vector2(622, 567)
 hint_text = "Consejo: Conserva tu Chi. Lo necesitaras para abrirte camino."
 
 [node name="HintSign_Wall" parent="Environment/Objects" unique_id=409194187 instance=ExtResource("14_r7o8t")]
