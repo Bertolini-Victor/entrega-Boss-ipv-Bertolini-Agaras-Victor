@@ -125,9 +125,31 @@ theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 7
 text = "Desarrollador / Diseñador Original: Victor Bertolini Agaras
 
-Diseño de modelo base (Golem) y animación pre-juego de historia: Victoria Struba
+Arte base de enemigos y Animación de Intro: Victoria Struba"
+horizontal_alignment = 1
+autowrap_mode = 2
 
-Diseño y Sprites de Iroh: Sebastian Torres (sebastianetorres@hotmail.com)
+[node name="VictoriaInstagram" type="LinkButton" parent="CenterContainer/PanelContainer/VBoxContainer" unique_id=1982952568]
+layout_mode = 2
+size_flags_horizontal = 4
+focus_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.78, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.2, 0.6, 0.9, 1)
+theme_override_colors/font_hover_color = Color(0.75, 0.92, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 7
+text = "@vick_st.art en Instagram"
+uri = "https://www.instagram.com/vick_st.art/"
+
+[node name="CreditsText2" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer" unique_id=1982952569]
+custom_minimum_size = Vector2(244, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.92, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 7
+text = "Diseño y Sprites de Iroh: Sebastian Torres (sebastianetorres@hotmail.com)
 
 El arte del entorno, la música y los efectos de sonido provienen de recursos gratuitos (Free to use)"
 horizontal_alignment = 1

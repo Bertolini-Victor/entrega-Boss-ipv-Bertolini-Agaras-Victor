@@ -58,7 +58,7 @@ anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 180.0
 grow_horizontal = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 16
 
 [node name="VictoryTitle" type="Label" parent="CreditsContent" unique_id=1325121510]
 layout_mode = 2
@@ -119,6 +119,7 @@ autowrap_mode = 2
 
 [node name="VictoriaInstagram" type="LinkButton" parent="CreditsContent" unique_id=1464446570]
 layout_mode = 2
+size_flags_horizontal = 4
 focus_mode = 2
 theme_override_colors/font_color = Color(0.4, 0.78, 1, 1)
 theme_override_colors/font_pressed_color = Color(0.2, 0.6, 0.9, 1)

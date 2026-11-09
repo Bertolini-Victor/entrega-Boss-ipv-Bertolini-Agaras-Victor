@@ -380,7 +380,7 @@ projectile_speed = 330.0
 [node name="Objects" type="Node2D" parent="Environment" unique_id=278969547]
 
 [node name="GoalZuko" parent="Environment/Objects" unique_id=786003239 instance=ExtResource("9_zuko")]
-position = Vector2(5040, -841)
+position = Vector2(5039, -832)
 
 [node name="ChiOrbs" type="Node2D" parent="Environment" unique_id=897801088]
 
@@ -395,93 +395,6 @@ position = Vector2(720, 520)
 
 [node name="ChiOrb_B4" parent="Environment/ChiOrbs" unique_id=1452362548 instance=ExtResource("13_orb")]
 position = Vector2(950, 520)
-
-[node name="ChiOrb_B5" parent="Environment/ChiOrbs" unique_id=1793425828 instance=ExtResource("13_orb")]
-position = Vector2(1550, 440)
-
-[node name="ChiOrb_B6" parent="Environment/ChiOrbs" unique_id=1398535768 instance=ExtResource("13_orb")]
-position = Vector2(1650, 440)
-
-[node name="ChiOrb_B7" parent="Environment/ChiOrbs" unique_id=1354734482 instance=ExtResource("13_orb")]
-position = Vector2(2080, 345)
-
-[node name="ChiOrb_B8" parent="Environment/ChiOrbs" unique_id=1314941304 instance=ExtResource("13_orb")]
-position = Vector2(2200, 345)
-
-[node name="ChiOrb_B9" parent="Environment/ChiOrbs" unique_id=2023365530 instance=ExtResource("13_orb")]
-position = Vector2(2550, 365)
-
-[node name="ChiOrb_B10" parent="Environment/ChiOrbs" unique_id=1427137961 instance=ExtResource("13_orb")]
-position = Vector2(2635, 373)
-
-[node name="ChiOrb_B11" parent="Environment/ChiOrbs" unique_id=1863430392 instance=ExtResource("13_orb")]
-position = Vector2(2780, 415)
-
-[node name="ChiOrb_B12" parent="Environment/ChiOrbs" unique_id=1863430393 instance=ExtResource("13_orb")]
-position = Vector2(2895, 433)
-
-[node name="ChiOrb_B13" parent="Environment/ChiOrbs" unique_id=1863430394 instance=ExtResource("13_orb")]
-position = Vector2(3010, 465)
-
-[node name="ChiOrb_B14" parent="Environment/ChiOrbs" unique_id=1863430395 instance=ExtResource("13_orb")]
-position = Vector2(3125, 479)
-
-[node name="ChiOrb_B15" parent="Environment/ChiOrbs" unique_id=1863430396 instance=ExtResource("13_orb")]
-position = Vector2(3240, 505)
-
-[node name="ChiOrb_B16" parent="Environment/ChiOrbs" unique_id=1863430397 instance=ExtResource("13_orb")]
-position = Vector2(3343, 519)
-
-[node name="ChiOrb_B17" parent="Environment/ChiOrbs" unique_id=1863430398 instance=ExtResource("13_orb")]
-position = Vector2(3550, 525)
-
-[node name="ChiOrb_B18" parent="Environment/ChiOrbs" unique_id=1863430399 instance=ExtResource("13_orb")]
-position = Vector2(3680, 525)
-
-[node name="ChiOrb_B19" parent="Environment/ChiOrbs" unique_id=1863430400 instance=ExtResource("13_orb")]
-position = Vector2(3820, 525)
-
-[node name="ChiOrb_B20" parent="Environment/ChiOrbs" unique_id=1863430401 instance=ExtResource("13_orb")]
-position = Vector2(3940, 525)
-
-[node name="ChiOrb_B21" parent="Environment/ChiOrbs" unique_id=1863430402 instance=ExtResource("13_orb")]
-position = Vector2(4050, 525)
-
-[node name="ChiOrb_M3" parent="Environment/ChiOrbs" unique_id=1863430405 instance=ExtResource("13_orb")]
-position = Vector2(4060, -165)
-
-[node name="ChiOrb_M4" parent="Environment/ChiOrbs" unique_id=1863430406 instance=ExtResource("13_orb")]
-position = Vector2(3980, -165)
-
-[node name="ChiOrb_M5" parent="Environment/ChiOrbs" unique_id=1863430407 instance=ExtResource("13_orb")]
-position = Vector2(3200, -165)
-
-[node name="ChiOrb_M6" parent="Environment/ChiOrbs" unique_id=1863430408 instance=ExtResource("13_orb")]
-position = Vector2(2817, -148)
-
-[node name="ChiOrb_M7" parent="Environment/ChiOrbs" unique_id=1863430409 instance=ExtResource("13_orb")]
-position = Vector2(2580, -174)
-
-[node name="ChiOrb_M8" parent="Environment/ChiOrbs" unique_id=1863430410 instance=ExtResource("13_orb")]
-position = Vector2(2310, -141)
-
-[node name="ChiOrb_M9" parent="Environment/ChiOrbs" unique_id=1863430411 instance=ExtResource("13_orb")]
-position = Vector2(1752, -211)
-
-[node name="ChiOrb_M10" parent="Environment/ChiOrbs" unique_id=1863430412 instance=ExtResource("13_orb")]
-position = Vector2(1152, -211)
-
-[node name="ChiOrb_M11" parent="Environment/ChiOrbs" unique_id=1863430413 instance=ExtResource("13_orb")]
-position = Vector2(1752, -71)
-
-[node name="ChiOrb_M12" parent="Environment/ChiOrbs" unique_id=1863430414 instance=ExtResource("13_orb")]
-position = Vector2(1152, -71)
-
-[node name="ChiOrb_T1" parent="Environment/ChiOrbs" unique_id=1863430415 instance=ExtResource("13_orb")]
-position = Vector2(820, -870)
-
-[node name="ChiOrb_T2" parent="Environment/ChiOrbs" unique_id=1863430416 instance=ExtResource("13_orb")]
-position = Vector2(920, -870)
 
 [node name="MidFloorFallZone" type="Area2D" parent="Environment" unique_id=1053703762]
 position = Vector2(1850, 70)
