@@ -78,7 +78,7 @@ modulate = Color(0.65, 0.7, 0.8, 0.75)
 texture_filter = 1
 offset_left = 453.0
 offset_top = -1050.0
-offset_right = 5264.0
+offset_right = 3694.0
 offset_bottom = -800.0
 texture = ExtResource("17_bg_deck")
 patch_margin_left = 16
@@ -277,26 +277,14 @@ position = Vector2(2750, -800)
 [node name="Floor_A2" parent="Environment/Ground" unique_id=1863430372 instance=ExtResource("4")]
 position = Vector2(3400, -800)
 
-[node name="Floor_A3" parent="Environment/Ground" unique_id=1863430373 instance=ExtResource("4")]
-position = Vector2(4050, -800)
-
-[node name="Floor_A4" parent="Environment/Ground" unique_id=1863430474 instance=ExtResource("4")]
-position = Vector2(4700, -800)
-
 [node name="Ceiling_A1" parent="Environment/Ground" unique_id=1863430374 instance=ExtResource("4")]
 position = Vector2(2750, -1050)
 
 [node name="Ceiling_A2" parent="Environment/Ground" unique_id=1863430375 instance=ExtResource("4")]
 position = Vector2(3400, -1050)
 
-[node name="Ceiling_A3" parent="Environment/Ground" unique_id=1863430376 instance=ExtResource("4")]
-position = Vector2(4050, -1050)
-
-[node name="Ceiling_A4" parent="Environment/Ground" unique_id=1863430479 instance=ExtResource("4")]
-position = Vector2(4700, -1050)
-
 [node name="Wall_T_Right" parent="Environment/Ground" unique_id=1863430380 instance=ExtResource("8")]
-position = Vector2(5274, -943)
+position = Vector2(3700, -945)
 
 [node name="Entities" type="Node2D" parent="Environment" unique_id=729562450]
 
@@ -363,26 +351,10 @@ move_speed = 75.0
 telegraph_duration = 0.45
 attack_cooldown = 1.5
 
-[node name="Turret_Boss1" parent="Environment/Entities" unique_id=1863430390 instance=ExtResource("5")]
-position = Vector2(2400, -835)
-fire_cooldown = 1.0
-projectile_speed = 330.0
-
-[node name="Golem_Boss2" parent="Environment/Entities" unique_id=1863430389 instance=ExtResource("10_0ri8u")]
-position = Vector2(2800, -835)
-move_speed = 75.0
-telegraph_duration = 0.45
-attack_cooldown = 1.5
-
-[node name="Turret_Boss2" parent="Environment/Entities" unique_id=1863430391 instance=ExtResource("5")]
-position = Vector2(3100, -835)
-fire_cooldown = 1.0
-projectile_speed = 330.0
-
 [node name="Objects" type="Node2D" parent="Environment" unique_id=278969547]
 
 [node name="GoalZuko" parent="Environment/Objects" unique_id=786003239 instance=ExtResource("9_zuko")]
-position = Vector2(5039, -832)
+position = Vector2(3527, -832)
 
 [node name="HintSign_Chi" parent="Environment/Objects" unique_id=1016425735 instance=ExtResource("14_r7o8t")]
 position = Vector2(622, 567)
@@ -418,7 +390,7 @@ collision_mask = 2
 shape = SubResource("RectangleShape2D_cj10r")
 
 [node name="BossArena" parent="Environment" unique_id=2135545868 instance=ExtResource("15_e7jk0")]
-position = Vector2(-1199, -18)
+position = Vector2(-2459, -13)
 
 [node name="BackgroundLayer" type="CanvasLayer" parent="." unique_id=1521015961]
 layer = -10
