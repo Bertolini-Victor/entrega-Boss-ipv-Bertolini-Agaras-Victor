@@ -23,6 +23,7 @@ const ACTION_SCALE: Vector2 = Vector2(0.117, 0.117)
 @export var patrol_distance: float = 64.0
 @export var attack_range: float = 46.0
 @export var attack_damage: int = 1
+@export var chi_drop_value: int = 30
 @export var telegraph_duration: float = 0.6
 @export var attack_active_duration: float = 0.24
 @export var attack_cooldown: float = 2.2
@@ -273,8 +274,10 @@ func _execute_melee_hit() -> bool:
 			if parry_ctrl.try_parry_melee_attack(self):
 				return true
 		_parryable_window = false
+		if target.has_method("apply_knockback"):
+			target.apply_knockback(global_position.x)
 		if target.has_method("take_damage"):
-			target.take_damage(attack_damage)
+			target.take_damage(attack_damage, global_position.x)
 	else:
 		_parryable_window = false
 	return false
@@ -348,6 +351,8 @@ func die() -> void:
 func _spawn_chi_orb() -> void:
 	if CHI_ORB_SCENE:
 		var orb: Node = CHI_ORB_SCENE.instantiate()
+		if "value" in orb:
+			orb.value = chi_drop_value
 		orb.global_position = global_position + Vector2(0.0, -12.0)
 		get_parent().call_deferred("add_child", orb)
 

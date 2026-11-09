@@ -17,6 +17,7 @@ const ACTION_SCALE: Vector2 = Vector2(0.095, 0.095)
 @export var max_health: int = 2
 @export var fire_cooldown: float = 2.0
 @export var projectile_speed: float = 240.0
+@export var chi_drop_value: int = 30
 
 var health: int = 2
 var target: Node2D
@@ -176,6 +177,8 @@ func die() -> void:
 func _spawn_chi_orb() -> void:
 	if CHI_ORB_SCENE:
 		var orb: Node = CHI_ORB_SCENE.instantiate()
+		if "value" in orb:
+			orb.value = chi_drop_value
 		orb.global_position = global_position
 		get_parent().call_deferred("add_child", orb)
 

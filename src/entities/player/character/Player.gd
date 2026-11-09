@@ -73,6 +73,8 @@ var direction: Vector2 = Vector2.RIGHT
 
 @export_group("Combat")
 @export var attack_lock_time: float = 0.18
+@export var melee_knockback_force: float = 380.0
+@export var melee_knockback_duration: float = 0.22
 
 var health: int = 2
 var chi: int = 0
@@ -93,6 +95,7 @@ var _jump_velocity: float = 0.0
 var _coyote_timer: float = 0.0
 var _jump_buffer_timer: float = 0.0
 var _cast_lock_timer: float = 0.0
+var _knockback_timer: float = 0.0
 var _is_blocking: bool = false
 var _was_on_floor: bool = false
 var _pre_land_velocity_y: float = 0.0
@@ -214,7 +217,10 @@ func _physics_process(delta: float) -> void:
 		_jump_buffer_timer -= delta
 
 	# ── Horizontal movement ─────────────────────────────────────────────────
-	if not dead and h_movement_direction != 0:
+	if _knockback_timer > 0.0:
+		_knockback_timer -= delta
+		velocity.x = move_toward(velocity.x, 0.0, 700.0 * delta)
+	elif not dead and h_movement_direction != 0:
 		var is_skidding: bool = on_floor and velocity.x != 0.0 and sign(velocity.x) != h_movement_direction
 		if is_skidding and absf(velocity.x) < skid_stop_threshold:
 			velocity.x = 0.0
@@ -462,10 +468,29 @@ func get_aim_point() -> Vector2:
 		return global_position
 	return _hitbox_shape.global_position
 
+# Aplica un fuerte impulso hacia atras (lejos del enemigo atacante) para evitar skip por i-frames.
+func apply_knockback(source_x: float, force: float = -1.0, duration: float = -1.0) -> void:
+	if dead:
+		return
+	var actual_force: float = force if force > 0.0 else melee_knockback_force
+	var actual_duration: float = duration if duration > 0.0 else melee_knockback_duration
+	var push_dir: float = 1.0 if global_position.x >= source_x else -1.0
+	velocity.x = push_dir * actual_force
+	velocity.y = minf(velocity.y, -140.0)
+	_knockback_timer = actual_duration
+
 # Recibe danio progresivo con 1.0s de invulnerabilidad temporal (i-frames).
-func take_damage(amount: int = 1) -> void:
+func take_damage(amount: int = 1, source_x: Variant = null) -> void:
 	if dead or _is_invulnerable:
 		return
+	
+	if source_x != null:
+		if source_x is float or source_x is int:
+			apply_knockback(float(source_x))
+		elif source_x is Vector2:
+			apply_knockback(source_x.x)
+		elif source_x is Node2D:
+			apply_knockback(source_x.global_position.x)
 	
 	health = max(0, health - amount)
 	health_changed.emit(health, max_health)

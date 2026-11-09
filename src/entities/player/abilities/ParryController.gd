@@ -162,6 +162,8 @@ func _do_parry() -> void:
 	parry_success.emit()
 
 func _grant_chi_reward() -> void:
+	if _player == null or not is_instance_valid(_player):
+		_player = get_parent()
 	if _player != null and is_instance_valid(_player) and _player.has_method("collect_chi"):
 		_player.collect_chi(chi_reward)
 
