@@ -52,6 +52,7 @@ var _parryable_window: bool = false
 var _telegraph_tween: Tween = null
 var _hit_tween: Tween = null
 
+# Inicializa la salud, orientacion y animacion base del golem.
 func _ready() -> void:
 	add_to_group("enemies")
 	if footstep_player and footstep_player.stream is AudioStreamWAV:
@@ -61,6 +62,7 @@ func _ready() -> void:
 	_set_facing(_facing)
 	_play_animation("idle")
 
+# Actualiza la gravedad, temporizadores y maquina de estados del golem.
 func _physics_process(delta: float) -> void:
 	if dead:
 		return
@@ -105,6 +107,7 @@ func _physics_process(delta: float) -> void:
 		if footstep_player and footstep_player.playing:
 			footstep_player.stop()
 
+# Comprueba si el objetivo actual sigue activo y con vida.
 func _has_valid_target() -> bool:
 	if target == null or not is_instance_valid(target):
 		return false
@@ -114,6 +117,7 @@ func _has_valid_target() -> bool:
 		return false
 	return true
 
+# Gestiona el avance hacia el objetivo y decide cuando atacar.
 func _process_chase_state() -> void:
 	if not _has_valid_target():
 		target = null
@@ -140,6 +144,7 @@ func _process_chase_state() -> void:
 		velocity.x = 0.0
 		_play_animation("idle")
 
+# Controla la patrulla entre los limites asignados.
 func _process_idle_state() -> void:
 	if _has_valid_target():
 		_state = State.CHASE
@@ -158,6 +163,7 @@ func _process_idle_state() -> void:
 		velocity.x = 0.0
 		_play_animation("idle")
 
+# Verifica con raycast si hay suelo por delante para no caer al vacio.
 func _can_advance_on_floor() -> bool:
 	if not is_on_floor():
 		return true
@@ -166,6 +172,7 @@ func _can_advance_on_floor() -> bool:
 	floor_check.force_raycast_update()
 	return floor_check.is_colliding()
 
+# Invierte la orientacion visual y el raycast de suelo del golem.
 func _set_facing(dir: float) -> void:
 	_facing = 1.0 if dir >= 0.0 else -1.0
 	if sprite != null:
@@ -173,6 +180,7 @@ func _set_facing(dir: float) -> void:
 	if floor_check != null:
 		floor_check.position.x = absf(floor_check.position.x) * _facing
 
+# Reproduce la animacion indicada ajustando la escala de sprite.
 func _play_animation(anim_name: String) -> void:
 	if sprite == null or sprite.sprite_frames == null:
 		return
@@ -182,18 +190,21 @@ func _play_animation(anim_name: String) -> void:
 	if sprite.animation != anim_name or not sprite.is_playing():
 		sprite.play(anim_name)
 
+# Restablece los efectos visuales, rotacion y modulacion del sprite.
 func _reset_sprite_visuals() -> void:
 	if sprite != null:
 		sprite.self_modulate = Color.WHITE
 		sprite.rotation = 0.0
 		sprite.speed_scale = 1.0
 
+# Interrumpe la animacion y transicion visual de telegrafo del ataque.
 func _cancel_telegraph() -> void:
 	if _telegraph_tween != null and _telegraph_tween.is_valid():
 		_telegraph_tween.kill()
 	_telegraph_tween = null
 	_reset_sprite_visuals()
 
+# Ejecuta una sacudida y modulacion blanca al recibir impacto.
 func play_hit_anim() -> void:
 	if sprite == null:
 		return
@@ -209,6 +220,7 @@ func play_hit_anim() -> void:
 	_hit_tween.tween_property(sprite, "self_modulate", Color.WHITE, 0.2)
 	_hit_tween.tween_property(sprite, "rotation", 0.0, 0.2)
 
+# Inicia la secuencia de anticipacion y ejecucion del ataque cuerpo a cuerpo.
 func _start_attack_sequence() -> void:
 	if dead or _state == State.TELEGRAPH or _state == State.ATTACK or _state == State.STUNNED:
 		return
@@ -260,6 +272,7 @@ func _start_attack_sequence() -> void:
 	_state = State.CHASE if _has_valid_target() else State.IDLE
 	_play_animation("idle")
 
+# Aplica daño y retroceso al jugador o resuelve un parry exitoso.
 func _execute_melee_hit() -> bool:
 	if dead or not _has_valid_target():
 		_parryable_window = false
@@ -282,9 +295,11 @@ func _execute_melee_hit() -> bool:
 		_parryable_window = false
 	return false
 
+# Indica si el golem se encuentra en una ventana de ataque bloqueable.
 func is_parryable_attack_active() -> bool:
 	return not dead and _parryable_window and (_state == State.TELEGRAPH or _state == State.ATTACK)
 
+# Aplica el estado de aturdimiento y retroceso tras ser bloqueado.
 func on_parried() -> void:
 	if dead:
 		return
@@ -298,6 +313,7 @@ func on_parried() -> void:
 	if sprite != null:
 		sprite.self_modulate = stun_color
 
+# Resta salud al golem, reproduce reaccion de daño o ejecuta su muerte.
 func take_damage(amount: int = 1) -> void:
 	if dead:
 		return
@@ -316,6 +332,7 @@ func take_damage(amount: int = 1) -> void:
 	_play_animation("idle")
 	play_hit_anim()
 
+# Desactiva colisiones, suelta un orbe de Chi y elimina al enemigo.
 func die() -> void:
 	if dead:
 		return
@@ -348,6 +365,7 @@ func die() -> void:
 		return
 	queue_free()
 
+# Instancia un orbe de Chi al morir el enemigo.
 func _spawn_chi_orb() -> void:
 	if CHI_ORB_SCENE:
 		var orb: Node = CHI_ORB_SCENE.instantiate()
@@ -356,6 +374,7 @@ func _spawn_chi_orb() -> void:
 		orb.global_position = global_position + Vector2(0.0, -12.0)
 		get_parent().call_deferred("add_child", orb)
 
+# Detecta al jugador al entrar en el area de percepcion.
 func _on_detection_area_body_entered(body: Node2D) -> void:
 	if dead:
 		return
@@ -364,6 +383,7 @@ func _on_detection_area_body_entered(body: Node2D) -> void:
 		if _state == State.IDLE:
 			_state = State.CHASE
 
+# Limpia el objetivo cuando el jugador sale del area de percepcion.
 func _on_detection_area_body_exited(body: Node2D) -> void:
 	if dead:
 		return

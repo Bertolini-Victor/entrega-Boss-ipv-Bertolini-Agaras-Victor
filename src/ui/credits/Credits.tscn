@@ -117,7 +117,7 @@ text = "Dragon In Space - Créditos"
 horizontal_alignment = 1
 
 [node name="CreditsText" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer" unique_id=982952567]
-custom_minimum_size = Vector2(244, 0)
+custom_minimum_size = Vector2(210, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.9, 0.92, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
@@ -127,7 +127,7 @@ text = "Desarrollador / Diseñador Original: Victor Bertolini Agaras
 
 Arte base de enemigos y Animación de Intro: Victoria Struba"
 horizontal_alignment = 1
-autowrap_mode = 2
+autowrap_mode = 3
 
 [node name="VictoriaInstagram" type="LinkButton" parent="CenterContainer/PanelContainer/VBoxContainer" unique_id=1982952568]
 layout_mode = 2
@@ -143,7 +143,7 @@ text = "@vick_st.art en Instagram"
 uri = "https://www.instagram.com/vick_st.art/"
 
 [node name="CreditsText2" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer" unique_id=1982952569]
-custom_minimum_size = Vector2(244, 0)
+custom_minimum_size = Vector2(210, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.9, 0.92, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
@@ -153,7 +153,7 @@ text = "Diseño y Sprites de Iroh: Sebastian Torres (sebastianetorres@hotmail.co
 
 El arte del entorno, la música y los efectos de sonido provienen de recursos gratuitos (Free to use)"
 horizontal_alignment = 1
-autowrap_mode = 2
+autowrap_mode = 3
 
 [node name="BackButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer" unique_id=2113398579]
 layout_mode = 2

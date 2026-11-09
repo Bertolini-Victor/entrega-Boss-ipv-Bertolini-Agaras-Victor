@@ -19,10 +19,12 @@ var _bottom_position: Vector2 = Vector2.ZERO
 var _state_timer: float = 0.0
 var _player_on_platform: bool = false
 
+# Guarda las alturas de reposo y destino del elevador.
 func _ready() -> void:
 	sync_to_physics = true
 	_bottom_position = global_position
 
+# Mueve el elevador entre pisos segun la presencia del jugador.
 func _physics_process(delta: float) -> void:
 	var top_position: Vector2 = _bottom_position + Vector2(0.0, -travel_height)
 	match _state:
@@ -59,10 +61,12 @@ func _physics_process(delta: float) -> void:
 				_state = State.IDLE_BOTTOM
 				_state_timer = 0.0
 
+# Detecta cuando el jugador sube a la plataforma.
 func _on_trigger_area_body_entered(body: Node2D) -> void:
 	if body is Player:
 		_player_on_platform = true
 
+# Detecta cuando el jugador abandona la plataforma.
 func _on_trigger_area_body_exited(body: Node2D) -> void:
 	if body is Player:
 		_player_on_platform = false

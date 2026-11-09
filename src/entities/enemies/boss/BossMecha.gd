@@ -39,6 +39,7 @@ var _state_timer: float = 0.0
 var _hit_tween: Tween = null
 var _muzzle_base_x: float = 42.0
 
+# Configura el estado inicial, grupo y animacion del jefe.
 func _ready() -> void:
 	add_to_group("enemies")
 	health = max_health
@@ -47,6 +48,7 @@ func _ready() -> void:
 	_set_facing(-1.0)
 	_play_animation("idle")
 
+# Activa al jefe e inicia sus rutinas de combate contra el jugador.
 func activate() -> void:
 	if active or dead:
 		return
@@ -57,6 +59,7 @@ func activate() -> void:
 	_jump_timer = 4.0
 	_play_animation("idle")
 
+# Busca y asigna la referencia al jugador dentro del arbol de nodos.
 func _find_player() -> void:
 	if target != null and is_instance_valid(target):
 		return
@@ -70,6 +73,7 @@ func _find_player() -> void:
 			if p is Node2D:
 				target = p
 
+# Ejecuta la maquina de estados de combate y fisicas del jefe.
 func _physics_process(delta: float) -> void:
 	if dead or not active:
 		if not is_on_floor():
@@ -117,6 +121,7 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 
+# Controla el desplazamiento y posicionamiento tactico del jefe.
 func _process_walk_state(delta: float) -> void:
 	if target == null:
 		current_state = State.IDLE
@@ -151,6 +156,7 @@ func _process_walk_state(delta: float) -> void:
 	velocity.x = desired_dir * move_speed
 	_play_animation("walk")
 
+# Gestiona la fisica y el aterrizaje durante el salto del jefe.
 func _process_jump_state(_delta: float) -> void:
 	# El salto aterriza al tocar el piso mientras la velocidad vertical es descendente
 	if is_on_floor() and velocity.y >= 0.0:
@@ -160,6 +166,7 @@ func _process_jump_state(_delta: float) -> void:
 		_state_timer = 0.4
 		_jump_timer = jump_cooldown
 
+# Elige la siguiente accion del jefe segun distancia y enfriamientos.
 func _decide_next_action() -> void:
 	if target == null:
 		_state_timer = 0.5
@@ -175,6 +182,7 @@ func _decide_next_action() -> void:
 		current_state = State.WALK
 		_play_animation("walk")
 
+# Inicia un salto con impulso hacia la posicion del jugador.
 func _start_jump() -> void:
 	if current_state == State.ATTACK or dead:
 		return
@@ -189,6 +197,7 @@ func _start_jump() -> void:
 	var jump_impulse_x: float = clampf(h_dist * 0.9, -240.0, 240.0)
 	velocity = Vector2(jump_impulse_x, jump_impulse_y)
 
+# Comienza la secuencia de ataque a distancia del jefe.
 func _start_attack() -> void:
 	if dead or current_state == State.ATTACK or current_state == State.JUMP:
 		return
@@ -202,11 +211,13 @@ func _start_attack() -> void:
 	var timer := get_tree().create_timer(shot_delay)
 	timer.timeout.connect(_on_attack_fire_moment)
 
+# Dispara el proyectil en el fotograma adecuado de la animacion.
 func _on_attack_fire_moment() -> void:
 	if dead or current_state != State.ATTACK or not is_inside_tree():
 		return
 	_fire_projectile()
 
+# Instancia y lanza un proyectil en direccion al jugador.
 func _fire_projectile() -> void:
 	if projectile_scene == null or muzzle == null:
 		return
@@ -245,11 +256,13 @@ func _fire_projectile() -> void:
 	_state_timer = 0.2
 	_play_animation("idle")
 
+# Aplica daño proporcional por impacto directo de rayo.
 func hit_by_lightning() -> void:
 	# El Rayo le quita un tercio exacto de su vida máxima: 3 impactos = muerte
 	var lightning_dmg: int = int(ceil(float(max_health) / 3.0))
 	take_damage(lightning_dmg)
 
+# Reduce los puntos de vida del jefe y gestiona su retroceso visual.
 func take_damage(amount: int = 1) -> void:
 	if dead:
 		return
@@ -274,6 +287,7 @@ func take_damage(amount: int = 1) -> void:
 		_play_animation("hurt")
 		velocity.x = -_facing * 35.0
 
+# Reproduce un destello visual al recibir impacto.
 func _play_hit_flash() -> void:
 	if sprite == null:
 		return
@@ -284,6 +298,7 @@ func _play_hit_flash() -> void:
 	_hit_tween = create_tween()
 	_hit_tween.tween_property(sprite, "self_modulate", Color.WHITE, 0.2)
 
+# Desactiva al jefe, emite la señal de victoria e inicia su animacion de muerte.
 func die() -> void:
 	if dead:
 		return
@@ -311,6 +326,7 @@ func die() -> void:
 	if is_inside_tree():
 		queue_free()
 
+# Actualiza la orientacion visual y el punto de disparo del jefe.
 func _set_facing(new_facing: float) -> void:
 	_facing = 1.0 if new_facing >= 0.0 else -1.0
 	if sprite != null:
@@ -318,6 +334,7 @@ func _set_facing(new_facing: float) -> void:
 	if muzzle != null:
 		muzzle.position.x = _facing * _muzzle_base_x
 
+# Reproduce una animacion del sprite si no esta en reproduccion.
 func _play_animation(anim_name: String) -> void:
 	if sprite == null or sprite.sprite_frames == null:
 		return

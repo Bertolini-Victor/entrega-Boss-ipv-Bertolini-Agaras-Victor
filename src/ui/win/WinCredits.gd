@@ -6,6 +6,7 @@ extends Control
 var _transitioned: bool = false
 var _is_hovering_link: bool = false
 
+# Configura el desplazamiento continuo y señales de los creditos finales.
 func _ready() -> void:
 	# Inicia el contenedor justo debajo de la pantalla
 	credits_container.position.y = size.y
@@ -14,6 +15,7 @@ func _ready() -> void:
 		link_btn.mouse_entered.connect(_on_link_mouse_entered)
 		link_btn.mouse_exited.connect(_on_link_mouse_exited)
 
+# Realiza el desplazamiento vertical automatico del texto de creditos.
 func _process(delta: float) -> void:
 	if _transitioned:
 		return
@@ -23,12 +25,15 @@ func _process(delta: float) -> void:
 	if credits_container.position.y + credits_container.size.y < -30.0:
 		_goto_main_menu()
 
+# Cambia la modulacion del enlace al pasar el puntero por encima.
 func _on_link_mouse_entered() -> void:
 	_is_hovering_link = true
 
+# Restaura la modulacion del enlace al retirar el puntero.
 func _on_link_mouse_exited() -> void:
 	_is_hovering_link = false
 
+# Permite saltar o salir al menu principal durante los creditos.
 func _unhandled_input(event: InputEvent) -> void:
 	if _transitioned:
 		return
@@ -38,6 +43,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event is InputEventMouseButton and event.is_pressed():
 		_goto_main_menu()
 
+# Cambia la escena hacia el menu principal.
 func _goto_main_menu() -> void:
 	if _transitioned:
 		return

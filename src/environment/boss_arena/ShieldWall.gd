@@ -9,12 +9,14 @@ extends StaticBody2D
 
 var _base_alpha: float = 0.65
 
+# Configura las colisiones y el shader de la barrera de energia.
 func _ready() -> void:
 	if active_on_start:
 		activate(false)
 	else:
 		deactivate()
 
+# Actualiza la transparencia y modulacion visual de la barrera.
 func _process(_delta: float) -> void:
 	if not visible:
 		return
@@ -25,6 +27,7 @@ func _process(_delta: float) -> void:
 	if inner_core:
 		inner_core.color.a = clampf(0.8 + 0.15 * cos(t * 1.5), 0.5, 1.0)
 
+# Enciende la barrera bloqueando el paso.
 func activate(animate: bool = true) -> void:
 	process_mode = Node.PROCESS_MODE_INHERIT
 	visible = true
@@ -37,6 +40,7 @@ func activate(animate: bool = true) -> void:
 	else:
 		modulate.a = 1.0
 
+# Apaga la barrera y deshabilita sus colisiones.
 func deactivate() -> void:
 	process_mode = Node.PROCESS_MODE_DISABLED
 	visible = false

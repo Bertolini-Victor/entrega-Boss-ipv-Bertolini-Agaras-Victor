@@ -7,6 +7,7 @@ extends Node2D
 
 var projectile_container: Node
 
+# Calcula la direccion hacia donde mira el jugador.
 func _get_facing_direction() -> Vector2:
 	if owner is Player:
 		return (owner as Player).get_facing_direction()
@@ -36,6 +37,7 @@ func fire() -> void:
 	)
 	fire_timer.start()
 
+# Comprueba si el proyectil de bola de fuego esta listo para dispararse.
 func is_ready() -> bool:
 	return fire_timer.is_stopped()
 

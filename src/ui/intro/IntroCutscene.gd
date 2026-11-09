@@ -13,6 +13,7 @@ var _current_index: int = 0
 var _is_transitioning: bool = false
 var _frame_tween: Tween = null
 
+# Prepara la reproduccion de cuadros y musica de la introduccion.
 func _ready() -> void:
 	# Cargar frames secuenciales 1.jpg a 30.jpg en orden numerico estricto
 	for i in range(1, TOTAL_FRAMES + 1):
@@ -36,6 +37,7 @@ func _ready() -> void:
 	else:
 		_finish_cutscene()
 
+# Permite avanzar de cuadro o saltar la cinematica completa.
 func _unhandled_input(event: InputEvent) -> void:
 	if _is_transitioning:
 		return
@@ -52,6 +54,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			_advance_frame()
 			get_viewport().set_input_as_handled()
 
+# Pasa al siguiente fotograma de la cinematica o finaliza si era el ultimo.
 func _advance_frame() -> void:
 	if _is_transitioning:
 		return
@@ -62,6 +65,7 @@ func _advance_frame() -> void:
 	else:
 		_show_frame(_current_index)
 
+# Muestra el cuadro especificado con desvanecimiento.
 func _show_frame(index: int) -> void:
 	if index < 0 or index >= _frames.size():
 		return
@@ -78,13 +82,16 @@ func _show_frame(index: int) -> void:
 	# Reiniciar el temporizador para este frame
 	frame_timer.start(FRAME_DURATION)
 
+# Avanza automaticamente de fotograma por temporizador.
 func _on_frame_timer_timeout() -> void:
 	_advance_frame()
 
+# Concluye la cinematica al terminar el audio de fondo.
 func _on_music_finished() -> void:
 	if not _is_transitioning and ambient_music:
 		ambient_music.play()
 
+# Transiciona la escena hacia el nivel principal del juego.
 func _finish_cutscene() -> void:
 	if _is_transitioning:
 		return

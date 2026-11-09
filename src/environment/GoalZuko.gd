@@ -12,6 +12,7 @@ signal level_completed
 
 var _triggered: bool = false
 
+# Configura el area de llegada y referencias al objetivo final.
 func _ready() -> void:
 	collision_layer = 0
 	collision_mask = 2 # Detectar al jugador (capa 2)
@@ -27,6 +28,7 @@ func _ready() -> void:
 		zuko_sprite.flip_h = true
 		zuko_sprite.play("idle")
 
+# Inicia la secuencia final al aproximarse el jugador.
 func _on_body_entered(body: Node2D) -> void:
 	if _triggered:
 		return
@@ -34,6 +36,7 @@ func _on_body_entered(body: Node2D) -> void:
 		_triggered = true
 		_start_cutscene(body)
 
+# Ejecuta la cinematica de rescate y dialogo de Zuko.
 func _start_cutscene(player: Node2D) -> void:
 	# Desactivar colisión del Goal para no repetir la ejecución
 	if collision_shape != null:
@@ -113,16 +116,19 @@ func _start_cutscene(player: Node2D) -> void:
 	# 13. Llama a la pantalla de victoria/nivel completado
 	level_completed.emit()
 
+# Muestra el texto de dialogo en la interfaz.
 func _show_dialogue(text: String) -> void:
 	var hud: HUD = _get_hud()
 	if hud != null and hud.has_method("show_dialogue"):
 		hud.show_dialogue(text)
 
+# Oculta la caja de dialogo de la interfaz.
 func _hide_dialogue() -> void:
 	var hud: HUD = _get_hud()
 	if hud != null and hud.has_method("hide_dialogue"):
 		hud.hide_dialogue()
 
+# Obtiene la referencia al HUD activo en la escena.
 func _get_hud() -> HUD:
 	if not is_inside_tree() or get_tree().current_scene == null:
 		return null

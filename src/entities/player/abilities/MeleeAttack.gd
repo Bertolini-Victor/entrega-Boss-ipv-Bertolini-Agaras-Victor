@@ -26,10 +26,12 @@ var _is_attacking: bool = false
 var _player: CharacterBody2D = null
 var _slash_sprite: AnimatedSprite2D = null
 
+# Configura el sprite de corte y colisiones del ataque cuerpo a cuerpo.
 func _ready() -> void:
 	_player = _get_player()
 	_setup_slash_sprite()
 
+# Carga los cuadros de animacion del efecto de fuego cortante.
 func _setup_slash_sprite() -> void:
 	_slash_sprite = get_node_or_null("SlashSprite") as AnimatedSprite2D
 	if _slash_sprite == null:
@@ -49,6 +51,7 @@ func _setup_slash_sprite() -> void:
 	_slash_sprite.scale = slash_scale
 	_slash_sprite.visible = false
 
+# Obtiene la referencia al nodo principal del jugador.
 func _get_player() -> CharacterBody2D:
 	if owner is CharacterBody2D:
 		return owner as CharacterBody2D
@@ -136,8 +139,10 @@ func attack(facing_direction: float = 1.0) -> void:
 		_slash_sprite.visible = false
 	_is_attacking = false
 
+# Devuelve true si el ataque cuerpo a cuerpo sigue en ejecucion.
 func is_attacking() -> bool:
 	return _is_attacking
 
+# Elimina el nodo del ataque.
 func die() -> void:
 	queue_free()

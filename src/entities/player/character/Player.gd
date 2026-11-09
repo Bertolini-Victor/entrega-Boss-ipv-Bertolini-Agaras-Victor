@@ -136,6 +136,7 @@ func _cache_sprite_metrics() -> void:
 	_sprite_base_scale = body_sprite.scale
 	_sprite_half_height = absf(_sprite_base_pos.y)
 
+# Calcula los valores de gravedad y velocidad de salto segun los parametros de altura y tiempo.
 func _compute_jump_physics() -> void:
 	_gravity_rise  = (2.0 * jump_height) / (jump_rise_time  * jump_rise_time)
 	_gravity_fall  = (2.0 * jump_height) / (jump_fall_time  * jump_fall_time)
@@ -205,7 +206,7 @@ func _physics_process(delta: float) -> void:
 
 	_process_input()
 
-	# ── Timers ──────────────────────────────────────────────────────────────
+	# Control de temporizadores.
 	var on_floor := is_on_floor()
 
 	if on_floor:
@@ -216,7 +217,7 @@ func _physics_process(delta: float) -> void:
 	if _jump_buffer_timer > 0.0:
 		_jump_buffer_timer -= delta
 
-	# ── Horizontal movement ─────────────────────────────────────────────────
+	# Movimiento horizontal y derrape.
 	if _knockback_timer > 0.0:
 		_knockback_timer -= delta
 		velocity.x = move_toward(velocity.x, 0.0, 700.0 * delta)
@@ -261,7 +262,7 @@ func _physics_process(delta: float) -> void:
 	else:
 		_skid_dust_timer = 0.0
 
-	# ── Jump ─────────────────────────────────────────
+	# Salto y buffer.
 	var can_jump := _coyote_timer > 0.0
 	if _jump_buffer_timer > 0.0 and can_jump:
 		var speed_ratio: float = absf(velocity.x) / maxf(h_speed_limit, 1.0)
@@ -273,7 +274,7 @@ func _physics_process(delta: float) -> void:
 			velocity.y *= jump_cut_multiplier
 		_apply_jump_juice(on_floor)
 
-	# ── Asymmetric gravity & Apex Hang ──────────────────────────────────────
+	# Gravedad asimetrica y suspension en el vertice.
 	var is_in_apex_grav: bool = not on_floor and Input.is_action_pressed("jump") and absf(velocity.y) <= apex_velocity_threshold
 	var g := _gravity_rise if velocity.y < 0.0 else _gravity_fall
 	if is_in_apex_grav:
@@ -288,7 +289,7 @@ func _physics_process(delta: float) -> void:
 	if on_floor and velocity.y > 0.0:
 		velocity.y = 0.0
 
-	# ── Corner Correction ────────────────────────────
+	# Correccion de esquinas en salto.
 	if velocity.y < 0.0:
 		_check_corner_correction(delta)
 
@@ -298,7 +299,7 @@ func _physics_process(delta: float) -> void:
 	if not dead and is_on_floor() and not is_on_wall():
 		last_safe_position = global_position
 
-	# ── Pasos del jugador (Audio) ──────────────────────────────────────────
+	# Audio de pasos del jugador.
 	var is_running: bool = not dead and is_on_floor() and absf(velocity.x) > 10.0
 	if is_running:
 		if footstep_player and not footstep_player.playing:
@@ -307,12 +308,12 @@ func _physics_process(delta: float) -> void:
 		if footstep_player and footstep_player.playing:
 			footstep_player.stop()
 
-	# ── Landing Juice ────────────────────────────────
+	# Efecto de impacto visual al aterrizar.
 	var just_landed: bool = not _was_on_floor and is_on_floor()
 	if just_landed:
 		_apply_landing_juice()
 
-	# ── RigidBody2D push  ──────────────────────────
+	# Empuje de cuerpos rigidos.
 	for i: int in get_slide_collision_count():
 		var collision: KinematicCollision2D = get_slide_collision(i)
 		var collider: Object = collision.get_collider()
@@ -341,7 +342,7 @@ func _process_input() -> void:
 		h_movement_direction = 0
 		return
 
-	# ── Exclusión mutua entre ataques ───────────────────────────────────────
+	# Exclusion mutua entre ataques.
 	var melee_busy: bool = can_melee and melee_attack != null and melee_attack.is_attacking()
 	var fire_breath_busy: bool = (_active_dragon_breath != null and is_instance_valid(_active_dragon_breath))
 	var lightning_busy: bool = can_lightning and lightning_controller != null and lightning_controller.is_charging()
@@ -584,6 +585,7 @@ func start_block() -> void:
 	if body_animations and body_animations.has_animation("block"):
 		body_animations.play("block")
 
+# Responde a la finalizacion de animaciones de cuerpo completo.
 func _on_body_animations_animation_finished(anim_name: StringName) -> void:
 	if anim_name == &"block":
 		_is_blocking = false
@@ -674,12 +676,14 @@ func _update_visual_juice(delta: float, on_floor_now: bool) -> void:
 	
 	body_sprite.rotation = lerp_angle(body_sprite.rotation, target_tilt, clampf(14.0 * delta, 0.0, 1.0))
 
+# Genera particulas de polvo al despegar del suelo en un salto.
 func _spawn_jump_dust() -> void:
 	var origin := Vector2(-5.0, 0.0)
 	for i: int in range(5):
 		var vel := Vector2(randf_range(-35.0, 35.0), randf_range(-8.0, -18.0))
 		_add_dust_particle(origin + Vector2(randf_range(-4.0, 4.0), 0.0), vel, randf_range(0.20, 0.32), randf_range(1.5, 2.5))
 
+# Genera particulas de polvo al derrapar sobre el suelo.
 func _spawn_skid_dust() -> void:
 	var dir: float = sign(velocity.x)
 	if dir == 0.0:
@@ -688,6 +692,7 @@ func _spawn_skid_dust() -> void:
 	var vel := Vector2(dir * randf_range(15.0, 45.0), randf_range(-6.0, -14.0))
 	_add_dust_particle(origin, vel, randf_range(0.18, 0.28), randf_range(1.2, 2.2))
 
+# Genera particulas de polvo al impactar fuertemente contra el suelo.
 func _spawn_hard_landing_dust() -> void:
 	var origin := Vector2(-5.0, 0.0)
 	for i: int in range(7):
@@ -695,6 +700,7 @@ func _spawn_hard_landing_dust() -> void:
 		var vel := Vector2(dir * randf_range(25.0, 65.0), randf_range(-5.0, -16.0))
 		_add_dust_particle(origin + Vector2(dir * randf_range(1.0, 6.0), 0.0), vel, randf_range(0.22, 0.35), randf_range(1.6, 2.8))
 
+# Crea e inserta una particula en el arreglo de polvo con posicion y velocidad.
 func _add_dust_particle(pos: Vector2, vel: Vector2, lifetime: float, radius: float) -> void:
 	if _dust_particles.size() >= 30:
 		_dust_particles.pop_front()
@@ -707,6 +713,7 @@ func _add_dust_particle(pos: Vector2, vel: Vector2, lifetime: float, radius: flo
 		"color": Color(0.88, 0.88, 0.94, 0.65)
 	})
 
+# Actualiza la posicion y tiempo restante de las particulas de polvo.
 func _update_dust_particles(delta: float) -> void:
 	var had_particles: bool = not _dust_particles.is_empty()
 	var write_idx: int = 0
@@ -721,6 +728,7 @@ func _update_dust_particles(delta: float) -> void:
 	if had_particles or not _dust_particles.is_empty():
 		queue_redraw()
 
+# Renderiza las particulas activas de polvo en pantalla.
 func _draw() -> void:
 	for p: Dictionary in _dust_particles:
 		var alpha: float = clampf(p["lifetime"] / p["initial_lifetime"], 0.0, 1.0) * 0.65

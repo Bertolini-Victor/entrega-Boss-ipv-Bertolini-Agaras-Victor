@@ -5,10 +5,9 @@ extends Area2D
 @export var chi_cost: int = 3
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
-@onready var collision_shape: CollisionShape2D = $CollisionShape2D
-
 var _hit_targets: Array[Node] = []
 
+# Configura colisiones, señales y temporizador del aliento de fuego.
 func _ready() -> void:
 	# Deteccion de enemigos (layer 4) y proyectiles enemigos (layer 16)
 	collision_layer = 0
@@ -26,6 +25,7 @@ func _ready() -> void:
 
 	call_deferred("_check_initial_overlaps")
 
+# Verifica colisiones que ya esten superpuestas al instanciarse.
 func _check_initial_overlaps() -> void:
 	if not is_inside_tree():
 		return
@@ -34,9 +34,11 @@ func _check_initial_overlaps() -> void:
 	for a in get_overlapping_areas():
 		_on_area_entered(a)
 
+# Libera el area al concluir la animacion del aliento.
 func _on_animation_finished() -> void:
 	queue_free()
 
+# Aplica daño al cuerpo enemigo impactado si no ha sido dañado previamente.
 func _on_body_entered(body: Node2D) -> void:
 	if body in _hit_targets:
 		return
@@ -47,6 +49,7 @@ func _on_body_entered(body: Node2D) -> void:
 	elif body.has_method("die"):
 		body.die()
 
+# Gestiona la destruccion de areas y proyectiles enemigos impactados.
 func _on_area_entered(area: Area2D) -> void:
 	var parent: Node = area.get_parent()
 	if parent != null and parent != self:

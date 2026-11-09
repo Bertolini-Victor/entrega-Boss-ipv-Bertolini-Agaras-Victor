@@ -6,6 +6,7 @@ var goal: Node = null
 var hud: HUD = null
 @onready var background_music: AudioStreamPlayer = get_node_or_null("BackgroundMusic")
 
+# Inicializa la escena principal y sus referencias.
 func _ready() -> void:
 	if background_music:
 		if not background_music.finished.is_connected(background_music.play):

@@ -1,9 +1,8 @@
 extends Control
 
-@onready var timer: Timer = $Timer
-
 var _transitioned: bool = false
 
+# Permite saltar los creditos de introduccion con teclado o raton.
 func _unhandled_input(event: InputEvent) -> void:
 	if _transitioned:
 		return
@@ -13,9 +12,11 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event is InputEventMouseButton and event.is_pressed():
 		_goto_main_menu()
 
+# Avanza al menu principal cuando vence el tiempo de muestra.
 func _on_timer_timeout() -> void:
 	_goto_main_menu()
 
+# Cambia la escena actual hacia el menu principal.
 func _goto_main_menu() -> void:
 	if _transitioned:
 		return

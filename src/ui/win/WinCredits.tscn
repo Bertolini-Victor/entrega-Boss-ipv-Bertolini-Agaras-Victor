@@ -142,14 +142,16 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="Disclaimer" type="Label" parent="CreditsContent" unique_id=1563999909]
+custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
 theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 7
 text = "El arte del entorno, la música y los efectos de sonido provienen de recursos gratuitos (Free to use)"
 horizontal_alignment = 1
-autowrap_mode = 2
+autowrap_mode = 3
 
 [node name="Engine" type="Label" parent="CreditsContent" unique_id=982733312]
 layout_mode = 2

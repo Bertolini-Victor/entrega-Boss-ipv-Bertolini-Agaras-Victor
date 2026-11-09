@@ -8,6 +8,7 @@ extends Projectile
 @export var damage: int = 100
 @export var lifetime: float = 1.3
 
+# Ajusta la velocidad, colisiones y ciclo de vida del rayo.
 func _ready() -> void:
 	velocity_speed = speed
 	if lifetime_timer:

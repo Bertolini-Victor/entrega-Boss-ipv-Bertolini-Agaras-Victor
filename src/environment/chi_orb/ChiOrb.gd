@@ -7,13 +7,16 @@ var _collected: bool = false
 var _time: float = 0.0
 var _base_y: float = 0.0
 
+# Prepara la deteccion y la animacion flotante del orbe de Chi.
 func _ready() -> void:
 	_base_y = position.y
 
+# Actualiza el desplazamiento vertical ondulante del orbe.
 func _process(delta: float) -> void:
 	_time += delta
 	position.y = _base_y + sin(_time * 4.0) * 2.5
 
+# Otorga Chi al jugador y libera el orbe al ser recogido.
 func _on_body_entered(body: Node2D) -> void:
 	if _collected:
 		return

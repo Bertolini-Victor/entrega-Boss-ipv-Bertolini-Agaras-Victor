@@ -12,6 +12,7 @@ extends StaticBody2D
 var _is_breaking: bool = false
 var _flash_tween: Tween = null
 
+# Registra la pared rompible en el grupo correspondiente y conecta colisiones.
 func _ready() -> void:
 	if is_instance_valid(sprite):
 		sprite.self_modulate = wall_color
@@ -48,6 +49,7 @@ func hit_by_lightning() -> void:
 		return
 	queue_free()
 
+# Renderiza la textura y el patrón visual de la pared destructible.
 func _draw() -> void:
 	var line_color: Color = Color(0.85, 0.8, 1.2, 0.9) if not _is_breaking else Color(1.0, 1.0, 1.0, 1.0)
 	draw_line(Vector2(-12.0, -68.0), Vector2(4.0, -32.0), line_color, 2.0)

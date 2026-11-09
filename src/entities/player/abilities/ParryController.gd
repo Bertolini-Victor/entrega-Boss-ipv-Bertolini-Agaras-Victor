@@ -25,11 +25,13 @@ var _is_success: bool = false
 var _is_redirect: bool = false
 var _attempting_redirect: bool = false
 
+# Conecta las señales de la zona de desvio y obtiene al jugador.
 func _ready() -> void:
 	_player = get_parent()
 	if not parry_zone.area_exited.is_connected(_on_parry_zone_area_exited):
 		parry_zone.area_exited.connect(_on_parry_zone_area_exited)
 
+# Actualiza temporizadores de bloqueo visual y ventanas activas.
 func _process(delta: float) -> void:
 	if _draw_shield:
 		_visual_timer -= delta
@@ -48,6 +50,7 @@ func _process(delta: float) -> void:
 		if melee_enemy != null:
 			_do_melee_parry(melee_enemy)
 
+# Intenta ejecutar un bloqueo o redireccion de proyectil o golpe cuerpo a cuerpo.
 func try_parry(allow_redirect: bool = false) -> void:
 	parry_attempted.emit()
 	_draw_shield = true
@@ -73,12 +76,14 @@ func try_parry(allow_redirect: bool = false) -> void:
 
 	parry_failed.emit()
 
+# Intenta desviar un ataque cuerpo a cuerpo entrante si la ventana esta activa.
 func try_parry_melee_attack(attacker: Node2D) -> bool:
 	if _active_parry_timer <= 0.0 or attacker == null or not is_instance_valid(attacker):
 		return false
 	_do_melee_parry(attacker)
 	return true
 
+# Ejecuta con exito el desvio cuerpo a cuerpo, aturdiendo al atacante y otorgando Chi.
 func _do_melee_parry(enemy: Node2D) -> void:
 	_active_parry_timer = 0.0
 	_can_parry = false
@@ -92,6 +97,7 @@ func _do_melee_parry(enemy: Node2D) -> void:
 	_grant_chi_reward()
 	parry_success.emit()
 
+# Localiza al enemigo valido mas cercano que cumpla con los filtros opcionales.
 func _find_nearest_valid_enemy(max_dist: float = INF, must_be_parryable_melee: bool = false) -> Node2D:
 	var enemies = get_tree().get_nodes_in_group("enemies")
 	var nearest: Node2D = null
@@ -109,9 +115,11 @@ func _find_nearest_valid_enemy(max_dist: float = INF, must_be_parryable_melee: b
 			nearest = enemy
 	return nearest
 
+# Busca al enemigo cuerpo a cuerpo mas cercano en rango de desvio.
 func _find_parryable_melee_enemy() -> Node2D:
 	return _find_nearest_valid_enemy(melee_parry_range, true)
 
+# Redirige un proyectil enemigo hacia la amenaza mas cercana.
 func _do_redirect() -> void:
 	_can_parry = false
 	if _incoming_projectile != null and is_instance_valid(_incoming_projectile):
@@ -137,9 +145,11 @@ func _do_redirect() -> void:
 	else:
 		_do_parry()
 
+# Encuentra al enemigo mas proximo para redireccion.
 func _find_nearest_enemy() -> Node2D:
 	return _find_nearest_valid_enemy(INF, false)
 
+# Registra un proyectil que entra en la zona de desvio.
 func _on_parry_zone_area_entered(area: Area2D) -> void:
 	var proj = area.get_parent()
 	if proj is Projectile and not proj is FireballProjectile and not proj is LightningProjectile:
@@ -147,10 +157,12 @@ func _on_parry_zone_area_entered(area: Area2D) -> void:
 		_can_parry = true
 		_parry_timer = parry_window
 
+# Anula el proyectil registrado si sale de la zona de desvio.
 func _on_parry_zone_area_exited(area: Area2D) -> void:
 	if area.get_parent() == _incoming_projectile:
 		_parry_expired()
 
+# Destruye el proyectil bloqueado y recompensa al jugador.
 func _do_parry() -> void:
 	_can_parry = false
 	if _incoming_projectile != null and is_instance_valid(_incoming_projectile):
@@ -161,19 +173,23 @@ func _do_parry() -> void:
 	_grant_chi_reward()
 	parry_success.emit()
 
+# Otorga Chi al jugador tras un bloqueo o desvio exitoso.
 func _grant_chi_reward() -> void:
 	if _player == null or not is_instance_valid(_player):
 		_player = get_parent()
 	if _player != null and is_instance_valid(_player) and _player.has_method("collect_chi"):
 		_player.collect_chi(chi_reward)
 
+# Restablece las variables al expirar la ventana de desvio.
 func _parry_expired() -> void:
 	_can_parry = false
 	_incoming_projectile = null
 
+# Libera el nodo del controlador de desvio.
 func die() -> void:
 	queue_free()
 
+# Renderiza el escudo visual y su onda de choque.
 func _draw() -> void:
 	if not _draw_shield:
 		return

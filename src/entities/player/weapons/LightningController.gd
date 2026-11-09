@@ -17,9 +17,11 @@ var _original_modulate: Color = Color.WHITE
 @onready var charge_timer: Timer = $ChargeTimer
 @onready var cooldown_timer: Timer = $CooldownTimer
 
+# Configura el temporizador de carga y la retroalimentacion visual.
 func _ready() -> void:
 	_init_visual_feedback()
 
+# Prepara el sprite y la modulacion visual de la carga electrica.
 func _init_visual_feedback() -> void:
 	var target: CanvasItem = _get_sprite()
 	if target != null:
@@ -27,6 +29,7 @@ func _init_visual_feedback() -> void:
 	else:
 		_original_modulate = Color.WHITE
 
+# Obtiene la referencia al jugador.
 func _get_player() -> Player:
 	if owner is Player:
 		return owner as Player
@@ -37,24 +40,28 @@ func _get_player() -> Player:
 		return p as Player
 	return null
 
+# Determina la orientacion horizontal de disparo.
 func _get_facing_direction() -> Vector2:
 	var player: Player = _get_player()
 	if player != null:
 		return player.get_facing_direction()
 	return Vector2.RIGHT
 
+# Verifica si el jugador dispone del Chi necesario para la habilidad.
 func _can_pay_chi() -> bool:
 	var player: Player = _get_player()
 	if player != null:
 		return player.has_enough_chi(chi_cost)
 	return true
 
+# Consume el coste de Chi requerido de los recursos del jugador.
 func _consume_chi() -> bool:
 	var player: Player = _get_player()
 	if player != null:
 		return player.consume_chi(chi_cost)
 	return true
 
+# Localiza el sprite animado del jugador para efectos visuales.
 func _get_sprite() -> CanvasItem:
 	if _sprite != null and is_instance_valid(_sprite):
 		return _sprite
@@ -69,6 +76,7 @@ func _get_sprite() -> CanvasItem:
 		_original_modulate = _sprite.self_modulate
 	return _sprite
 
+# Aplica o revierte el efecto visual de carga electrica sobre el jugador.
 func _apply_charge_feedback(charging: bool) -> void:
 	var target: CanvasItem = _get_sprite()
 	if charging:
@@ -90,16 +98,19 @@ func process_input() -> void:
 			if _can_pay_chi():
 				_start_charge()
 
+# Inicia la canalizacion de la habilidad y su temporizador.
 func _start_charge() -> void:
 	_is_charging = true
 	_apply_charge_feedback(true)
 	charge_timer.start(charge_time)
 
+# Cancela la preparacion del ataque y restablece efectos.
 func _cancel_charge() -> void:
 	_is_charging = false
 	_apply_charge_feedback(false)
 	charge_timer.stop()
 
+# Ejecuta el disparo de rayo al completarse el tiempo de carga.
 func _on_charge_timer_timeout() -> void:
 	if not _consume_chi():
 		_cancel_charge()
@@ -110,6 +121,7 @@ func _on_charge_timer_timeout() -> void:
 	_on_cooldown = true
 	cooldown_timer.start(fire_cooldown)
 
+# Habilita el uso de la habilidad al concluir el enfriamiento.
 func _on_cooldown_timer_timeout() -> void:
 	_on_cooldown = false
 
@@ -127,9 +139,11 @@ func _fire() -> void:
 		horizontal_dir
 	)
 
+# Informa si la habilidad esta en proceso de canalizacion.
 func is_charging() -> bool:
 	return _is_charging
 
+# Cancela la carga y libera el nodo.
 func die() -> void:
 	_is_charging = false
 	_apply_charge_feedback(false)

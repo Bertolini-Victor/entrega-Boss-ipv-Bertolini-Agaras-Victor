@@ -23,6 +23,7 @@ func _ready() -> void:
 		elif animated_sprite.sprite_frames.has_animation("move"):
 			animated_sprite.play("move")
 
+# Activa la logica de movimiento tras reproducirse la animacion de aparicion.
 func _on_spawn_animation_finished() -> void:
 	if not _is_removing and animated_sprite != null and animated_sprite.animation == "spawn":
 		if animated_sprite.sprite_frames != null and animated_sprite.sprite_frames.has_animation("move"):

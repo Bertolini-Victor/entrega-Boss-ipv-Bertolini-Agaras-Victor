@@ -4,6 +4,7 @@ extends Projectile
 @export var max_range: float = 250.0
 var _origin: Vector2
 
+# Inicializa la posicion de salida y la direccion de avance del proyectil.
 func initialize(spawn_position: Vector2, p_direction: Vector2) -> void:
 	_origin = spawn_position
 	super.initialize(spawn_position, p_direction)

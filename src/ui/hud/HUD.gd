@@ -24,6 +24,7 @@ var _required_actions: Dictionary = {
 	"parry": false
 }
 
+# Inicializa las barras de vida y Chi y temporizadores de ayuda.
 func _ready() -> void:
 	update_health(2, 2)
 	update_chi(0, 100)
@@ -35,6 +36,7 @@ func _ready() -> void:
 	if dialogue_box:
 		dialogue_box.visible = false
 
+# Detecta entradas del usuario para ocultar pistas de control aprendidas.
 func _input(event: InputEvent) -> void:
 	if _is_dismissing_hint or tutorial_panel == null or not tutorial_panel.visible:
 		return
@@ -49,12 +51,14 @@ func _input(event: InputEvent) -> void:
 
 	_check_all_actions_completed()
 
+# Verifica si todas las acciones del tutorial fueron realizadas.
 func _check_all_actions_completed() -> void:
 	for action: String in _required_actions:
 		if not _required_actions[action]:
 			return
 	_dismiss_controls_hint()
 
+# Oculta y desvanece el panel de controles inicial.
 func _dismiss_controls_hint() -> void:
 	if _is_dismissing_hint or tutorial_panel == null or not tutorial_panel.visible:
 		return
@@ -70,12 +74,14 @@ func _dismiss_controls_hint() -> void:
 			tutorial_panel.visible = false
 	)
 
+# Actualiza la barra y el valor numerico de vida en la interfaz.
 func update_health(current_hp: int, _max_hp: int) -> void:
 	if heart_1:
 		heart_1.modulate = Color(1.0, 0.2, 0.2, 1.0) if current_hp >= 1 else Color(0.35, 0.35, 0.35, 0.5)
 	if heart_2:
 		heart_2.modulate = Color(1.0, 0.2, 0.2, 1.0) if current_hp >= 2 else Color(0.35, 0.35, 0.35, 0.5)
 
+# Actualiza la barra y el valor numerico de Chi en la interfaz.
 func update_chi(current_chi: int, max_chi: int) -> void:
 	if chi_bar:
 		chi_bar.max_value = max_chi
@@ -83,6 +89,7 @@ func update_chi(current_chi: int, max_chi: int) -> void:
 	if chi_label:
 		chi_label.text = "Chi: %d / %d" % [current_chi, max_chi]
 
+# Muestra el mensaje en pantalla tras desbloquear una habilidad.
 func show_ability_unlocked_overlay(title: String, hint: String) -> void:
 	if fireball_title_label:
 		fireball_title_label.text = title
@@ -93,9 +100,11 @@ func show_ability_unlocked_overlay(title: String, hint: String) -> void:
 		if fireball_timer:
 			fireball_timer.start(5.0)
 
+# Gestiona la expiracion del tiempo del tutorial en pantalla.
 func _on_tutorial_timer_timeout() -> void:
 	_dismiss_controls_hint()
 
+# Oculta la pista visual de disparo de bola de fuego.
 func _on_fireball_timer_timeout() -> void:
 	if fireball_panel:
 		fireball_panel.visible = false

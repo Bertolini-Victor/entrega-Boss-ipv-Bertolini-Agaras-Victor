@@ -37,6 +37,7 @@ func _ready() -> void:
 	fire_timer.timeout.connect(fire)
 	_play_animation("idle")
 
+# Controla la orientacion de la torreta hacia el jugador si esta en rango.
 func _process(_delta: float) -> void:
 	if dead or sprite == null:
 		return
@@ -58,6 +59,7 @@ func _get_target_aim_point() -> Vector2:
 		return target.get_aim_point()
 	return target.global_position
 
+# Reproduce la animacion especificada en el sprite animado.
 func _play_animation(anim_name: String) -> void:
 	if sprite == null or sprite.sprite_frames == null:
 		return
@@ -85,6 +87,7 @@ func take_damage(amount: int = 1) -> void:
 		_is_firing = false
 		_play_animation("hurt")
 
+# Inicia el temporizador de cadencia de disparo.
 func _start_fire_timer() -> void:
 	fire_timer.wait_time = maxf(fire_cooldown, 0.1)
 	fire_timer.start()
@@ -174,6 +177,7 @@ func die() -> void:
 		return
 	queue_free()
 
+# Instancia un orbe de Chi al ser destruida la torreta.
 func _spawn_chi_orb() -> void:
 	if CHI_ORB_SCENE:
 		var orb: Node = CHI_ORB_SCENE.instantiate()
