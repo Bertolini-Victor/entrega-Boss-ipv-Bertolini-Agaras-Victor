@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://e3w1dxk37h4j" path="res://src/environment/Platform.tscn" id="11"]
 [ext_resource type="PackedScene" uid="uid://cfl84b6ma6emi" path="res://src/ui/hud/HUD.tscn" id="12_hud"]
 [ext_resource type="PackedScene" uid="uid://cchiorb000001" path="res://src/environment/chi_orb/ChiOrb.tscn" id="13_orb"]
+[ext_resource type="PackedScene" uid="uid://bv1e0py6wph4a" path="res://src/environment/interactables/HintSign.tscn" id="14_r7o8t"]
 [ext_resource type="PackedScene" uid="uid://bossarena0001" path="res://src/environment/boss_arena/BossArena.tscn" id="15_e7jk0"]
 [ext_resource type="Texture2D" uid="uid://cwmo5c2nu20wc" path="res://assets/textures/tilesets/2_Industrial_Tileset_1_Background.png" id="17_bg_deck"]
 [ext_resource type="Texture2D" uid="uid://dgpvqwbwfm0v" path="res://assets/textures/background/background.jpg" id="17_r7o8t"]
@@ -382,6 +383,14 @@ projectile_speed = 330.0
 [node name="GoalZuko" parent="Environment/Objects" unique_id=786003239 instance=ExtResource("9_zuko")]
 position = Vector2(5039, -832)
 
+[node name="HintSign_Chi" parent="Environment/Objects" unique_id=1016425735 instance=ExtResource("14_r7o8t")]
+position = Vector2(240, 568)
+hint_text = "Consejo: Conserva tu Chi. Lo necesitaras para abrirte camino."
+
+[node name="HintSign_Wall" parent="Environment/Objects" unique_id=409194187 instance=ExtResource("14_r7o8t")]
+position = Vector2(4090, 568)
+hint_text = "Esta estructura parece debil... Quiza un ataque poderoso pueda derribarla."
+
 [node name="ChiOrbs" type="Node2D" parent="Environment" unique_id=897801088]
 
 [node name="ChiOrb_B1" parent="Environment/ChiOrbs" unique_id=592527033 instance=ExtResource("13_orb")]
@@ -395,6 +404,9 @@ position = Vector2(720, 520)
 
 [node name="ChiOrb_B4" parent="Environment/ChiOrbs" unique_id=1452362548 instance=ExtResource("13_orb")]
 position = Vector2(950, 520)
+
+[node name="ChiOrb_B5" parent="Environment/ChiOrbs" unique_id=593979620 instance=ExtResource("13_orb")]
+position = Vector2(3950, 520)
 
 [node name="MidFloorFallZone" type="Area2D" parent="Environment" unique_id=1053703762]
 position = Vector2(1850, 70)
